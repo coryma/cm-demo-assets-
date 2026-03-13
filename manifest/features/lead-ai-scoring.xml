@@ -33,6 +33,10 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>CM_Lead_AI_Scoring</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
         <members>cmLatestLeads</members>
         <name>LightningComponentBundle</name>
     </types>
