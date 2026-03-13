@@ -4,16 +4,244 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>tabs</name>
+                    <value>Facet-30a934aa-02cb-46e6-bbda-c330d4a7bbc3</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tabset</componentName>
+                <identifier>flexipage_tabset1</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!$User.External_ID__c}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>User.007</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>tabs</name>
+                    <value>Facet-a9a00ca9-9c02-4762-a2a3-33048c768b6b</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tabset</componentName>
+                <identifier>flexipage_tabset3</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Dashboard</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>tabs</name>
+                    <value>Facet-31cac7bd-9116-4228-8cf4-234f404e477e</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tabset</componentName>
+                <identifier>flexipage_tabset2</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>activitiesCompleted1</name>
+                    <value>90</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesCompleted2</name>
+                    <value>98</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesCompleted3</name>
+                    <value>98</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesCompleted4</name>
+                    <value>23</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesDescription1</name>
+                    <value>tasks completed</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesDescription2</name>
+                    <value>calls logged</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesDescription3</name>
+                    <value>emails sent</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activitiesDescription4</name>
+                    <value>events logged</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activityIcon1</name>
+                    <value>standard:task</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activityIcon2</name>
+                    <value>standard:log_a_call</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activityIcon3</name>
+                    <value>standard:email</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>activityIcon4</name>
+                    <value>standard:event</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiSign1</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiSign2</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiTitle1</name>
+                    <value>Deals Won</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiTitle2</name>
+                    <value>Deals Lost</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiValue1</name>
+                    <value>10</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>kpiValue2</name>
+                    <value>7</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>personalBest1</name>
+                    <value>78</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>personalBest2</name>
+                    <value>120</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>personalBest3</name>
+                    <value>150</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>personalBest4</name>
+                    <value>35</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>progressBarColor1</name>
+                    <value>#4bca81</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>progressBarColor2</name>
+                    <value>#48C3CC</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>progressBarColor3</name>
+                    <value>#95AEC5</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>progressBarColor4</name>
+                    <value>#EB7092</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Activity Scorecard - Last 30 Days</value>
+                </componentInstanceProperties>
+                <componentName>ActivityScorecardComponent</componentName>
+                <identifier>c_ActivityScorecardComponent1</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!$User.External_ID__c}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>User.007</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>page</name>
+                    <value>634f7c00-1622-4f5e-bf3c-7e45b58bcff1</value>
+                </componentInstanceProperties>
+                <componentName>qbranch:Q_Demo_Tracker</componentName>
+                <identifier>qbranch_Q_Demo_Tracker</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>emptyStateImage</name>
+                    <value>/projRes/ui-home-private/emptyStates/noAssistant.svg</value>
+                </componentInstanceProperties>
+                <componentName>home:assistant</componentName>
+                <identifier>home_assistant</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>runtime_approval_process:pendingApprovalCard</componentName>
+                <identifier>runtime_approval_process_pendingApprovalCard</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>home:recentRecordContainer</componentName>
+                <identifier>home_recentRecordContainer</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Sidebar</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>enableInlineEdit</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>entityName</name>
+                    <value>Lead</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>filterName</name>
+                    <value>Marketing_Qualified_Leads_Lead</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideActionBar</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideSearchBar</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>pageSize</name>
+                    <value>3</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:filterListCard</componentName>
+                <identifier>flexipage_filterListCard1</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
                     <name>enableInlineEdit</name>
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>entityName</name>
-                    <value>Account</value>
+                    <value>Contact</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>filterName</name>
-                    <value>AllCompanyAccountsNeedingOutreach</value>
+                    <value>Contacts_with_Recent_Marketing_Interest</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>hideActionBar</name>
@@ -29,50 +257,6 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:filterListCard</componentName>
                 <identifier>flexipage_filterListCard2</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!$User.LanguageLocaleKey}</leftValue>
-                        <operator>EQUAL</operator>
-                        <rightValue>en_US</rightValue>
-                    </criteria>
-                </visibilityRule>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>enableInlineEdit</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>entityName</name>
-                    <value>Account</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>filterName</name>
-                    <value>Accounts_Needing_Outreach</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>hideActionBar</name>
-                    <value>true</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>hideSearchBar</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>pageSize</name>
-                    <value>3</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:filterListCard</componentName>
-                <identifier>flexipage_filterListCard</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!$User.LanguageLocaleKey}</leftValue>
-                        <operator>NE</operator>
-                        <rightValue>en_US</rightValue>
-                    </criteria>
-                </visibilityRule>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -338,6 +522,24 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>dashboardName</name>
+                    <value>Program_Dashboard_sfdcSESv612</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideOnError</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentName>desktopDashboards:embeddedDashboard</componentName>
+                <identifier>desktopDashboards_embeddedDashboard</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-502c23cb-17f6-4ee9-8ddd-9b0e3a0d9cb5</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
                     <name>active</name>
                     <value>true</value>
                 </componentInstanceProperties>
@@ -365,6 +567,20 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
                 <identifier>flexipage_tab2</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-502c23cb-17f6-4ee9-8ddd-9b0e3a0d9cb5</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Partner Enablement</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tab</componentName>
+                <identifier>flexipage_tab</identifier>
             </componentInstance>
         </itemInstances>
         <name>Facet-30a934aa-02cb-46e6-bbda-c330d4a7bbc3</name>
@@ -546,77 +762,6 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Tabs</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>tabs</name>
-                    <value>Facet-30a934aa-02cb-46e6-bbda-c330d4a7bbc3</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tabset</componentName>
-                <identifier>flexipage_tabset1</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!$User.External_ID__c}</leftValue>
-                        <operator>NE</operator>
-                        <rightValue>User.007</rightValue>
-                    </criteria>
-                </visibilityRule>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Tabs</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>tabs</name>
-                    <value>Facet-a9a00ca9-9c02-4762-a2a3-33048c768b6b</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tabset</componentName>
-                <identifier>flexipage_tabset3</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Dashboard</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Section_1</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Section_2</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Content</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentName>runtime_sales_activities:todayTaskContainer</componentName>
-                <identifier>runtime_sales_activities_todayTaskContainer</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Facet-08360ea6-db0a-45d9-89c1-22c91667166f</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentName>home:eventContainer</componentName>
-                <identifier>home_eventContainer</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Facet-0d509258-5ba9-4cdf-a939-a5fdab980e3d</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
                     <name>actionDestination</name>
                     <value>Contact(s) successfully added to campaign</value>
                 </componentInstanceProperties>
@@ -712,51 +857,33 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Tabs</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>tabs</name>
-                    <value>Facet-31cac7bd-9116-4228-8cf4-234f404e477e</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tabset</componentName>
-                <identifier>flexipage_tabset2</identifier>
+                <componentName>runtime_sales_activities:todayTaskContainer</componentName>
+                <identifier>runtime_sales_activities_todayTaskContainer</identifier>
             </componentInstance>
         </itemInstances>
+        <name>Facet-08360ea6-db0a-45d9-89c1-22c91667166f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentInstanceProperties>
-                    <name>headerLabel</name>
-                    <value>Activity Scorecard - Last 30 Days</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>lookbackDays</name>
-                    <value>90</value>
-                </componentInstanceProperties>
-                <componentName>activityScorecard</componentName>
-                <identifier>c_activityScorecard</identifier>
+                <componentName>home:eventContainer</componentName>
+                <identifier>home_eventContainer</identifier>
             </componentInstance>
         </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>home:assistant</componentName>
-                <identifier>home_assistant</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>runtime_approval_process:pendingApprovalCard</componentName>
-                <identifier>runtime_approval_process_pendingApprovalCard</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>home:recentRecordContainer</componentName>
-                <identifier>home_recentRecordContainer</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Sidebar</name>
+        <name>Facet-0d509258-5ba9-4cdf-a939-a5fdab980e3d</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Section_1</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Section_2</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <name>Content</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>Home - Discrete MFG - Sales</masterLabel>

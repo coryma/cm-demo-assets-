@@ -15,8 +15,6 @@
     </types>
     <types>
         <members>MFG_HOME_DISCRETE_MCO</members>
-        <members>MFG_Lead_Record_Page1</members>
-        <members>SDO_Sales_Lead_Default</members>
         <name>FlexiPage</name>
     </types>
     <types>

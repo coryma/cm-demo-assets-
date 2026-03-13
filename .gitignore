@@ -11,6 +11,7 @@ coverage/
 test-results/
 
 # Temp and retrieve/deploy output
+.tmp/
 .tmp-*/
 tmp/
 mdapi/
