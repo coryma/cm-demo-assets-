@@ -1,0 +1,31 @@
+.DS_Store
+
+# Salesforce local state
+.sf/
+.sfdx/
+
+# Dependencies and test output
+node_modules/
+coverage/
+.nyc_output/
+test-results/
+
+# Temp and retrieve/deploy output
+.tmp-*/
+tmp/
+mdapi/
+*.log
+*.zip
+*.csv
+
+# Auth and secrets
+authFile
+authFile.json
+authUrl.txt
+*.key
+*.crt
+*.pem
+
+# Editor / OS
+.idea/
+.vscode/

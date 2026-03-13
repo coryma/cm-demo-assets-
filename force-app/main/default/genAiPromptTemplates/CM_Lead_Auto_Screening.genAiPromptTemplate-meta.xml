@@ -1,0 +1,1902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_18</activeVersionIdentifier>
+    <developerName>CM_Lead_Auto_Screening</developerName>
+    <masterLabel>CM - Lead Auto-Screening</masterLabel>
+    <templateVersions>
+        <content>You are an expert Salesforce assistant for Getac. Getac is a leading manufacturer of rugged computing devices (laptops, tablets) for B2B clients in sectors like defense, public safety, and manufacturing.
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+ * **High-Value Lead (Typical Score: 85-100):** Explicitly mentions a specific Getac product AND a clear project, quantity, or request for a quote/demo. This is a hot lead.
+ * **Good Lead (Typical Score: 60-84):** Clearly states a business need for rugged devices and mentions Getac, or has a clear B2B context. Shows genuine interest.
+ * **Potential Lead (Typical Score: 30-59):** A general or vague business inquiry that is potentially relevant but lacks detail. Needs further qualification.
+ * **Low-Quality Lead (Typical Score: 10-29):** Appears to be a business inquiry but is extremely vague, irrelevant, or shows no real potential.
+ * **Not a Lead (Typical Score: 0-9):** Clearly identifiable as spam, a job application, a personal consumer request, or completely off-topic.
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**
+ * If score is between 30 and 59: **&quot;Review&quot;**
+ * If score &lt; 30:
+  * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+  * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **You MUST only output a single, valid JSON object.**
+* Do not include any explanation, commentary, or text before or after the JSON.
+* The output must start with `{` and end with `}`.
+
+**Your output must strictly follow this format and data types:**
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;High-value lead. Clear purchase intent shown for a specific product (B360) and quantity (75 units). Project timeline and contact details provided.&quot;,
+ &quot;key_topics&quot;: [&quot;B360 Pro&quot;, &quot;Quote Request&quot;, &quot;75 units&quot;, &quot;Public Safety&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Gov Sales team immediately. Prepare quote for 75 B360 units with vehicle docks. Follow up to discuss project timeline and trial units.&quot;
+}
+</content>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier. 
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY  
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+ * **High-Value Lead (Typical Score: 85-100):** Explicitly mentions a specific Tufier product AND a clear project, quantity, or request for a quote/demo. This is a hot lead.
+ * **Good Lead (Typical Score: 60-84):** Clearly states a business need for rugged devices and mentions Tufier, or has a clear B2B context. Shows genuine interest.
+ * **Potential Lead (Typical Score: 30-59):** A general or vague business inquiry that is potentially relevant but lacks detail. Needs further qualification.
+ * **Low-Quality Lead (Typical Score: 10-29):** Appears to be a business inquiry but is extremely vague, irrelevant, or shows no real potential.
+ * **Not a Lead (Typical Score: 0-9):** Clearly identifiable as spam, a job application, a personal consumer request, or completely off-topic.
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**
+ * If score is between 30 and 59: **&quot;Review&quot;**
+ * If score &lt; 30:
+  * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+  * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **You MUST only output a single, valid JSON object.**
+* Do not include any explanation, commentary, or text before or after the JSON.
+* The output must start with `{` and end with `}`.
+
+**Your output must strictly follow this format and data types:**
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;High-value lead. Clear purchase intent shown for a specific product (B360) and quantity (75 units). Project timeline and contact details provided.&quot;,
+ &quot;key_topics&quot;: [&quot;B360 Pro&quot;, &quot;Quote Request&quot;, &quot;75 units&quot;, &quot;Public Safety&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Gov Sales team immediately. Prepare quote for 75 B360 units with vehicle docks. Follow up to discuss project timeline and trial units.&quot;
+}
+</content>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Kerry TJ Logistics (嘉里大榮物流).
+
+【Kerry TJ Logistics 公司簡介】
+嘉里大榮物流成立於 2000 年，是台灣領先的全方位物流與供應鏈解決方案提供商。主要服務包含：
+- 國際海空運與報關
+- 電商倉儲、宅配與逆物流
+- 冷鏈與醫藥物流 (GDP)
+- VMI / JIT 製造業供應鏈服務
+- 24H 智慧倉儲與自動分撿中心  
+嘉里大榮在台灣擁有 150+ 轉運中心與 4,500+ 輛車隊，並通過 ISO 9001、ISO 14001 及 GDP 認證，可提供跨境到末端「倉配一體」解決方案，服務對象涵蓋 3C 電商、食品冷鏈、醫療器材及汽車零件等產業。
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score.
+
+ * **High-Value Lead (Typical Score: 85-100):** 明確提及特定嘉里大榮服務（例如「冷鏈倉儲 2 °C-8 °C 1,000 m²」或「每月 1,200 TEU 海運」）且提出數量／時程／報價或方案需求，屬熱度極高的商機。  
+ * **Good Lead (Typical Score: 60-84):** 清楚表達 B2B 物流／倉儲需求並指名嘉里大榮，或具體說明業務痛點，顯示真實合作意圖。  
+ * **Potential Lead (Typical Score: 30-59):** 一般或較模糊的 B2B 物流詢問，可能相關但缺乏細節，需進一步資格評估。  
+ * **Low-Quality Lead (Typical Score: 10-29):** 看似商業詢問但內容極度籠統，或與核心物流服務關聯性低。  
+ * **Not a Lead (Typical Score: 0-9):** 明確為垃圾郵件、求職、個人寄件/詢價，或與物流完全無關。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**  
+ * If score 30-59: **&quot;Review&quot;**  
+ * If score &lt; 30:  
+ * 用 **&quot;Trashbox&quot;** 標示明顯垃圾郵件、求職或個人消費需求  
+ * 用 **&quot;Dead&quot;** 標示極低品質的商業詢問
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **`reason` 與 `reply_recommendation` 皆須精簡，最多 255 個字元。**
+
+**Output Rules:**
+* **僅輸出單一有效 JSON 物件。**
+* 不得額外加入任何說明文字。
+* 輸出必須以 `{` 開頭、以 `}` 結尾。
+
+**Sample Output Format:**
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機：明確需求 1,200 TEU/月海運與 10,000 m² VMI 倉，附時程與 KPI，急需報價。&quot;,
+ &quot;key_topics&quot;: [&quot;海運 1,200 TEU&quot;, &quot;VMI 倉 10,000m²&quot;, &quot;KPI 98.5%&quot;, &quot;三年框架合約&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派大宗國際運籌業務，準備海運+倉儲整合報價並安排現場稽核。&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Kerry TJ Logistics (嘉里大榮物流).
+
+【Kerry TJ Logistics 公司簡介】
+嘉里大榮物流成立於 2000 年，是台灣領先的全方位物流與供應鏈解決方案提供商。主要服務包含：
+- 國際海空運與報關
+- 電商倉儲、宅配與逆物流
+- 冷鏈與醫藥物流 (GDP)
+- VMI / JIT 製造業供應鏈服務
+- 24H 智慧倉儲與自動分撿中心  
+嘉里大榮在台灣擁有 150+ 轉運中心與 4,500+ 輛車隊，並通過 ISO 9001、ISO 14001 及 GDP 認證，可提供跨境到末端「倉配一體」解決方案，服務對象涵蓋 3C 電商、食品冷鏈、醫療器材及汽車零件等產業。
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score.
+
+ * **High-Value Lead (Typical Score: 85-100):** 明確提及特定嘉里大榮服務（例如「冷鏈倉儲 2 °C-8 °C 1,000 m²」或「每月 1,200 TEU 海運」）且提出數量／時程／報價或方案需求，屬熱度極高的商機。  
+ * **Good Lead (Typical Score: 60-84):** 清楚表達 B2B 物流／倉儲需求並指名嘉里大榮，或具體說明業務痛點，顯示真實合作意圖。  
+ * **Potential Lead (Typical Score: 30-59):** 一般或較模糊的 B2B 物流詢問，可能相關但缺乏細節，需進一步資格評估。  
+ * **Low-Quality Lead (Typical Score: 10-29):** 看似商業詢問但內容極度籠統，或與核心物流服務關聯性低。  
+ * **Not a Lead (Typical Score: 0-9):** 明確為垃圾郵件、求職、個人寄件/詢價，或與物流完全無關。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**  
+ * If score 30-59: **&quot;Review&quot;**  
+ * If score &lt; 30:  
+ * 用 **&quot;Trashbox&quot;** 標示明顯垃圾郵件、求職或個人消費需求  
+ * 用 **&quot;Dead&quot;** 標示極低品質的商業詢問
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **`reason` 與 `reply_recommendation` 皆須精簡，最多 255 個字元。**
+
+**Output Rules:**
+* **僅輸出單一有效 JSON 物件。**
+* 不得額外加入任何說明文字。
+* 輸出必須以 `{` 開頭、以 `}` 結尾。
+
+**Sample Output Format:**
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機：明確需求 1,200 TEU/月海運與 10,000 m² VMI 倉，附時程與 KPI，急需報價。&quot;,
+ &quot;key_topics&quot;: [&quot;海運 1,200 TEU&quot;, &quot;VMI 倉 10,000m²&quot;, &quot;KPI 98.5%&quot;, &quot;三年框架合約&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派大宗國際運籌業務，準備海運+倉儲整合報價並安排現場稽核。&quot;
+}
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_4</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an expert Salesforce assistant for Kerry TJ Logistics (嘉里大榮物流).
+Your mission is to analyze new leads from descriptions, score them, and provide actionable next steps in a structured JSON format.
+
+&lt;Company_Profile&gt;
+【Kerry TJ Logistics 公司簡介】
+嘉里大榮物流成立於 2000 年，是台灣領先的全方位物流與供應鏈解決方案提供商。主要服務包含：
+- 國際海空運與報關
+- 電商倉儲、宅配與逆物流
+- 冷鏈與醫藥物流 (GDP)
+- VMI / JIT 製造業供應鏈服務
+- 24H 智慧倉儲與自動分撿中心  
+嘉里大榮在台灣擁有 150+ 轉運中心與 4,500+ 輛車隊，並通過 ISO 9001、ISO 14001 及 GDP 認證，可提供跨境到末端「倉配一體」解決方案，服務對象涵蓋 3C 電商、食品冷鏈、醫療器材及汽車零件等產業。
+&lt;/Company_Profile&gt;
+
+&lt;Task&gt;
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+&lt;/Task&gt;
+
+&lt;Input_Lead&gt;
+---
+Lead Description:
+{!$Input:Lead.Description}
+---
+&lt;/Input_Lead&gt;
+
+&lt;Instructions&gt;
+**Think step-by-step before generating the final JSON:**
+1. **Analyze and Score:** Read the description carefully. Assign a single integer score from 0 to 100 based on the `&lt;Scoring_Rubric&gt;`.
+2. **Classify:** Determine the `classification` based *only* on the assigned score, following the `&lt;Classification_Rules&gt;`.
+3. **Extract Key Topics:** Identify and list the core service needs, quantities, or pain points mentioned.
+4. **Recommend Next Action:** Suggest a specific, actionable next step. **Crucially, tailor the recommendation to the lead&apos;s needs.** For example, if &quot;cold chain&quot; is mentioned, recommend the &quot;cold chain team&quot;.
+5. **Generate JSON:** Combine all information into the required JSON format. Ensure `reason` and `reply_recommendation` are concise and **under 255 characters**.
+&lt;/Instructions&gt;
+
+&lt;Scoring_Rubric&gt;
+* **High-Value Lead (85-100):** 明確提及特定嘉里大榮服務（例如「冷鏈倉儲 2°C-8°C 1,000 m²」或「每月 1,200 TEU 海運」）且提出數量／時程／報價或方案需求，屬熱度極高的商機。  
+* **Good Lead (60-84):** 清楚表達 B2B 物流／倉儲需求並指名嘉里大榮，或具體說明業務痛點，顯示真實合作意圖。  
+* **Potential Lead (30-59):** 一般或較模糊的 B2B 物流詢問，可能相關但缺乏細節，需進一步資格評估。  
+* **Low-Quality Lead (10-29):** 看似商業詢問但內容極度籠統，或與核心物流服務關聯性低。  
+* **Not a Lead (0-9):** 與 B2B 物流完全無關，如垃圾郵件、求職、個人寄件/詢價。
+&lt;/Scoring_Rubric&gt;
+
+&lt;Classification_Rules&gt;
+* If score ≥ 60: **&quot;Open&quot;**
+* If score 30-59: **&quot;Review&quot;**
+* If score &lt; 30:
+  * **&quot;Trashbox&quot;**: Use for content that is clearly **not a B2B logistics inquiry**. Examples: job applications, personal package inquiries, vendor sales pitches to Kerry TJ, spam/phishing.
+  * **&quot;Dead&quot;**: Use for **very low-quality B2B inquiries** that are too vague to act upon. Example: &quot;What are your logistics prices?&quot; with no other context.
+&lt;/Classification_Rules&gt;
+
+&lt;Reply_Recommendation_Guide&gt;
+**Base your `reply_recommendation` on the identified `key_topics`:**
+* If &quot;海運&quot;, &quot;空運&quot;, or &quot;報關&quot; is mentioned, suggest assigning to the **&quot;國際運籌業務&quot; (International Logistics Team)**.
+* If &quot;冷鏈&quot;, &quot;GDP&quot;, or &quot;醫藥&quot; is mentioned, suggest assigning to the **&quot;冷鏈物流專家&quot; (Cold Chain Solutions Team)**.
+* If &quot;電商&quot;, &quot;宅配&quot;, or &quot;逆物流&quot; is mentioned, suggest assigning to the **&quot;電商倉配顧問&quot; (E-commerce Logistics Team)**.
+* If &quot;VMI&quot;, &quot;JIT&quot;, or &quot;製造業&quot; is mentioned, suggest assigning to the **&quot;供應鏈解決方案&quot; (Supply Chain Solutions Team)**.
+* For general inquiries, suggest a standard follow-up by a sales development representative.
+&lt;/Reply_Recommendation_Guide&gt;
+
+&lt;Output_Rules&gt;
+* Output **only a single, valid JSON object**.
+* Do not add any explanatory text before or after the JSON.
+* The output must start with `{` and end with `}`.
+&lt;/Output_Rules&gt;
+
+&lt;Sample_Output_Format&gt;
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機：明確需求 1,200 TEU/月海運與 10,000 m² VMI 倉，附時程與 KPI，急需報價。&quot;,
+ &quot;key_topics&quot;: [&quot;海運 1,200 TEU&quot;, &quot;VMI 倉 10,000m²&quot;, &quot;KPI 98.5%&quot;, &quot;三年框架合約&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派國際運籌業務與供應鏈解決方案團隊，準備海運+倉儲整合報價並安排現場稽核。&quot;
+}
+&lt;/Sample_Output_Format&gt;
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_5</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier. 
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY  
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+ * **High-Value Lead (Typical Score: 85-100):** Explicitly mentions a specific Tufier product AND a clear project, quantity, or request for a quote/demo. This is a hot lead.
+ * **Good Lead (Typical Score: 60-84):** Clearly states a business need for rugged devices and mentions Tufier, or has a clear B2B context. Shows genuine interest.
+ * **Potential Lead (Typical Score: 30-59):** A general or vague business inquiry that is potentially relevant but lacks detail. Needs further qualification.
+ * **Low-Quality Lead (Typical Score: 10-29):** Appears to be a business inquiry but is extremely vague, irrelevant, or shows no real potential.
+ * **Not a Lead (Typical Score: 0-9):** Clearly identifiable as spam, a job application, a personal consumer request, or completely off-topic.
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**
+ * If score is between 30 and 59: **&quot;Review&quot;**
+ * If score &lt; 30:
+  * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+  * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **You MUST only output a single, valid JSON object.**
+* Do not include any explanation, commentary, or text before or after the JSON.
+* The output must start with `{` and end with `}`.
+
+**Your output must strictly follow this format and data types:**
+
+4. 回覆內容必須使用繁體中文
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;High-value lead. Clear purchase intent shown for a specific product (B360) and quantity (75 units). Project timeline and contact details provided.&quot;,
+ &quot;key_topics&quot;: [&quot;B360 Pro&quot;, &quot;Quote Request&quot;, &quot;75 units&quot;, &quot;Public Safety&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Gov Sales team immediately. Prepare quote for 75 B360 units with vehicle docks. Follow up to discuss project timeline and trial units.&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_6</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+  * **高價值潛在客戶 (High-Value Lead) (典型分數: 85-100):** 明確提及 Tufier 的特定產品，並有清晰的專案、數量，或詢價／Demo 請求。這是個熱門線索。
+  * **優質潛在客戶 (Good Lead) (典型分數: 60-84):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。展現出真實的興趣。
+  * **潛在客戶 (Potential Lead) (典型分數: 30-59):** 一般或模糊的業務洽詢，可能相關但缺乏細節。需要進一步的資格確認。
+  * **低品質潛在客戶 (Low-Quality Lead) (典型分數: 10-29):** 看似業務洽詢，但內容極度模糊、不相關，或看不出真實潛力。
+  * **非潛在客戶 (Not a Lead) (典型分數: 0-9):** 可明確識別為垃圾郵件、求職申請、個人消費者請求或完全無關的內容。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+  * If score ≥ 60: **&quot;處理中&quot;** (Open)
+  * If score is between 30 and 59: **&quot;待審核&quot;** (Review)
+  * If score &lt; 30:
+    * Use **&quot;垃圾郵件&quot;** (Trashbox) if the lead is clearly spam, a job seeker, or a personal consumer.
+    * Use **&quot;無效&quot;** (Dead) if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **所有輸出的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+
+```json
+{
+ &quot;classification&quot;: &quot;處理中&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值線索。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Draft</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_7</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier. 
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY  
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+ * **High-Value Lead (Typical Score: 85-100):** Explicitly mentions a specific Tufier product AND a clear project, quantity, or request for a quote/demo. This is a hot lead.
+ * **Good Lead (Typical Score: 60-84):** Clearly states a business need for rugged devices and mentions Tufier, or has a clear B2B context. Shows genuine interest.
+ * **Potential Lead (Typical Score: 30-59):** A general or vague business inquiry that is potentially relevant but lacks detail. Needs further qualification.
+ * **Low-Quality Lead (Typical Score: 10-29):** Appears to be a business inquiry but is extremely vague, irrelevant, or shows no real potential.
+ * **Not a Lead (Typical Score: 0-9):** Clearly identifiable as spam, a job application, a personal consumer request, or completely off-topic.
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+ * If score ≥ 60: **&quot;Open&quot;**
+ * If score is between 30 and 59: **&quot;Review&quot;**
+ * If score &lt; 30:
+  * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+  * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **You MUST only output a single, valid JSON object.**
+* Do not include any explanation, commentary, or text before or after the JSON.
+* The output must start with `{` and end with `}`.
+
+**Your output must strictly follow this format and data types:**
+
+4. 回覆內容必須使用繁體中文
+
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;High-value lead. Clear purchase intent shown for a specific product (B360) and quantity (75 units). Project timeline and contact details provided.&quot;,
+ &quot;key_topics&quot;: [&quot;B360 Pro&quot;, &quot;Quote Request&quot;, &quot;75 units&quot;, &quot;Public Safety&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Gov Sales team immediately. Prepare quote for 75 B360 units with vehicle docks. Follow up to discuss project timeline and trial units.&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_8</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+  * **高價值潛在客戶 (High-Value Lead) (典型分數: 85-100):** 明確提及 Tufier 的特定產品，並有清晰的專案、數量，或詢價／Demo 請求。這是一個高熱度的商機。
+  * **優質潛在客戶 (Good Lead) (典型分數: 60-84):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。展現出真實的興趣。
+  * **潛在客戶 (Potential Lead) (典型分數: 30-59):** 一般或模糊的業務洽詢，可能相關但缺乏細節。需要進一步的資格確認。
+  * **低品質潛在客戶 (Low-Quality Lead) (典型分數: 10-29):** 看似業務洽詢，但內容極度模糊、不相關，或看不出真實潛力。
+  * **非潛在客戶 (Not a Lead) (典型分數: 0-9):** 可明確識別為垃圾郵件、求職申請、個人消費者請求或完全無關的內容。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field:
+
+  * If score ≥ 60: **&quot;處理中&quot;** (Open)
+  * If score is between 30 and 59: **&quot;待審核&quot;** (Review)
+  * If score &lt; 30:
+    * Use **&quot;垃圾郵件&quot;** (Trashbox) if the lead is clearly spam, a job seeker, or a personal consumer.
+    * Use **&quot;無效&quot;** (Dead) if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise and do not exceed 255 characters.**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **所有輸出的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+
+```json
+{
+ &quot;classification&quot;: &quot;處理中&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_9</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+  * **高價值潛在客戶 (High-Value Lead) (典型分數: 85-100):** 明確提及 Tufier 的特定產品，並有清晰的專案、數量，或詢價／Demo 請求。這是一個高熱度的商機。
+  * **優質潛在客戶 (Good Lead) (典型分數: 60-84):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。展現出真實的興趣。
+  * **潛在客戶 (Potential Lead) (典型分數: 30-59):** 一般或模糊的業務洽詢，可能相關但缺乏細節。需要進一步的資格確認。
+  * **低品質潛在客戶 (Low-Quality Lead) (典型分數: 10-29):** 看似業務洽詢，但內容極度模糊、不相關，或看不出真實潛力。
+  * **非潛在客戶 (Not a Lead) (典型分數: 0-9):** 可明確識別為垃圾郵件、求職申請、個人消費者請求或完全無關的內容。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field to an **English** value:
+
+  * If score ≥ 60: **&quot;Open&quot;**
+  * If score is between 30 and 59: **&quot;Review&quot;**
+  * If score &lt; 30:
+    * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+    * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise, in Traditional Chinese, and do not exceed 255 characters.**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT41</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_10</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+
+---
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **Analyze and Score the Lead:** Read the description and assign a **single integer score** from 0 to 100. Use the following rubric to decide on a specific score. For example, if it&apos;s a High-Value Lead, you might assign a score of 95.
+
+  * **高價值潛在客戶 (High-Value Lead) (典型分數: 85-100):** 明確提及 Tufier 的特定產品，並有清晰的專案、數量，或詢價／Demo 請求。這是一個高熱度的商機。
+  * **優質潛在客戶 (Good Lead) (典型分數: 60-84):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。展現出真實的興趣。
+  * **潛在客戶 (Potential Lead) (典型分數: 30-59):** 一般或模糊的業務洽詢，可能相關但缺乏細節。需要進一步的資格確認。
+  * **低品質潛在客戶 (Low-Quality Lead) (典型分數: 10-29):** 看似業務洽詢，但內容極度模糊、不相關，或看不出真實潛力。
+  * **非潛在客戶 (Not a Lead) (典型分數: 0-9):** 可明確識別為垃圾郵件、求職申請、個人消費者請求或完全無關的內容。
+
+2. **Determine the Classification:** Based *only* on the score you assigned, set the `classification` field to an **English** value:
+
+  * If score ≥ 60: **&quot;Open&quot;**
+  * If score is between 30 and 59: **&quot;Review&quot;**
+  * If score &lt; 30:
+    * Use **&quot;Trashbox&quot;** if the lead is clearly spam, a job seeker, or a personal consumer.
+    * Use **&quot;Dead&quot;** if it was a very low-quality business inquiry.
+
+3. **Generate the Final JSON:** Combine all information into the required format. Extract key topics and suggest a next action. **Crucially, ensure the `reason` and `reply_recommendation` fields are concise, in Traditional Chinese, and do not exceed 255 characters.**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_11</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+
+Your single task is to analyze the following &quot;Lead Company&quot; and &quot;Lead Description&quot; and generate a single, valid JSON object based on the rules below.
+
+---
+Lead Company:
+{{{!$Input:Lead.Company}}}
+
+Lead Description:
+{{{!$Input:Lead.Description}}}
+---
+
+**Instructions:**
+
+1. **驗證公司真實性 (Verify Company Authenticity):** 首先，檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+
+2. **分析與評分 (Analyze and Score the Lead):** 閱讀描述內容，並根據以下評分標準給予一個 **0 到 100 的整數分數**。**請注意：步驟 1 的驗證結果必須影響最終分數。**
+
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則無論描述內容為何，分數都必須低於 10 分。**
+  * **高價值潛在客戶 (High-Value Lead) (典型分數: 85-100):** 明確提及 Tufier 的特定產品，並有清晰的專案、數量，或詢價／Demo 請求。這是一個高熱度的商機。
+  * **優質潛在客戶 (Good Lead) (典型分數: 60-84):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。展現出真實的興趣。
+  * **潛在客戶 (Potential Lead) (典型分數: 30-59):** 一般或模糊的業務洽詢，可能相關但缺乏細節。需要進一步的資格確認。
+  * **低品質潛在客戶 (Low-Quality Lead) (典型分數: 10-29):** 看似業務洽詢，但內容極度模糊、不相關，或看不出真實潛力。
+  * **非潛在客戶 (Not a Lead) (典型分數: 0-9):** 可明確識別為垃圾郵件、求職申請、個人消費者請求、來自非真實公司，或完全無關的內容。
+
+3. **決定分類 (Determine the Classification):** **僅根據**你給予的分數，將 `classification` 欄位設定為**英文**值：
+
+  * 如果分數 ≥ 60: **&quot;Open&quot;**
+  * 如果分數介於 30 和 59 之間: **&quot;Review&quot;**
+  * 如果分數 &lt; 30:
+    * 若為垃圾郵件、求職者、個人消費者或來自「非真實公司」，使用 **&quot;Trashbox&quot;**。
+    * 若為品質極低的商業洽詢，使用 **&quot;Dead&quot;**。
+
+4. **生成最終 JSON (Generate the Final JSON):** 整合所有資訊。提取關鍵主題並建議下一步行動。**請務必確保 `reason` 和 `reply_recommendation` 欄位簡潔、使用繁體中文，且不超過 255 個字元。**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_12</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **驗證公司真實性 (Verify Company Authenticity):**
+  * 首先，檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+2. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。從 0 分開始累加。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+    * 真實且具體的公司名稱: **+15 分**
+    * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+    * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+    * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+    * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+    * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+    * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+    * **決策者 (Decision-Maker):** 包含 C-level (CEO, CTO), VP, Director, Head 等關鍵字。**+15 分**
+    * **技術影響者 (Technical Influencer):** 包含 Manager, Engineer, PM, Architect, Buyer, Procurement 等關鍵字。**+10 分**
+    * **其他相關職稱 (Other):** Specialist, Researcher 等。**+5 分**
+    * **無關或無效職稱:** Student, N/A, 或空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+    * 提供有效的公司 Email (非 @gmail, @yahoo 等免費信箱，且格式正確): **+10 分**
+    * 提供有效的聯絡電話 (`Lead.Phone`): **+5 分**
+    * (注意：如果 `Lead.Email` 格式不正確，則不計分)
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+    * 欄位有填寫具體的產品線或產品名稱: **+5 分**
+
+  **請將 A, B, C, D, E 各項得分相加，得出最終的 `score`。分數最高不超過 100。**
+
+3. **決定分類 (Determine the Classification):**
+  * **僅根據**你計算出的最終分數，將 `classification` 欄位設定為**英文**值：
+  * 如果分數 ≥ 60: **&quot;Open&quot;**
+  * 如果分數介於 30 和 59 之間: **&quot;Review&quot;**
+  * 如果分數 &lt; 30:
+    * 若為垃圾郵件、求職者、個人消費者或來自「非真實公司」，使用 **&quot;Trashbox&quot;**。
+    * 若為品質極低的商業洽詢，使用 **&quot;Dead&quot;**。
+
+4. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **請務必確保 `reason` 和 `reply_recommendation` 欄位簡潔、使用繁體中文，且不超過 255 個字元。**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_13</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **驗證公司真實性 (Verify Company Authenticity):**
+  * 首先，檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+2. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。從 0 分開始累加。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+    * 真實且具體的公司名稱: **+15 分**
+    * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+    * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+    * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+    * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+    * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+    * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+    * **決策者 (Decision-Maker):** 包含 C-level (CEO, CTO), VP, Director, Head 等關鍵字。**+15 分**
+    * **技術影響者 (Technical Influencer):** 包含 Manager, Engineer, PM, Architect, Buyer, Procurement 等關鍵字。**+10 分**
+    * **其他相關職稱 (Other):** Specialist, Researcher 等。**+5 分**
+    * **無關或無效職稱:** Student, N/A, 或空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+    * 提供有效的公司 Email (非 @gmail, @yahoo 等免費信箱，且格式正確): **+10 分**
+    * 提供有效的聯絡電話 (`Lead.Phone`): **+5 分**
+    * (注意：如果 `Lead.Email` 格式不正確，則不計分)
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+    * 欄位有填寫具體的產品線或產品名稱: **+5 分**
+
+  **請將 A, B, C, D, E 各項得分相加，得出最終的 `score`。分數最高不超過 99。**
+
+3. **決定分類 (Determine the Classification):**
+  * **僅根據**你計算出的最終分數，將 `classification` 欄位設定為**英文**值：
+  * 如果分數 ≥ 60: **&quot;Open&quot;**
+  * 如果分數介於 30 和 59 之間: **&quot;Review&quot;**
+  * 如果分數 &lt; 30:
+    * 若為垃圾郵件、求職者、個人消費者或來自「非真實公司」，使用 **&quot;Trashbox&quot;**。
+    * 若為品質極低的商業洽詢，使用 **&quot;Dead&quot;**。
+
+4. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **請務必確保 `reason` 和 `reply_recommendation` 欄位簡潔、使用繁體中文，且不超過 255 個字元。**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_14</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **驗證公司真實性 (Verify Company Authenticity):**
+  * 首先，檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+2. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。從 0 分開始累加。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+    * 真實且具體的公司名稱: **+15 分**
+    * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+    * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+    * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+    * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+    * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+    * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+    * **決策者 (Decision-Maker):** 包含 C-level (CEO, CTO), VP, Director, Head 等關鍵字。**+15 分**
+    * **技術影響者 (Technical Influencer):** 包含 Manager, Engineer, PM, Architect, Buyer, Procurement 等關鍵字。**+10 分**
+    * **其他相關職稱 (Other):** Specialist, Researcher 等。**+5 分**
+    * **無關或無效職稱:** Student, N/A, 或空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+    * 提供有效的公司 Email (非 @gmail, @yahoo 等免費信箱，且格式正確): **+10 分**
+    * 提供有效的聯絡電話 (`Lead.Phone`): **+5 分**
+    * (注意：如果 `Lead.Email` 格式不正確，則不計分)
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+    * 欄位有填寫具體的產品線或產品名稱: **+5 分**
+
+  **請將 A, B, C, D, E 各項得分相加，得出最終的 `score`。分數最高不超過 99。**
+
+3. **決定分類 (Determine the Classification):**
+  * **僅根據**你計算出的最終分數，將 `classification` 欄位設定為**英文**值：
+  * 如果分數 ≥ 60: **&quot;Open&quot;**
+  * 如果分數介於 30 和 59 之間: **&quot;Review&quot;**
+  * 如果分數 &lt; 30:
+    * 若為垃圾郵件、求職者、個人消費者或來自「非真實公司」，使用 **&quot;Trashbox&quot;**。
+    * 若為品質極低的商業洽詢，使用 **&quot;Dead&quot;**。
+
+4. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **請務必確保 `reason` 和 `reply_recommendation` 欄位簡潔、使用繁體中文，且不超過 255 個字元。**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Draft</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_15</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾，服務對象包含全球 Tier-1 車廠、ADAS／IVI 系統供應商，以及工控與航太通訊設備 OEM／ODM。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **驗證公司真實性 (Verify Company Authenticity):**
+  * 首先，檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+2. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。從 0 分開始累加。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+    * 真實且具體的公司名稱: **+15 分**
+    * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+    * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+    * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+    * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+    * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+    * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+    * **決策者 (Decision-Maker):** 包含 C-level (CEO, CTO), VP, Director, Head 等關鍵字。**+15 分**
+    * **技術影響者 (Technical Influencer):** 包含 Manager, Engineer, PM, Architect, Buyer, Procurement 等關鍵字。**+10 分**
+    * **其他相關職稱 (Other):** Specialist, Researcher 等。**+5 分**
+    * **無關或無效職稱:** Student, N/A, 或空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+    * 提供有效的公司 Email (非 @gmail, @yahoo 等免費信箱，且格式正確): **+10 分**
+    * 提供有效的聯絡電話 (`Lead.Phone`): **+5 分**
+    * (注意：如果 `Lead.Email` 格式不正確，則不計分)
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+    * 欄位有填寫具體的產品線或產品名稱: **+5 分**
+
+  **請將 A, B, C, D, E 各項得分相加，得出最終的 `score`。分數最高不超過 99。**
+
+3. **決定分類 (Determine the Classification):**
+  * **僅根據**你計算出的最終分數，將 `classification` 欄位設定為**英文**值：
+  * 如果分數 ≥ 60: **&quot;Open&quot;**
+  * 如果分數介於 30 和 59 之間: **&quot;Review&quot;**
+  * 如果分數 &lt; 30:
+    * 若為垃圾郵件、求職者、個人消費者或來自「非真實公司」，使用 **&quot;Trashbox&quot;**。
+    * 若為品質極低的商業洽詢，使用 **&quot;Dead&quot;**。
+
+4. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **請務必確保 `reason` 和 `reply_recommendation` 欄位簡潔、使用繁體中文，且不超過 255 個字元。**
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* **`classification` 欄位的值必須是英文。**
+* **所有其他的字串值 (string values) 都必須是繁體中文或是英文，取決目前使用者使用的語言。**
+* 請勿在 JSON 物件前後包含任何解釋、評論或文字。
+* 輸出必須以 `{` 開始，並以 `}` 結束。
+
+**您的輸出必須嚴格遵循此格式與資料類型：**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;高價值商機。已針對特定產品 (車用 AI 推論處理器) 與應用 (ADAS L2+) 展現明確導入意圖。已提供專案時程與聯絡資訊。&quot;,
+ &quot;key_topics&quot;: [&quot;車用 AI 推論處理器&quot;, &quot;詢價&quot;, &quot;ADAS L2+&quot;, &quot;Tier-1 車廠&quot;],
+ &quot;reply_recommendation&quot;: &quot;立即指派給車用電子業務團隊。準備 AI 推論處理器產品簡報與規格書。跟進以討論樣品申請與導入時程。&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_16</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **偵測語言 (Determine Output Language):**
+  * 分析 `Lead.Description` 的主要語言。
+  * **如果內容主要是英文**：後續生成的 `reason`、`key_topics` 和 `reply_recommendation` 必須使用 **英文**。
+  * **如果內容主要是中文 (繁體或簡體) 或其他語言**：後續生成內容必須使用 **繁體中文**。
+
+2. **驗證公司真實性 (Verify Company Authenticity):**
+  * 檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+3. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+   * 真實且具體的公司名稱: **+15 分**
+   * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+   * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+   * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+   * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+   * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+   * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+   * **決策者:** C-level, VP, Director, Head。**+15 分**
+   * **技術影響者:** Manager, Engineer, PM, Architect, Buyer。**+10 分**
+   * **其他相關:** Specialist, Researcher。**+5 分**
+   * **無關:** Student, N/A, 空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+   * 有效公司 Email: **+10 分**
+   * 有效電話: **+5 分**
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+   * 有填寫具體產品: **+5 分**
+
+  **請將各項得分相加得出 `score` (最高 99)。**
+
+4. **決定分類 (Determine the Classification):**
+  * **僅根據**最終分數設定 `classification` (固定為英文值)：
+  * ≥ 60: **&quot;Open&quot;**
+  * 30 - 59: **&quot;Review&quot;**
+  * &lt; 30: **&quot;Trashbox&quot;** (垃圾/非真實/個人/求職) 或 **&quot;Dead&quot;** (低品質商務)。
+
+5. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **關鍵規則：** `reason` 和 `reply_recommendation` 必須嚴格遵守 **第 1 步 (偵測語言)** 的結果 (英文或繁體中文)。
+  * 內容需簡潔，不超過 255 個字元。
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* `classification` 欄位的值必須是英文。
+* `score` 必須是整數。
+* `reason`, `key_topics`, `reply_recommendation` 的語言必須依照 Step 1 的判斷結果（Lead Description 為英文則輸出英文，否則輸出繁體中文）。
+* 請勿在 JSON 物件前後包含任何解釋、評論或 markdown 標記 (如 ```json)。
+
+**JSON Output Format Example (Note: The language in the output must follow the Lead Description, do not blindly copy the Chinese language from this example):**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;Detected High Value. Valid company with specific project needs mentioned...&quot;,
+ &quot;key_topics&quot;: [&quot;Automotive AI&quot;, &quot;RFQ&quot;, &quot;ADAS&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Sales team immediately...&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_17</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are a Salesforce assistant for Tufier.
+
+【Tufier 公司簡介】
+Tufier 成立於 2010 年，專注於高可靠度通訊與車用電子晶片的研發與製造。主要產品線涵蓋：
+- 5G NR／C-V2X 通訊 SoC
+- 車用 AI 推論處理器（16~32 TOPS）
+- Wi-Fi 6/6E/7 與藍牙 5.x 整合無線模組
+- 100/1000BASE-T1 車載乙太網 PHY
+Tufier 擁有 ISO 26262（ASIL-B/C）功能安全流程與 AEC-Q100 Grade 2 認證製程，並提供長達 10 年的長期供貨承諾。
+
+Your single task is to analyze the following Lead data and generate a single, valid JSON object based on the rules below.
+
+---
+**Lead Data:**
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+**Instructions:**
+
+1. **偵測語言 (Determine Output Language):**
+  * 分析 `Lead.Description` 的主要語言。
+  * **如果內容主要是英文**：後續生成的 `reason`、`key_topics` 和 `reply_recommendation` 必須使用 **英文**。
+  * **如果內容主要是中文 (繁體或簡體) 或其他語言**：後續生成內容必須使用 **繁體中文**。
+
+2. **驗證公司真實性 (Verify Company Authenticity):**
+  * 檢查 `Lead.Company` 欄位。判斷這是否是一個真實的公司名稱。測試性輸入 (如 &quot;Test Company&quot;, &quot;ABC Inc.&quot;)、無意義的佔位符或個人姓名應被視為「非真實公司」。
+  * **重要規則：如果 `Lead.Company` 被判斷為「非真實公司」，則最終總分必須低於 10 分。**
+
+3. **分析與評分 (Analyze and Score the Lead):**
+  * 根據以下的「評分方法」為此 Lead 計算一個 **0 到 100 的整數總分**。
+
+  **評分方法 (Scoring Methodology):**
+  * **A. 公司名稱 (`Lead.Company`):**
+   * 真實且具體的公司名稱: **+15 分**
+   * 非真實公司: **不加分 (且總分上限為 9)**
+  * **B. 描述內容 (`Lead.Description`):**
+   * **高價值內容 (High-Value):** 明確提及 Tufier 特定產品，並有清晰專案、數量，或詢價／Demo 請求。**+50 分**
+   * **優質內容 (Good):** 清楚說明對高可靠度設備的業務需求，並提及 Tufier，或具有明確的 B2B 背景。**+30 分**
+   * **潛在內容 (Potential):** 一般或模糊的業務洽詢，可能相關但缺乏細節。**+15 分**
+   * **低品質內容 (Low-Quality):** 內容極度模糊、不相關，或看不出真實潛力。**+5 分**
+   * **無價值內容 (Not a Lead):** 垃圾郵件、求職、個人請求。**+0 分**
+  * **C. 職稱 (`Lead.Title`) (加權計分):**
+   * **決策者:** C-level, VP, Director, Head。**+15 分**
+   * **技術影響者:** Manager, Engineer, PM, Architect, Buyer。**+10 分**
+   * **其他相關:** Specialist, Researcher。**+5 分**
+   * **無關:** Student, N/A, 空白。**+0 分**
+  * **D. 聯絡資訊 (Contact Info):**
+   * 有效公司 Email: **+10 分**
+   * 有效電話: **+5 分**
+  * **E. 產品興趣 (`Lead.SDO_Sales_Product_Interest__c`):**
+   * 有填寫具體產品: **+5 分**
+
+  **請將各項得分相加得出 `score` (最高 99)。**
+
+4. **決定分類 (Determine the Classification):**
+  * **僅根據**最終分數設定 `classification` (固定為英文值)：
+  * ≥ 60: **&quot;Open&quot;**
+  * 30 - 59: **&quot;Review&quot;**
+  * &lt; 30: **&quot;Trashbox&quot;** (垃圾/非真實/個人/求職) 或 **&quot;Dead&quot;** (低品質商務)。
+
+5. **生成最終 JSON (Generate the Final JSON):**
+  * 整合所有資訊。提取關鍵主題並建議下一步行動。
+  * **關鍵規則：** `reason` 和 `reply_recommendation` 必須嚴格遵守 **第 1 步 (偵測語言)** 的結果 (英文或繁體中文)。
+  * 內容需簡潔，不超過 255 個字元。
+
+**Output Rules:**
+* **您必須僅輸出一份單一、有效的 JSON 物件。**
+* `classification` 欄位的值必須是英文。
+* `score` 必須是整數。
+* `reason`, `key_topics`, `reply_recommendation` 的語言必須依照 Step 1 的判斷結果（Lead Description 為英文則輸出英文，否則輸出繁體中文）。
+* 請勿在 JSON 物件前後包含任何解釋、評論或 markdown 標記 (如 ```json)。
+
+**JSON Output Format Example (Note: The language in the output must follow the Lead Description, do not blindly copy the Chinese language from this example):**
+```json
+{
+ &quot;classification&quot;: &quot;Open&quot;,
+ &quot;score&quot;: 95,
+ &quot;reason&quot;: &quot;Detected High Value. Valid company with specific project needs mentioned...&quot;,
+ &quot;key_topics&quot;: [&quot;Automotive AI&quot;, &quot;RFQ&quot;, &quot;ADAS&quot;],
+ &quot;reply_recommendation&quot;: &quot;Assign to Sales team immediately...&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_18</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

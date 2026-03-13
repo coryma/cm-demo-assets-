@@ -1,0 +1,177 @@
+<template>
+  <div class="cm-wrapper">
+    <!-- Header -->
+    <div class="cm-toolbar slds-grid slds-wrap slds-p-horizontal_small slds-p-vertical_x-small">
+      <div class="slds-col slds-grow slds-align-middle">
+        <div class="slds-media slds-media_center">
+          <div class="slds-media__figure slds-m-right_x-small">
+            <lightning-icon icon-name="standard:lead" size="medium"></lightning-icon>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-text-title_caps slds-text-color_weak slds-truncate">{leadSectionLabel}</div>
+            <h2 class="slds-text-heading_medium slds-truncate">{titleText}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subbar -->
+    <div class="cm-subbar slds-grid slds-wrap slds-p-horizontal_small slds-p-vertical_x-small">
+      <div class="slds-col slds-grow slds-align-middle">
+        <p class="slds-text-body_small slds-text-color_weak">
+          {summaryText}
+        </p>
+      </div>
+      <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+        <lightning-input
+          type="search"
+          variant="label-hidden"
+          value={keyword}
+          onchange={handleKeywordChange}
+          placeholder={searchPlaceholder}
+          class="cm-search">
+        </lightning-input>
+      </div>
+    </div>
+
+    <!-- Table (靜態：星星 + 分數文字) -->
+    <div class="slds-table_header-fixed_container slds-scrollable_y">
+      <table class="slds-table slds-table_cell-buffer slds-table_header-fixed slds-table_bordered">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th scope="col" style="width:3rem;">#</th>
+
+            <th scope="col">
+              <div class="slds-truncate sortable"
+                   data-field="name" tabindex="0"
+                   onclick={handleSort} onkeydown={handleSortKeydown}>
+                {leadNameLabel} <span class="sort-arrow">{nameSortArrow}</span>
+              </div>
+            </th>
+
+            <th scope="col"><div class="slds-truncate">{companyLabel}</div></th>
+            <th scope="col"><div class="slds-truncate">{phoneLabel}</div></th>
+
+            <th scope="col" class="slds-text-align_right">
+              <div class="slds-truncate sortable"
+                   data-field="aiScore" tabindex="0"
+                   onclick={handleSort} onkeydown={handleSortKeydown}>
+                {valueIndicatorLabel} <span class="sort-arrow">{aiScoreSortArrow}</span>
+              </div>
+            </th>
+
+            <th scope="col" class="slds-text-align_right">
+              <div class="slds-truncate sortable"
+                   data-field="createdDate" tabindex="0"
+                   onclick={handleSort} onkeydown={handleSortKeydown}>
+                {createdDateLabel} <span class="sort-arrow">{createdSortArrow}</span>
+              </div>
+            </th>
+
+            <th scope="col" class="slds-text-align_right"><div class="slds-truncate">{statusLabel}</div></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <template if:true={hasLeads}>
+            <template for:each={filteredLeads} for:item="row">
+              <tr key={row.id} class="cm-row">
+                <td data-label="#" class="slds-cell-wrap">{row.displayIndex}</td>
+
+                <td data-label={leadNameLabel} class="slds-cell-wrap">
+                  <a class="cm-link" role="link" tabindex="0"
+                     href={row.recordUrl}
+                     data-id={row.id}
+                     onclick={handleNavigate}
+                     onkeydown={handleLinkKeydown}>
+                    {row.name}
+                  </a>
+                </td>
+
+                <td data-label={companyLabel} class="slds-cell-wrap">{row.company}</td>
+                <td data-label={phoneLabel} class="slds-cell-wrap">{row.phone}</td>
+
+                <!-- 靜態星星 + 分數字樣；滑入才顯示 Popover -->
+                <td data-label={valueIndicatorLabel} class="slds-text-align_right">
+                  <div class="score-cell"
+                       data-id={row.id}
+                       onmouseenter={handleScoreEnter}
+                       onmouseleave={handleScoreLeave}>
+                    <span class="stars" aria-label={row.scoreTitle}>
+                      <template for:each={row.starArray} for:item="s">
+                        <template if:true={s.filled}>
+                          <lightning-icon key={s.keyFilled} icon-name="utility:favorite" size="small" variant="warning" class="cm-star"></lightning-icon>
+                        </template>
+                        <template if:false={s.filled}>
+                          <lightning-icon key={s.keyEmpty} icon-name="utility:favorite" size="small" class="cm-star cm-star-empty"></lightning-icon>
+                        </template>
+                      </template>
+                    </span>
+                    <span class="cm-score-text">{row.aiScoreDisplay}</span>
+                  </div>
+                </td>
+
+                <td data-label={createdDateLabel} class="slds-text-align_right">{row.createdRel}</td>
+                <td data-label={statusLabel} class="slds-text-align_right"><span class="slds-badge">{row.status}</span></td>
+              </tr>
+            </template>
+          </template>
+
+          <template if:false={hasLeads}>
+            <tr>
+              <td colspan="7" class="slds-text-align_center slds-p-vertical_medium slds-text-color_weak">
+                {noDataText}
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Popover（只有這裡有動畫 & 圓形徽章；標題：智能評分） -->
+    <template if:true={popover.visible}>
+      <div class={popoverClass}
+           style={popoverStyle}
+           role="dialog"
+           aria-label={popoverAriaLabel}
+           onmouseenter={cancelHide}
+           onmouseleave={handleScoreLeave}>
+        <div class="slds-popover__header cm-popover__header">
+          <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+            <div class="slds-media slds-media_center">
+  <template if:true={popoverHasScore}>
+    <span class="ring ring--lg" style={ringHeaderStyle}>
+      <span class="ring__inner">
+        <span class="ring__value">{popover.scoreAnimated}</span>
+      </span>
+    </span>
+  </template>
+  <template if:false={popoverHasScore}>
+    <span class="cm-popover__na">NA</span>
+  </template>
+
+  <div class="slds-media__body slds-m-left_small">
+    <div class="cm-popover__title slds-text-heading_small">{popoverTitle}</div>
+  </div>
+</div>
+            <div class="cm-popover__time slds-text-color_weak slds-text-body_small">{popover.row.createdRel}</div>
+          </div>
+        </div>
+
+        <div class="slds-popover__body cm-popover__body">
+          <p class="cm-section">{classificationLabel}</p>
+          <p class="cm-field slds-m-bottom_medium">{popover.row.aiClassification}</p>
+
+          <p class="cm-section">{keyTopicsLabel}</p>
+          <p class="cm-field slds-m-bottom_medium">{popover.row.aiKeyTopics}</p>
+
+          <p class="cm-section">{reasonLabel}</p>
+          <p class="cm-field slds-m-bottom_medium">{popover.row.aiReason}</p>
+
+          <p class="cm-section">{replyLabel}</p>
+          <p class="cm-field">{popover.row.aiReplyRecommendation}</p>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

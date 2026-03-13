@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>CM_LeadAIJsonParser</members>
+        <members>CM_LatestLeadsController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Lead.AI_Classification__c</members>
+        <members>Lead.AI_KeyTopics__c</members>
+        <members>Lead.AI_Reason__c</members>
+        <members>Lead.AI_ReplyRecommendation__c</members>
+        <members>Lead.AI_Score__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>MFG_HOME_DISCRETE_MCO</members>
+        <members>MFG_Lead_Record_Page1</members>
+        <members>SDO_Sales_Lead_Default</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>CM_Update_Lead_AI_Related_Fields</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>CM_Lead_Auto_Screening</members>
+        <name>GenAiPromptTemplate</name>
+    </types>
+    <types>
+        <members>Lead-Lead Layout</members>
+        <members>Lead-SDO - Lead</members>
+        <members>Lead-SDO - Lead Community</members>
+        <members>Lead-SDO - Partner Lead</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>cmLatestLeads</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <version>66.0</version>
+</Package>

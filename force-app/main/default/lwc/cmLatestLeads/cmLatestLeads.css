@@ -1,0 +1,121 @@
+/* 外層沿用頁面底色；也作為 fixed popover 的視覺範圍 */
+.cm-wrapper{ background:transparent; box-shadow:none; border-radius:0; position:relative; }
+
+/* Header & Subbar */
+.cm-toolbar{
+  background:#f3f2f2;
+  border-bottom:1px solid #e5e7eb;
+  border-top-left-radius:1.25rem;
+  border-top-right-radius:1.25rem;
+  padding-top:.5rem; padding-bottom:.5rem;
+}
+.cm-subbar{
+  background:#f3f2f2;
+  border-bottom:1px solid #e5e7eb;
+  padding-top:.4rem; padding-bottom:.4rem;
+}
+.cm-search{ min-width:16rem; margin-top:.05rem; }
+
+/* 表格容器透明 + sticky header 補丁 */
+.slds-table_header-fixed_container{ background:transparent; }
+:host .slds-table_header-fixed_container,
+:host .slds-table--header-fixed_container{ padding-block-start:0 !important; padding-top:0 !important; }
+:host .slds-table_header-fixed_container::before,
+:host .slds-table--header-fixed_container::before{ height:0 !important; }
+:host .slds-line-height_reset,
+:host .slds-line-height--reset{ height:35px; }
+:host .slds-line-height_reset::before,
+:host .slds-line-height--reset::before{ height:35px; }
+:host .slds-text-heading_medium {
+    color: rgb(8, 7, 7);
+    font-size: 1.75rem;
+}
+
+
+/* 進場感 */
+.cm-row{ animation: fadeIn .35s ease both; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:none;} }
+
+/* 連結樣式 */
+.cm-link{ color: var(--lwc-brandTextLink,#0176d3); cursor:pointer; text-decoration:none; }
+.cm-link:hover{ text-decoration:underline; }
+
+/* 表頭排序箭頭 */
+.sortable{ cursor:pointer; user-select:none; outline:none; }
+.sortable:focus{ box-shadow: inset 0 -2px 0 0 #0176d3; }
+.sort-arrow{ position:relative; top:2px; margin-left:.25rem; color:#9ca3af; font-size:.8rem; }
+
+/* 讓滑鼠點擊不畫線 */
+.sortable:focus{ outline: none; box-shadow: none; }
+
+/* 只有鍵盤導覽時才顯示底線（符合 SLDS 色票） */
+.sortable:focus-visible{
+  box-shadow: inset 0 -2px 0 0 var(--lwc-brandAccessible, #0176d3);
+}
+
+/* 安全網：舊瀏覽器不支援 :focus-visible 時也不要顯示 */
+@supports not selector(:focus-visible){
+  .sortable:focus{ box-shadow: none; }
+}
+
+/* 星星顏色（List 區） */
+.cm-star{
+  margin-left:.125rem;
+  vertical-align:middle;
+  --slds-c-icon-color-foreground: currentColor;
+  --slds-c-icon-color-foreground-default: currentColor;
+}
+.cm-star-empty{ color:#d1d5db; }
+
+/* 分數小字（List 區，靜態） */
+.cm-score-text{ margin-left:.4rem; font-size:.75rem; color: var(--lwc-colorTextWeak,#6b7280); }
+
+/* 分數欄容器（List 區） */
+.score-cell{ position:relative; display:inline-flex; align-items:center; }
+
+/* ---------------- Popover（才有動畫與圓環） ---------------- */
+.cm-popover{ position:fixed; width:28rem; z-index:9000; }
+.cm-popover__body p{ margin:0 0 .5rem; }
+.cm-section{ font-weight:600; color:#4b5563; margin-bottom:.25rem; }
+.cm-field{ color:#111827; }
+
+/* 圓形分數徽章（Popover 用） */
+.ring{
+  --p:0;               /* 百分比 0~100，由 JS 動態更新 */
+  --ring:#2563eb;      /* 色彩由 JS 依分數帶入 */
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ring) calc(var(--p) * 1%), #e5e7eb 0);
+  position: relative; display:inline-block;
+}
+.ring::after{
+  content:""; position:absolute; inset:3.5px; background:white;
+  border-radius:50%; box-shadow: inset 0 0 0 1px #e5e7eb;
+  z-index: 0; /* 讓數字在 ::after 之上 */
+}
+.ring__inner{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.78rem; color:#111827;
+  z-index: 1; /* 數字蓋在白色內圓上 */
+}
+.ring__value{ line-height:1; }
+
+/* 小尺寸（如果其他地方要用） */
+.ring--sm{ width:24px; height:24px; }
+.ring--sm::after{ inset:3px; }
+.ring--sm .ring__inner{ font-size:.72rem; }
+
+/* ✅ 新：大尺寸（Popover 標題用） */
+.ring--lg{ width:40px; height:40px; }
+.ring--lg::after{ inset:5px; }
+.ring--lg .ring__inner{ font-size:.95rem; }
+
+.cm-popover__na{
+  display:inline-block;
+  min-width:24px;
+  text-align:center;
+  font-weight:700;
+  font-size:.75rem;
+  color:#6b7280;
+}
