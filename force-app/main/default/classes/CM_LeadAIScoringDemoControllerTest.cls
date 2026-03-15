@@ -61,7 +61,8 @@ private class CM_LeadAIScoringDemoControllerTest {
         Test.startTest();
         List<CM_LeadAIScoringDemoController.LeadGenerationResult> results =
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                toInputs(leads, configuredTiers)
+                toInputs(leads, configuredTiers),
+                null
             );
         Test.stopTest();
 
@@ -105,7 +106,8 @@ private class CM_LeadAIScoringDemoControllerTest {
         Boolean failed = false;
         try {
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                toInputs(leads, null)
+                toInputs(leads, null),
+                null
             );
         } catch (AuraHandledException ex) {
             failed = true;
@@ -135,7 +137,8 @@ private class CM_LeadAIScoringDemoControllerTest {
         Boolean failed = false;
         try {
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                toInputs(leads, null)
+                toInputs(leads, null),
+                null
             );
         } catch (AuraHandledException ex) {
             failed = true;
@@ -165,12 +168,53 @@ private class CM_LeadAIScoringDemoControllerTest {
         Boolean failed = false;
         try {
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                new List<CM_LeadAIScoringDemoController.LeadGenerationInput>{ inputRow }
+                new List<CM_LeadAIScoringDemoController.LeadGenerationInput>{ inputRow },
+                null
             );
         } catch (AuraHandledException ex) {
             failed = true;
         }
         System.assertEquals(true, failed, 'Method should fail when tier is outside allowed values.');
+    }
+
+    @IsTest
+    static void supportsLegacyLeadIdsPayload() {
+        Account demoTarget = new Account(
+            Name = 'Legacy Payload Demo',
+            CM_Is_Demo_Target__c = true
+        );
+        insert demoTarget;
+
+        List<Lead> leads = new List<Lead>();
+        for (Integer i = 0; i < 2; i++) {
+            leads.add(new Lead(
+                LastName = 'Legacy ' + i,
+                Company = 'Legacy Co ' + i
+            ));
+        }
+        insert leads;
+
+        CM_LeadAIScoringDemoController.testDescriptionByTier = new Map<String, String>{
+            'Very High' => 'Legacy VH',
+            'High' => 'Legacy H',
+            'Medium' => 'Legacy M',
+            'Low' => 'Legacy L',
+            'Very Low' => 'Legacy VL'
+        };
+        CM_LeadAIScoringInvoker.testPromptResponse =
+            '{"classification":"Review","score":55,"reason":"Legacy payload ok.","key_topics":["Legacy"],"reply_recommendation":"Follow up."}';
+
+        Test.startTest();
+        List<CM_LeadAIScoringDemoController.LeadGenerationResult> results =
+            CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
+                null,
+                new List<Id>{ leads[0].Id, leads[1].Id }
+            );
+        Test.stopTest();
+
+        System.assertEquals(2, results.size());
+        System.assertEquals('Very High', results[0].qualityTier);
+        System.assertEquals('High', results[1].qualityTier);
     }
 
     @IsTest

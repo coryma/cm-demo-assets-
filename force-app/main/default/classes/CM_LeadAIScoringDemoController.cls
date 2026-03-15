@@ -70,8 +70,14 @@ public with sharing class CM_LeadAIScoringDemoController {
     }
 
     @AuraEnabled
-    public static List<LeadGenerationResult> generateDescriptionsAndScore(List<LeadGenerationInput> leadInputs) {
+    public static List<LeadGenerationResult> generateDescriptionsAndScore(
+        List<LeadGenerationInput> leadInputs,
+        List<Id> leadIds
+    ) {
         List<GenerationSelection> selections = normalizeSelections(leadInputs);
+        if (selections.isEmpty()) {
+            selections = normalizeSelectionsFromIds(leadIds);
+        }
 
         if (selections.isEmpty()) {
             throw new AuraHandledException('Please select at least 1 Lead.');
@@ -87,9 +93,9 @@ public with sharing class CM_LeadAIScoringDemoController {
             );
         }
 
-        Set<Id> leadIds = new Set<Id>();
+        Set<Id> selectedLeadIds = new Set<Id>();
         for (GenerationSelection selection : selections) {
-            leadIds.add(selection.leadId);
+            selectedLeadIds.add(selection.leadId);
         }
 
         Map<Id, Lead> selectedById = new Map<Id, Lead>([
@@ -97,7 +103,7 @@ public with sharing class CM_LeadAIScoringDemoController {
                    AI_Score__c, AI_Classification__c, AI_Reason__c,
                    AI_KeyTopics__c, AI_ReplyRecommendation__c
             FROM Lead
-            WHERE Id IN :leadIds
+            WHERE Id IN :selectedLeadIds
             AND IsDeleted = false
             AND IsConverted = false
         ]);
@@ -167,7 +173,7 @@ public with sharing class CM_LeadAIScoringDemoController {
                    AI_Score__c, AI_Classification__c, AI_Reason__c,
                    AI_KeyTopics__c, AI_ReplyRecommendation__c
             FROM Lead
-            WHERE Id IN :leadIds
+            WHERE Id IN :selectedLeadIds
         ]);
 
         List<LeadGenerationResult> results = new List<LeadGenerationResult>();
@@ -310,15 +316,43 @@ public with sharing class CM_LeadAIScoringDemoController {
         }
 
         for (LeadGenerationInput input : leadInputs) {
-            if (input == null || input.leadId == null || seen.contains(input.leadId)) {
+            Id selectedLeadId = input == null
+                ? null
+                : input.leadId == null
+                    ? input.id
+                    : input.leadId;
+
+            if (selectedLeadId == null || seen.contains(selectedLeadId)) {
                 continue;
             }
 
             GenerationSelection selection = new GenerationSelection();
-            selection.leadId = input.leadId;
+            selection.leadId = selectedLeadId;
             selection.qualityTier = normalizeQualityTier(input.qualityTier, ordered.size());
             ordered.add(selection);
-            seen.add(input.leadId);
+            seen.add(selectedLeadId);
+        }
+        return ordered;
+    }
+
+    private static List<GenerationSelection> normalizeSelectionsFromIds(List<Id> leadIds) {
+        List<GenerationSelection> ordered = new List<GenerationSelection>();
+        Set<Id> seen = new Set<Id>();
+
+        if (leadIds == null) {
+            return ordered;
+        }
+
+        for (Id leadId : leadIds) {
+            if (leadId == null || seen.contains(leadId)) {
+                continue;
+            }
+
+            GenerationSelection selection = new GenerationSelection();
+            selection.leadId = leadId;
+            selection.qualityTier = normalizeQualityTier(null, ordered.size());
+            ordered.add(selection);
+            seen.add(leadId);
         }
         return ordered;
     }
@@ -404,6 +438,7 @@ public with sharing class CM_LeadAIScoringDemoController {
 
     public class LeadGenerationInput {
         @AuraEnabled public Id leadId;
+        @AuraEnabled public Id id;
         @AuraEnabled public String qualityTier;
     }
 

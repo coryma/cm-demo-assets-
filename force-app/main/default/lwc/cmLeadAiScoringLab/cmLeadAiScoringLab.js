@@ -117,12 +117,9 @@ export default class CmLeadAiScoringLab extends LightningElement {
             this.selectedLeadRows.map((row) => [row.id, row.qualityTier])
         );
 
-        this.selectedLeadRows = rows.map((row, index) => ({
-            id: row.id,
-            name: row.name,
-            company: row.company,
-            qualityTier: previousTierById.get(row.id) || this.defaultTierByIndex(index)
-        }));
+        this.selectedLeadRows = rows
+            .map((row, index) => this.normalizeSelectedRow(row, index, previousTierById))
+            .filter((row) => Boolean(row?.id));
         this.selectedLeadIds = this.selectedLeadRows.map((row) => row.id);
     }
 
@@ -138,7 +135,39 @@ export default class CmLeadAiScoringLab extends LightningElement {
         return QUALITY_TIERS[index % QUALITY_TIERS.length];
     }
 
+    normalizeSelectedRow(row, index, previousTierById) {
+        const rowId = row?.id || row?.Id;
+        return {
+            id: rowId,
+            name: row?.name || row?.Name,
+            company: row?.company || row?.Company,
+            qualityTier: previousTierById.get(rowId) || this.defaultTierByIndex(index)
+        };
+    }
+
+    syncSelectionFromDatatable() {
+        const datatable = this.template.querySelector('lightning-datatable');
+        if (!datatable) {
+            return;
+        }
+
+        const selectedRows = datatable.getSelectedRows() || [];
+        if (!selectedRows.length) {
+            return;
+        }
+
+        const previousTierById = new Map(
+            this.selectedLeadRows.map((row) => [row.id, row.qualityTier])
+        );
+        this.selectedLeadRows = selectedRows
+            .map((row, index) => this.normalizeSelectedRow(row, index, previousTierById))
+            .filter((row) => Boolean(row?.id));
+        this.selectedLeadIds = this.selectedLeadRows.map((row) => row.id);
+    }
+
     async handleGenerateClick() {
+        this.syncSelectionFromDatatable();
+
         if (!this.selectedLeadRows.length) {
             this.showToast('Lead AI Scoring', 'Please select at least 1 Lead.', 'warning');
             return;
