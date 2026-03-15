@@ -1,26 +1,28 @@
 <template>
-    <lightning-card title="Account Role Identity" icon-name="standard:account">
-        <div class="slds-p-horizontal_small slds-p-bottom_small">
-            <template if:true={errorMessage}>
-                <p class="warning-text">{errorMessage}</p>
-            </template>
-
-            <div class="banner-row">
-                <span class="label">Identity</span>
-                <lightning-badge label={summaryLabel}></lightning-badge>
+    <template if:true={showBanner}>
+        <section class={bannerClass} role="status" aria-live="polite">
+            <div class="tag-wrap">
+                <lightning-icon
+                    icon-name="utility:company"
+                    alternative-text={roleAltText}
+                    size={iconSize}
+                ></lightning-icon>
+                <template for:each={roleBadges} for:item="role">
+                    <span key={role.key} class={role.className}>{role.label}</span>
+                </template>
             </div>
-
-            <template if:true={hasBadges}>
-                <div class="chips">
-                    <template for:each={badgeItems} for:item="badge">
-                        <span key={badge.key} class="chip">{badge.label}</span>
-                    </template>
-                </div>
-            </template>
-
-            <template if:false={hasBadges}>
-                <p class="hint-text">No role assigned yet.</p>
-            </template>
-        </div>
-    </lightning-card>
+            <div class="content">
+                <template if:true={isDetailMode}>
+                    <p class="title">{detailTitle}</p>
+                </template>
+                <p class="message">{mainMessage}</p>
+                <template if:true={showMapping}>
+                    <p class="mapping">{mappingMessage}</p>
+                </template>
+                <template if:true={isDetailMode}>
+                    <p class="hint">{detailHint}</p>
+                </template>
+            </div>
+        </section>
+    </template>
 </template>

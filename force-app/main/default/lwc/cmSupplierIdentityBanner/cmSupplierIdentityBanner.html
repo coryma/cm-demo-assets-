@@ -1,16 +1,16 @@
 <template>
-    <lightning-card title="Supplier Identity" icon-name="utility:company">
+    <lightning-card title={i18n.cardTitle} icon-name="utility:company">
         <div class="slds-p-horizontal_small slds-p-bottom_small">
             <template if:true={errorMessage}>
                 <p class="warning-text">{errorMessage}</p>
             </template>
 
             <div class="status-row">
-                <span class="status-label">Supplier Status</span>
+                <span class="status-label">{i18n.supplierStatus}</span>
                 <lightning-badge label={supplierStatus}></lightning-badge>
             </div>
 
-            <p class="meta-label">Current Roles</p>
+            <p class="meta-label">{i18n.currentRoles}</p>
             <p class="meta-value">{roleSummary}</p>
         </div>
     </lightning-card>

@@ -1,15 +1,61 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
-import ACCOUNT_ROLES_FIELD from '@salesforce/schema/Account.CM_Account_Roles__c';
+import lang from '@salesforce/i18n/lang';
+import locale from '@salesforce/i18n/locale';
 
-const FIELDS = [ACCOUNT_ROLES_FIELD];
+// DEPRECATED:
+// This banner is retained only for backward compatibility with orgs that still
+// use Account.CM_Account_Roles__c. New Account role UX should use
+// cmAccountRoleIdentityBanner (BusinessRole__c-based model).
+const ROLES_FIELD = 'Account.CM_Account_Roles__c';
+const FIELDS = [ROLES_FIELD];
 const ROLE_ORDER = ['Customer', 'Supplier', 'Partner'];
 
-const ROLE_DISPLAY = {
-    Customer: '客戶 / Customer',
-    Supplier: '供應商 / Supplier',
-    Partner: '合作夥伴 / Partner'
+const I18N = {
+    zh: {
+        cardTitle: '供應商身分',
+        supplierStatus: '供應商狀態',
+        currentRoles: '目前角色',
+        isSupplier: '供應商',
+        notSupplier: '非供應商',
+        notSet: '未設定',
+        roleSeparator: '、',
+        roleDisplay: {
+            Customer: '客戶',
+            Supplier: '供應商',
+            Partner: '合作夥伴'
+        },
+        unknownError: '未知錯誤'
+    },
+    en: {
+        cardTitle: 'Supplier Identity',
+        supplierStatus: 'Supplier Status',
+        currentRoles: 'Current Roles',
+        isSupplier: 'Supplier',
+        notSupplier: 'Not Supplier',
+        notSet: 'Not set',
+        roleSeparator: ', ',
+        roleDisplay: {
+            Customer: 'Customer',
+            Supplier: 'Supplier',
+            Partner: 'Partner'
+        },
+        unknownError: 'Unknown error'
+    }
 };
+
+function isTraditionalChineseLocale() {
+    const normalizedLang = (lang || '').toLowerCase().replace('_', '-');
+    const normalizedLocale = (locale || '').toLowerCase().replace('_', '-');
+    const code = normalizedLang || normalizedLocale;
+
+    return (
+        code.startsWith('zh-hant') ||
+        code.startsWith('zh-tw') ||
+        code.startsWith('zh-hk') ||
+        code.startsWith('zh-mo')
+    );
+}
 
 export default class CmSupplierIdentityBanner extends LightningElement {
     @api recordId;
@@ -20,11 +66,15 @@ export default class CmSupplierIdentityBanner extends LightningElement {
     wiredAccount({ data, error }) {
         if (data) {
             this.errorMessage = '';
-            this.roles = this.parseRoles(getFieldValue(data, ACCOUNT_ROLES_FIELD));
+            this.roles = this.parseRoles(getFieldValue(data, ROLES_FIELD));
         } else if (error) {
             this.roles = [];
             this.errorMessage = this.reduceError(error);
         }
+    }
+
+    get i18n() {
+        return isTraditionalChineseLocale() ? I18N.zh : I18N.en;
     }
 
     get isSupplier() {
@@ -32,17 +82,17 @@ export default class CmSupplierIdentityBanner extends LightningElement {
     }
 
     get supplierStatus() {
-        return this.isSupplier ? '供應商 / Supplier' : '非供應商 / Not Supplier';
+        return this.isSupplier ? this.i18n.isSupplier : this.i18n.notSupplier;
     }
 
     get roleSummary() {
         if (!this.roles.length) {
-            return '未設定 / Not set';
+            return this.i18n.notSet;
         }
 
         return this.roles
-            .map((role) => ROLE_DISPLAY[role] || role)
-            .join('、');
+            .map((role) => this.i18n.roleDisplay[role] || role)
+            .join(this.i18n.roleSeparator);
     }
 
     parseRoles(rawRoles) {
@@ -64,6 +114,6 @@ export default class CmSupplierIdentityBanner extends LightningElement {
         if (Array.isArray(error?.body)) {
             return error.body.map((item) => item.message).join(', ');
         }
-        return error?.body?.message || error?.message || 'Unknown error';
+        return error?.body?.message || error?.message || this.i18n.unknownError;
     }
 }

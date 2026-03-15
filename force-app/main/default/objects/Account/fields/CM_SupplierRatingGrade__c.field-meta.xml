@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>CM_Account_Roles__c</fullName>
-    <description>Identity roles used by demo assets and identity banners.</description>
-    <inlineHelpText>Select one or more identity roles for this Account.</inlineHelpText>
-    <label>CM Account Roles</label>
+    <fullName>CM_SupplierRatingGrade__c</fullName>
+    <description>Internal supplier evaluation grade.</description>
+    <inlineHelpText>Internal supplier evaluation grade used by the business team.</inlineHelpText>
+    <label>Supplier Rating Grade</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
-    <type>MultiselectPicklist</type>
+    <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Customer</fullName>
+                <fullName>A</fullName>
                 <default>false</default>
-                <label>Customer</label>
+                <label>A</label>
             </value>
             <value>
-                <fullName>Supplier</fullName>
+                <fullName>B</fullName>
                 <default>false</default>
-                <label>Supplier</label>
+                <label>B</label>
             </value>
             <value>
-                <fullName>Partner</fullName>
+                <fullName>C</fullName>
                 <default>false</default>
-                <label>Partner</label>
+                <label>C</label>
             </value>
         </valueSetDefinition>
     </valueSet>
-    <visibleLines>4</visibleLines>
 </CustomField>

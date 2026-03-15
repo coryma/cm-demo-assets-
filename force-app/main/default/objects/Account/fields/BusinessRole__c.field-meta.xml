@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>CM_Account_Roles__c</fullName>
-    <description>Identity roles used by demo assets and identity banners.</description>
-    <inlineHelpText>Select one or more identity roles for this Account.</inlineHelpText>
-    <label>CM Account Roles</label>
+    <fullName>BusinessRole__c</fullName>
+    <description>Business role on the account. Supports customer and supplier dual-role modeling.</description>
+    <inlineHelpText>Select one or more business roles. Use Supplier when this account is an upstream supplier. Use Customer when this account is a sell-side customer account.</inlineHelpText>
+    <label>Business Role</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
@@ -21,11 +21,6 @@
                 <fullName>Supplier</fullName>
                 <default>false</default>
                 <label>Supplier</label>
-            </value>
-            <value>
-                <fullName>Partner</fullName>
-                <default>false</default>
-                <label>Partner</label>
             </value>
         </valueSetDefinition>
     </valueSet>

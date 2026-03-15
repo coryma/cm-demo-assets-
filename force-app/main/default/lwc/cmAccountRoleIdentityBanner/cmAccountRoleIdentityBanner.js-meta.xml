@@ -2,16 +2,19 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>66.0</apiVersion>
     <isExposed>true</isExposed>
-    <masterLabel>CM Account Role Identity Banner</masterLabel>
+    <masterLabel>Account Role Identity Banner</masterLabel>
     <targets>
-        <target>lightning__AppPage</target>
         <target>lightning__RecordPage</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
-            <objects>
-                <object>Account</object>
-            </objects>
+            <property
+                name="mode"
+                type="String"
+                label="Display Mode"
+                default="header"
+                description="header or detail"
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

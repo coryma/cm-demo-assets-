@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BusinessRoleHasCustomer__c</fullName>
+    <description>Compatibility formula used by page visibility to detect Customer role from BusinessRole__c.</description>
+    <formula>INCLUDES(BusinessRole__c, &quot;Customer&quot;)</formula>
+    <label>Business Role Has Customer</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>
