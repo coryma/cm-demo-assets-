@@ -181,10 +181,12 @@ export default class CmLeadAiScoringLab extends LightningElement {
         try {
             const leadInputs = this.selectedLeadRows.map((row) => ({
                 leadId: row.id,
+                id: row.id,
                 qualityTier: row.qualityTier
             }));
+            const leadIds = this.selectedLeadRows.map((row) => row.id);
 
-            const payload = await generateDescriptionsAndScore({ leadInputs });
+            const payload = await generateDescriptionsAndScore({ leadInputs, leadIds });
             this.results = (payload || []).map((row) => this.decorateResult(row));
             await this.runSearch(this.searchKey);
             await this.loadDemoTarget();
