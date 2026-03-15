@@ -99,6 +99,7 @@ export default class CmLeadAiScoringLab extends LightningElement {
     get selectedLeadPreview() {
         return this.selectedLeadRows.map((row) => ({
             ...row,
+            id: row.recordId,
             company: row.company || 'Not set'
         }));
     }
@@ -114,20 +115,20 @@ export default class CmLeadAiScoringLab extends LightningElement {
     handleRowSelection(event) {
         const rows = event.detail.selectedRows || [];
         const previousTierById = new Map(
-            this.selectedLeadRows.map((row) => [row.id, row.qualityTier])
+            this.selectedLeadRows.map((row) => [row.recordId, row.qualityTier])
         );
 
         this.selectedLeadRows = rows
             .map((row, index) => this.normalizeSelectedRow(row, index, previousTierById))
-            .filter((row) => Boolean(row?.id));
-        this.selectedLeadIds = this.selectedLeadRows.map((row) => row.id);
+            .filter((row) => Boolean(row?.recordId));
+        this.selectedLeadIds = this.selectedLeadRows.map((row) => row.recordId);
     }
 
     handleQualityTierChange(event) {
         const leadId = event.target.dataset.id;
         const value = event.detail.value;
         this.selectedLeadRows = this.selectedLeadRows.map((row) =>
-            row.id === leadId ? { ...row, qualityTier: value } : row
+            row.recordId === leadId ? { ...row, qualityTier: value } : row
         );
     }
 
@@ -136,13 +137,35 @@ export default class CmLeadAiScoringLab extends LightningElement {
     }
 
     normalizeSelectedRow(row, index, previousTierById) {
-        const rowId = row?.id || row?.Id;
+        const rowId = this.resolveLeadId(row);
         return {
-            id: rowId,
+            recordId: rowId,
             name: row?.name || row?.Name,
             company: row?.company || row?.Company,
             qualityTier: previousTierById.get(rowId) || this.defaultTierByIndex(index)
         };
+    }
+
+    resolveLeadId(row) {
+        const directId = row?.recordId || row?.id || row?.Id;
+        if (directId) {
+            return directId;
+        }
+
+        const recordUrl = row?.recordUrl || '';
+        const match = recordUrl.match(/\/Lead\/([a-zA-Z0-9]{15,18})\//);
+        if (match && match[1]) {
+            return match[1];
+        }
+
+        if (recordUrl.startsWith('/') && recordUrl.length >= 16) {
+            const possibleId = recordUrl.substring(1, 19);
+            if (/^[a-zA-Z0-9]{15,18}$/.test(possibleId)) {
+                return possibleId;
+            }
+        }
+
+        return null;
     }
 
     syncSelectionFromDatatable() {
@@ -157,12 +180,12 @@ export default class CmLeadAiScoringLab extends LightningElement {
         }
 
         const previousTierById = new Map(
-            this.selectedLeadRows.map((row) => [row.id, row.qualityTier])
+            this.selectedLeadRows.map((row) => [row.recordId, row.qualityTier])
         );
         this.selectedLeadRows = selectedRows
             .map((row, index) => this.normalizeSelectedRow(row, index, previousTierById))
-            .filter((row) => Boolean(row?.id));
-        this.selectedLeadIds = this.selectedLeadRows.map((row) => row.id);
+            .filter((row) => Boolean(row?.recordId));
+        this.selectedLeadIds = this.selectedLeadRows.map((row) => row.recordId);
     }
 
     async handleGenerateClick() {
@@ -180,11 +203,11 @@ export default class CmLeadAiScoringLab extends LightningElement {
         this.isGenerating = true;
         try {
             const leadInputs = this.selectedLeadRows.map((row) => ({
-                leadId: row.id,
-                id: row.id,
+                leadId: row.recordId,
+                id: row.recordId,
                 qualityTier: row.qualityTier
             }));
-            const leadIds = this.selectedLeadRows.map((row) => row.id);
+            const leadIds = this.selectedLeadRows.map((row) => row.recordId);
 
             const payload = await generateDescriptionsAndScore({ leadInputs, leadIds });
             this.results = (payload || []).map((row) => this.decorateResult(row));
@@ -232,8 +255,10 @@ export default class CmLeadAiScoringLab extends LightningElement {
     }
 
     decorateLead(row) {
+        const recordId = this.resolveLeadId(row);
         return {
             ...row,
+            recordId,
             aiClassification: row.aiClassification || '-',
             aiScoreDisplay: row.aiScore === null || row.aiScore === undefined ? '-' : `${row.aiScore}`,
             descriptionPreview: this.toPreview(row.description, 140)
@@ -241,8 +266,10 @@ export default class CmLeadAiScoringLab extends LightningElement {
     }
 
     decorateResult(row) {
+        const recordId = this.resolveLeadId(row);
         return {
             ...row,
+            recordId,
             aiClassification: row.aiClassification || '-',
             aiReason: row.aiReason || '-',
             aiScoreDisplay: row.aiScore === null || row.aiScore === undefined ? '-' : `${row.aiScore}`,

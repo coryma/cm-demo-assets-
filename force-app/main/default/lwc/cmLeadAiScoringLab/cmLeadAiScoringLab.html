@@ -48,7 +48,7 @@
                 </template>
 
                 <lightning-datatable
-                    key-field="id"
+                    key-field="recordId"
                     data={leads}
                     columns={leadColumns}
                     max-row-selection="10"
@@ -97,7 +97,7 @@
                 <section class="panel results-panel">
                     <span class="status-label">Generation Results</span>
                     <lightning-datatable
-                        key-field="id"
+                        key-field="recordId"
                         data={results}
                         columns={resultColumns}
                         wrap-text-max-lines="6"
