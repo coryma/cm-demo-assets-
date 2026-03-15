@@ -19,6 +19,14 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Industry</members>
+        <name>StandardValueSet</name>
+    </types>
+    <types>
+        <members>Industry-zh_TW</members>
+        <name>StandardValueSetTranslation</name>
+    </types>
+    <types>
         <members>MFG_HOME_DISCRETE_MCO</members>
         <name>FlexiPage</name>
     </types>

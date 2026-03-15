@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Agriculture</masterLabel>
+        <translation><!-- Agriculture --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Apparel</masterLabel>
+        <translation><!-- Apparel --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Banking</masterLabel>
+        <translation><!-- Banking --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Biotechnology</masterLabel>
+        <translation><!-- Biotechnology --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Chemicals</masterLabel>
+        <translation><!-- Chemicals --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Communications</masterLabel>
+        <translation><!-- Communications --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Construction</masterLabel>
+        <translation><!-- Construction --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Consulting</masterLabel>
+        <translation><!-- Consulting --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Education</masterLabel>
+        <translation><!-- Education --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Electronics</masterLabel>
+        <translation><!-- Electronics --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Energy</masterLabel>
+        <translation><!-- Energy --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Engineering</masterLabel>
+        <translation><!-- Engineering --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Entertainment</masterLabel>
+        <translation><!-- Entertainment --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Environmental</masterLabel>
+        <translation><!-- Environmental --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Financial Services</masterLabel>
+        <translation><!-- Financial Services --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Food &amp; Beverage</masterLabel>
+        <translation><!-- Food &amp; Beverage --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Government</masterLabel>
+        <translation><!-- Government --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Healthcare &amp; Life Sciences</masterLabel>
+        <translation><!-- Healthcare &amp; Life Sciences --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Hospitality</masterLabel>
+        <translation><!-- Hospitality --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>IC Distribution</masterLabel>
+        <translation>IC 通路業</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Insurance</masterLabel>
+        <translation><!-- Insurance --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Machinery</masterLabel>
+        <translation><!-- Machinery --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Manufacturing</masterLabel>
+        <translation><!-- Manufacturing --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Media</masterLabel>
+        <translation><!-- Media --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Not For Profit</masterLabel>
+        <translation><!-- Not For Profit --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Other</masterLabel>
+        <translation><!-- Other --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Recreation</masterLabel>
+        <translation><!-- Recreation --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Retail</masterLabel>
+        <translation><!-- Retail --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Shipping</masterLabel>
+        <translation><!-- Shipping --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Technology</masterLabel>
+        <translation><!-- Technology --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Telecommunications</masterLabel>
+        <translation><!-- Telecommunications --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Transportation</masterLabel>
+        <translation><!-- Transportation --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Utilities</masterLabel>
+        <translation><!-- Utilities --></translation>
+    </valueTranslation>
+</StandardValueSetTranslation>
