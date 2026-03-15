@@ -7,7 +7,7 @@ public with sharing class CMAccountRoleSetupController {
     };
     private static final Set<String> ALLOWED_ROLES = new Set<String>(ROLE_ORDER);
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<AccountRoleOption> searchAccounts(String searchTerm) {
         String normalized = searchTerm == null ? '' : searchTerm.trim();
         List<Account> accounts;

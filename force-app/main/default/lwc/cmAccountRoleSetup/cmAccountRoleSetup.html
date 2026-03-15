@@ -25,13 +25,15 @@
                     <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
                 </template>
 
-                <lightning-datatable
-                    key-field="id"
-                    data={accounts}
-                    columns={columns}
-                    onrowselection={handleRowSelection}
-                    selected-rows={selectedRows}
-                ></lightning-datatable>
+                <div class="table-wrap">
+                    <lightning-datatable
+                        key-field="id"
+                        data={accounts}
+                        columns={columns}
+                        onrowselection={handleRowSelection}
+                        selected-rows={selectedRows}
+                    ></lightning-datatable>
+                </div>
 
                 <template if:true={showEmptyState}>
                     <p class="empty-state">No matching accounts found.</p>

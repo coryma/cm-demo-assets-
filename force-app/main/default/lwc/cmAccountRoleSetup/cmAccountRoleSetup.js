@@ -96,11 +96,11 @@ export default class CmAccountRoleSetup extends LightningElement {
 
         this.isSaving = true;
         try {
-            await saveAccountRoles({
+            const updatedRows = await saveAccountRoles({
                 accountIds: this.selectedAccountIds,
                 roles
             });
-            await this.runSearch(this.searchKey);
+            this.applyUpdatedRows(updatedRows);
             this.selectedRows = [...this.selectedAccountIds];
 
             const accountCount = this.selectedAccountIds.length;
@@ -114,6 +114,17 @@ export default class CmAccountRoleSetup extends LightningElement {
         } finally {
             this.isSaving = false;
         }
+    }
+
+    applyUpdatedRows(rows) {
+        const updatesById = new Map(
+            (rows || []).map((row) => [row.id, this.decorateAccount(row)])
+        );
+        if (updatesById.size === 0) {
+            return;
+        }
+
+        this.accounts = this.accounts.map((row) => updatesById.get(row.id) || row);
     }
 
     async runSearch(searchTerm) {

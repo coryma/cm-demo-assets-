@@ -35,6 +35,11 @@
     margin-bottom: 0.75rem;
 }
 
+.table-wrap {
+    max-height: min(42vh, 24rem);
+    overflow-y: auto;
+}
+
 .roles-picklist {
     margin-top: 0.5rem;
 }
