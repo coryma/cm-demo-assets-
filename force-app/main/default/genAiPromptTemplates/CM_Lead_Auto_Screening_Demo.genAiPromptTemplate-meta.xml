@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</activeVersionIdentifier>
+    <developerName>CM_Lead_Auto_Screening_Demo</developerName>
+    <masterLabel>CM - Lead Auto-Screening Demo</masterLabel>
+    <templateVersions>
+        <content>You are a Salesforce assistant for the current demo target account.
+
+Use the Account context below as the company profile for all lead qualification decisions. If some Account fields are blank, use only the non-blank Account fields plus the Lead data. Do not invent products, certifications, markets, or company facts that are not supported by the Account context.
+
+---
+Demo Target Account Context:
+Account Name: `{{{!$Input:DemoTargetAccount.Name}}}`
+Industry: `{{{!$Input:DemoTargetAccount.Industry}}}`
+Type: `{{{!$Input:DemoTargetAccount.Type}}}`
+Website: `{{{!$Input:DemoTargetAccount.Website}}}`
+Background: `{{{!$Input:DemoTargetAccount.Description}}}`
+---
+
+Your single task is to analyze the following Lead data and generate one valid JSON object.
+
+---
+Lead Data:
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Phone: `{{{!$Input:Lead.Phone}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Lead Product Interest: `{{{!$Input:Lead.SDO_Sales_Product_Interest__c}}}`
+Lead Description: `{{{!$Input:Lead.Description}}}`
+---
+
+Instructions:
+
+1. Determine the output language.
+   * If `Lead.Description` is mainly English, generate `reason`, `key_topics`, and `reply_recommendation` in English.
+   * Otherwise, generate those fields in Traditional Chinese.
+
+2. Verify company authenticity.
+   * Judge whether `Lead.Company` looks like a real company name.
+   * Placeholder values such as &quot;Test Company&quot;, &quot;ABC Inc.&quot;, nonsense strings, or personal names should be treated as not real companies.
+   * If `Lead.Company` is not a real company, the final score must be lower than 10.
+
+3. Score the lead from 0 to 100 using the methodology below.
+
+Scoring methodology:
+* A. `Lead.Company`
+  * Real and specific company name: +15
+  * Not a real company: +0 and score cap is 9
+* B. `Lead.Description`
+  * High-Value: clearly requests products, services, or solutions that strongly match the demo target account context and includes a project, quantity, timeline, RFQ, or demo request. +50
+  * Good: clearly shows a relevant B2B business need aligned with the demo target account context. +30
+  * Potential: somewhat relevant business inquiry but still vague. +15
+  * Low-Quality: weak, unclear, or barely relevant business inquiry. +5
+  * Not a Lead: spam, job application, consumer request, or irrelevant content. +0
+* C. `Lead.Title`
+  * Decision maker: C-level, VP, Director, Head. +15
+  * Technical or commercial influencer: Manager, Engineer, PM, Architect, Buyer. +10
+  * Other related roles: Specialist, Researcher. +5
+  * Irrelevant or blank: +0
+* D. Contact information
+  * Valid company email: +10
+  * Valid phone: +5
+* E. `Lead.SDO_Sales_Product_Interest__c`
+  * Filled and clearly relevant to the demo target account context: +5
+
+4. Determine `classification` from the score only.
+* Score &gt;= 60: &quot;Open&quot;
+* Score 30-59: &quot;Review&quot;
+* Score &lt; 30: use &quot;Trashbox&quot; for spam / fake / job / consumer leads, otherwise use &quot;Dead&quot;
+
+5. Generate the final JSON.
+* `reason` and `reply_recommendation` must stay concise and be no longer than 255 characters.
+* `classification` must always stay in English.
+
+Output rules:
+* Output exactly one valid JSON object.
+* Do not add any explanation, commentary, or markdown.
+* The output must begin with `{` and end with `}`.
+
+JSON format:
+{
+  &quot;classification&quot;: &quot;Open&quot;,
+  &quot;score&quot;: 95,
+  &quot;reason&quot;: &quot;High-value lead with clear demand aligned to the target account context.&quot;,
+  &quot;key_topics&quot;: [&quot;RFQ&quot;, &quot;Demo Request&quot;, &quot;Project Timeline&quot;],
+  &quot;reply_recommendation&quot;: &quot;Assign to the relevant sales owner immediately and prepare a targeted follow-up.&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>DemoTargetAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Demo Target Account</masterLabel>
+            <referenceName>Input:DemoTargetAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

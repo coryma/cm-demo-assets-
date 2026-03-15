@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Lead_Auto_Screening</name>
-        <label>Lead Auto-Screening</label>
+        <name>Generate_Lead_AI_Scoring</name>
+        <label>Generate Lead AI Scoring</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <actionName>CM_Lead_Auto_Screening</actionName>
-        <actionType>generatePromptResponse</actionType>
-        <connector>
-            <targetReference>Parse_Prompt_Results</targetReference>
-        </connector>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>Input:Lead</name>
-            <value>
-                <elementReference>$Record</elementReference>
-            </value>
-        </inputParameters>
-        <nameSegment>CM_Lead_Auto_Screening</nameSegment>
-        <offset>0</offset>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </actionCalls>
-    <actionCalls>
-        <name>Parse_Prompt_Results</name>
-        <label>Parse Prompt Results</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <actionName>CM_LeadAIJsonParser</actionName>
+        <actionName>CM_LeadAIScoringInvoker</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>Update_Lead</targetReference>
         </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
-            <name>jsonInput</name>
+            <name>leadId</name>
             <value>
-                <elementReference>Lead_Auto_Screening.promptResponse</elementReference>
+                <elementReference>$Record.Id</elementReference>
             </value>
         </inputParameters>
-        <nameSegment>CM_LeadAIJsonParser</nameSegment>
+        <nameSegment>CM_LeadAIScoringInvoker</nameSegment>
         <offset>0</offset>
         <outputParameters>
             <assignToReference>classification</assignToReference>
@@ -126,7 +105,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Lead_Auto_Screening</targetReference>
+            <targetReference>Generate_Lead_AI_Scoring</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>

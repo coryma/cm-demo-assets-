@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Demo Target Setup" icon-name="standard:account">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <p class="intro">
+                Select the Account currently used for demos. Before activating it, maintain the customer's
+                profile on the Account record, especially <strong>Industry</strong>, <strong>Website</strong>,
+                and <strong>Description</strong>.
+            </p>
+
+            <template if:true={activeTarget}>
+                <section class="status-box">
+                    <div class="status-header">
+                        <span class="status-label">Current Demo Target</span>
+                        <lightning-badge label={activeContextStatus}></lightning-badge>
+                    </div>
+                    <p class="target-name">
+                        <a href={activeTarget.recordUrl} target="_blank" rel="noreferrer">{activeTarget.name}</a>
+                    </p>
+                    <p class="target-meta">{activeTarget.industryLabel}</p>
+                    <template if:true={activeTarget.missingContext}>
+                        <p class="warning-text">Missing context: {activeTarget.missingContext}</p>
+                    </template>
+                </section>
+            </template>
+
+            <template if:false={activeTarget}>
+                <section class="status-box status-box_empty">
+                    <p class="status-label">No active demo target yet.</p>
+                    <p class="warning-text">Lead AI scoring will keep existing values until a demo target is set.</p>
+                </section>
+            </template>
+
+            <lightning-input
+                class="search"
+                type="search"
+                label="Search Account"
+                value={searchKey}
+                placeholder="Search by account name"
+                onchange={handleSearchChange}
+            ></lightning-input>
+
+            <template if:true={isSearching}>
+                <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
+            </template>
+
+            <lightning-datatable
+                key-field="id"
+                data={accounts}
+                columns={columns}
+                max-row-selection="1"
+                onrowselection={handleRowSelection}
+                selected-rows={selectedRows}
+            ></lightning-datatable>
+
+            <template if:true={showEmptyState}>
+                <p class="empty-state">No matching accounts found.</p>
+            </template>
+
+            <div class="actions">
+                <lightning-button
+                    variant="brand"
+                    label="Set as Demo Target"
+                    onclick={handleSetActive}
+                    disabled={disableSetButton}
+                ></lightning-button>
+                <lightning-button
+                    class="slds-m-left_x-small"
+                    label="Open Selected Account"
+                    onclick={handleOpenSelected}
+                    disabled={disableOpenButton}
+                ></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

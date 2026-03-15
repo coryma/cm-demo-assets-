@@ -1,0 +1,126 @@
+public with sharing class CMDemoTargetSetupController {
+    private static final Integer SEARCH_LIMIT = 8;
+
+    @AuraEnabled(cacheable=true)
+    public static DemoTargetAccount getActiveDemoTarget() {
+        List<Account> accounts = [
+            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE CM_Is_Demo_Target__c = true
+            ORDER BY LastModifiedDate DESC
+            LIMIT 1
+        ];
+
+        return accounts.isEmpty() ? null : toDto(accounts[0]);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<DemoTargetAccount> searchAccounts(String searchTerm) {
+        String normalized = searchTerm == null ? '' : searchTerm.trim();
+        List<Account> accounts;
+
+        if (String.isBlank(normalized)) {
+            accounts = [
+                SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+                FROM Account
+                ORDER BY LastModifiedDate DESC
+                LIMIT :SEARCH_LIMIT
+            ];
+        } else {
+            String likeTerm = '%' + normalized + '%';
+            accounts = [
+                SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+                FROM Account
+                WHERE Name LIKE :likeTerm
+                ORDER BY Name
+                LIMIT :SEARCH_LIMIT
+            ];
+        }
+
+        List<DemoTargetAccount> results = new List<DemoTargetAccount>();
+        for (Account account : accounts) {
+            results.add(toDto(account));
+        }
+        return results;
+    }
+
+    @AuraEnabled
+    public static DemoTargetAccount setActiveDemoTarget(Id accountId) {
+        if (accountId == null) {
+            throw new AuraHandledException('Please select an Account.');
+        }
+
+        Account selected = [
+            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ];
+
+        List<Account> updates = new List<Account>();
+
+        for (Account account : [
+            SELECT Id, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE CM_Is_Demo_Target__c = true
+            AND Id != :accountId
+        ]) {
+            account.CM_Is_Demo_Target__c = false;
+            updates.add(account);
+        }
+
+        if (selected.CM_Is_Demo_Target__c != true) {
+            selected.CM_Is_Demo_Target__c = true;
+            updates.add(selected);
+        }
+
+        if (!updates.isEmpty()) {
+            update updates;
+        }
+
+        return toDto([
+            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ]);
+    }
+
+    private static DemoTargetAccount toDto(Account account) {
+        DemoTargetAccount dto = new DemoTargetAccount();
+        dto.id = account.Id;
+        dto.name = account.Name;
+        dto.industry = account.Industry;
+        dto.type = account.Type;
+        dto.website = account.Website;
+        dto.description = account.Description;
+        dto.isDemoTarget = account.CM_Is_Demo_Target__c;
+
+        List<String> missing = new List<String>();
+        if (String.isBlank(account.Industry)) {
+            missing.add('Industry');
+        }
+        if (String.isBlank(account.Website)) {
+            missing.add('Website');
+        }
+        if (String.isBlank(account.Description)) {
+            missing.add('Description');
+        }
+
+        dto.hasContext = missing.isEmpty();
+        dto.missingContext = String.join(missing, ', ');
+        return dto;
+    }
+
+    public class DemoTargetAccount {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String industry;
+        @AuraEnabled public String type;
+        @AuraEnabled public String website;
+        @AuraEnabled public String description;
+        @AuraEnabled public Boolean isDemoTarget;
+        @AuraEnabled public Boolean hasContext;
+        @AuraEnabled public String missingContext;
+    }
+}
