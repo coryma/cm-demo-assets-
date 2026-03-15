@@ -1,0 +1,99 @@
+<template>
+    <lightning-card title="Lead AI Scoring" icon-name="standard:lead">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <p class="intro">
+                Select exactly 5 Leads. The system will generate 5 different description quality tiers and
+                run Lead AI scoring immediately.
+            </p>
+
+            <template if:true={hasDemoTarget}>
+                <section class="status-box">
+                    <div class="status-row">
+                        <span class="status-label">Active Demo Target</span>
+                        <lightning-badge label={demoTargetStatus}></lightning-badge>
+                    </div>
+                    <p class="target-name">
+                        <a href={demoTarget.recordUrl} target="_blank" rel="noreferrer">{demoTarget.name}</a>
+                    </p>
+                    <p class="target-meta">Industry: {demoTarget.industry}</p>
+                    <template if:true={demoTarget.missingContext}>
+                        <p class="warning-text">Missing context: {demoTarget.missingContext}</p>
+                    </template>
+                </section>
+            </template>
+
+            <template if:false={hasDemoTarget}>
+                <section class="status-box status-box_warning">
+                    <p class="warning-text">No active demo target. Configure one in Demo Setup first.</p>
+                </section>
+            </template>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <span class="status-label">Pick Leads</span>
+                    <span class="selected-count">{selectedCountLabel}</span>
+                </div>
+
+                <lightning-input
+                    class="search"
+                    type="search"
+                    label="Search Leads"
+                    value={searchKey}
+                    placeholder="Search by name, company, email, or title"
+                    onchange={handleSearchChange}
+                ></lightning-input>
+
+                <template if:true={isSearching}>
+                    <lightning-spinner alternative-text="Searching leads" size="small"></lightning-spinner>
+                </template>
+
+                <lightning-datatable
+                    key-field="id"
+                    data={leads}
+                    columns={leadColumns}
+                    max-row-selection="5"
+                    selected-rows={selectedLeadIds}
+                    onrowselection={handleRowSelection}
+                    wrap-text-max-lines="3"
+                ></lightning-datatable>
+            </section>
+
+            <template if:true={hasSelectedLeadPreview}>
+                <section class="tier-panel">
+                    <span class="status-label">Quality Tier Mapping</span>
+                    <template for:each={selectedLeadPreview} for:item="item">
+                        <div key={item.id} class="tier-row">
+                            <span class="tier-label">{item.qualityTier}</span>
+                            <span>{item.name} ({item.company})</span>
+                        </div>
+                    </template>
+                </section>
+            </template>
+
+            <div class="actions">
+                <lightning-button
+                    variant="brand"
+                    label="Generate 5 Descriptions + Score"
+                    onclick={handleGenerateClick}
+                    disabled={disableGenerateButton}
+                ></lightning-button>
+            </div>
+
+            <template if:true={isGenerating}>
+                <lightning-spinner alternative-text="Generating descriptions" size="medium"></lightning-spinner>
+            </template>
+
+            <template if:true={hasResults}>
+                <section class="panel results-panel">
+                    <span class="status-label">Generation Results</span>
+                    <lightning-datatable
+                        key-field="id"
+                        data={results}
+                        columns={resultColumns}
+                        wrap-text-max-lines="6"
+                    ></lightning-datatable>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+</template>

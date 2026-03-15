@@ -1,0 +1,89 @@
+.intro {
+    color: #445066;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+}
+
+.status-box,
+.panel,
+.tier-panel {
+    background: #fcfdff;
+    border: 1px solid #dce4f4;
+    border-radius: 0.75rem;
+    margin-bottom: 0.9rem;
+    padding: 0.9rem 1rem;
+}
+
+.status-box_warning {
+    background: #fff9eb;
+    border-color: #f0d38a;
+}
+
+.status-row,
+.panel-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+}
+
+.status-label {
+    color: #52627a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.target-name {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.target-meta,
+.warning-text {
+    color: #52627a;
+    margin: 0.25rem 0 0;
+}
+
+.warning-text {
+    color: #8a5a00;
+}
+
+.search {
+    margin: 0.35rem 0 0.7rem;
+}
+
+.selected-count {
+    color: #5f6f86;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.tier-row {
+    align-items: baseline;
+    border-top: 1px dashed #e4eaf7;
+    display: flex;
+    gap: 0.55rem;
+    padding: 0.45rem 0;
+}
+
+.tier-row:first-of-type {
+    border-top: 0;
+    padding-top: 0.15rem;
+}
+
+.tier-label {
+    color: #0b5cab;
+    font-weight: 700;
+    min-width: 5.4rem;
+}
+
+.actions {
+    margin-top: 0.45rem;
+}
+
+.results-panel {
+    margin-top: 1rem;
+}

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</activeVersionIdentifier>
+    <developerName>CM_Lead_Description_Quality_Demo</developerName>
+    <masterLabel>CM - Lead Description Quality Demo</masterLabel>
+    <templateVersions>
+        <content>You are a Salesforce assistant for demo data preparation.
+
+Your goal is to write one Lead Description paragraph for Salesforce Lead.Description based on:
+1) the selected demo target account context,
+2) the current Lead basic fields,
+3) a required quality tier.
+
+---
+Demo Target Account:
+Name: `{{{!$Input:DemoTargetAccount.Name}}}`
+Industry: `{{{!$Input:DemoTargetAccount.Industry}}}`
+Website: `{{{!$Input:DemoTargetAccount.Website}}}`
+Background: `{{{!$Input:DemoTargetAccount.Description}}}`
+---
+
+Lead context:
+Lead Company: `{{{!$Input:Lead.Company}}}`
+Lead Title: `{{{!$Input:Lead.Title}}}`
+Lead Email: `{{{!$Input:Lead.Email}}}`
+Current Lead Description: `{{{!$Input:Lead.Description}}}`
+
+Quality Tier: `{{{!$Input:QualityTier}}}`
+
+Rules:
+1. Output exactly one plain text paragraph only. No JSON, no markdown, no bullet list.
+2. Keep output under 900 characters.
+3. Content must be B2B and aligned with the demo target account context.
+4. Do not invent impossible facts, certifications, or named products that are not implied by context.
+5. The quality tier must control clarity and buying intent:
+   - Very High: specific project scope, timeline, quantity, and explicit RFQ/demo request.
+   - High: clear business need with at least one concrete project detail.
+   - Medium: relevant but moderately vague inquiry, limited detail.
+   - Low: weak and generic inquiry with minimal detail.
+   - Very Low: barely useful inquiry that still looks like a business message (not spam).
+6. Prefer Traditional Chinese when the current Lead Description is primarily Chinese; otherwise use English.
+
+Return only the final paragraph text.
+</content>
+        <inputs>
+            <apiName>Lead</apiName>
+            <definition>SOBJECT://Lead</definition>
+            <masterLabel>Lead</masterLabel>
+            <referenceName>Input:Lead</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>DemoTargetAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Demo Target Account</masterLabel>
+            <referenceName>Input:DemoTargetAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>QualityTier</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Quality Tier</masterLabel>
+            <referenceName>Input:QualityTier</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

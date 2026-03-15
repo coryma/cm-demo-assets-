@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>CM_LeadAIScoringDemoController</members>
+        <members>CM_LeadAIScoringDemoControllerTest</members>
         <members>CMDemoTargetSetupController</members>
         <members>CMDemoTargetSetupControllerTest</members>
         <members>CM_LeadAIScoringInvoker</members>
@@ -16,6 +18,7 @@
         <members>Lead.AI_Reason__c</members>
         <members>Lead.AI_ReplyRecommendation__c</members>
         <members>Lead.AI_Score__c</members>
+        <members>Lead.Description</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -27,6 +30,7 @@
         <name>StandardValueSetTranslation</name>
     </types>
     <types>
+        <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
         <members>MFG_HOME_DISCRETE_MCO</members>
         <name>FlexiPage</name>
@@ -36,6 +40,7 @@
         <name>Flow</name>
     </types>
     <types>
+        <members>CM_Lead_Description_Quality_Demo</members>
         <members>CM_Lead_Auto_Screening_Demo</members>
         <name>GenAiPromptTemplate</name>
     </types>
@@ -58,10 +63,12 @@
     </types>
     <types>
         <members>cmDemoTargetSetup</members>
+        <members>cmLeadAiScoringLab</members>
         <members>cmLatestLeads</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
         <name>CustomTab</name>
     </types>

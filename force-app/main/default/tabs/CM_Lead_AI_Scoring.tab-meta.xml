@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Select five Leads, generate quality-tier descriptions, and run Lead AI scoring.</description>
+    <flexiPage>CM_Lead_AI_Scoring</flexiPage>
+    <label>Lead AI Scoring</label>
+    <motif>Custom83: Pencil</motif>
+</CustomTab>
