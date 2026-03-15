@@ -47,15 +47,17 @@
                     <lightning-spinner alternative-text="Searching leads" size="small"></lightning-spinner>
                 </template>
 
-                <lightning-datatable
-                    key-field="recordId"
-                    data={leads}
-                    columns={leadColumns}
-                    max-row-selection="10"
-                    selected-rows={selectedLeadIds}
-                    onrowselection={handleRowSelection}
-                    wrap-text-max-lines="3"
-                ></lightning-datatable>
+                <div class="pick-table-wrap">
+                    <lightning-datatable
+                        key-field="recordId"
+                        data={leads}
+                        columns={leadColumns}
+                        max-row-selection="10"
+                        selected-rows={selectedLeadIds}
+                        onrowselection={handleRowSelection}
+                        wrap-text-max-lines="3"
+                    ></lightning-datatable>
+                </div>
             </section>
 
             <template if:true={hasSelectedLeadPreview}>

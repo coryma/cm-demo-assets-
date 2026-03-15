@@ -61,6 +61,11 @@
     font-weight: 600;
 }
 
+.pick-table-wrap {
+    max-height: clamp(18rem, 42vh, 30rem);
+    overflow-y: auto;
+}
+
 .tier-row {
     align-items: center;
     border-top: 1px dashed #e4eaf7;
