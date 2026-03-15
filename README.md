@@ -15,6 +15,19 @@ Imported and verified:
   - Home component: `cmLatestLeads`
   - UI metadata: Lead layouts, Lead record pages, `MFG_HOME_DISCRETE_MCO`
   - Fields: `Lead.AI_Classification__c`, `Lead.AI_KeyTopics__c`, `Lead.AI_Reason__c`, `Lead.AI_ReplyRecommendation__c`, `Lead.AI_Score__c`
+- `Email Simulation`
+  - Quick action: `Account.Generate_Simulated_Emails`
+  - Flow: `CM_Generate_Simulated_Emails`
+  - Apex service/controller: `CMEmailTimelineSimulationService`, `CMEmailSimulationController`
+  - Components: `cmEmailSimulationSetup`, `cmEmailSimulationManager`
+  - Prompt templates: `CM_Mock_Email_Background_Context`, `CM_Draft_Mock_Email`
+  - UI metadata: Account record page `MFG_ACCOUNT_DISCRETE_ALL`, app page/tab `CM_Email_Simulation`
+- `Account Description / News Briefing`
+  - Field completion prompts: `CM_Account_News_Update` (writes `Account.Description`), `CM_Account_News` (writes `Account.Account_News__c`)
+  - Prompt flow: `CM_Get_News_Prompt_Template_Flow`
+  - Apex invocable service: `CM_Get_News_By_GDELT_API`
+  - UI metadata: Account record page `MFG_ACCOUNT_DISCRETE_ALL` (`Record.Description` generative prompt binding)
+  - Field: `Account.Account_News__c`
 
 Planned demo features to add next:
 
@@ -25,7 +38,6 @@ Planned demo features to add next:
 - Account news / Brave Search
 - QBR preparation
 - Meeting AI follow-up
-- Email simulation
 - Account SWOT analysis
 - Activity scorecard
 
@@ -44,8 +56,16 @@ Retrieve one curated feature manifest:
 ./scripts/retrieve-feature.sh lead-ai-scoring coryma@coryma-240922.demo
 ```
 
+```bash
+./scripts/retrieve-feature.sh email-simulation coryma@coryma-240922.demo
+```
+
 Deploy one curated feature manifest:
 
 ```bash
 ./scripts/deploy-feature.sh lead-ai-scoring coryma-250312-demo
+```
+
+```bash
+./scripts/deploy-feature.sh email-simulation coryma-250312-demo
 ```
