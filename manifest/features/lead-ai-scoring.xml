@@ -24,6 +24,7 @@
     <types>
         <members>CM_Account_Role_Setup</members>
         <members>CM_Demo_Setup</members>
+        <members>MFG_ACCOUNT_DISCRETE_ALL</members>
         <members>MFG_HOME_DISCRETE_MCO</members>
         <name>FlexiPage</name>
     </types>

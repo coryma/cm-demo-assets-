@@ -11,6 +11,7 @@
     </types>
     <types>
         <members>CM_Account_Role_Setup</members>
+        <members>MFG_ACCOUNT_DISCRETE_ALL</members>
         <name>FlexiPage</name>
     </types>
     <types>

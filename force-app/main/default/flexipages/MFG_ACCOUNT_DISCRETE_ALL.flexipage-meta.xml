@@ -575,6 +575,31 @@
             </componentInstance>
         </itemInstances>
         <itemInstances>
+                <componentInstance>
+                    <componentInstanceProperties>
+                        <name>columns</name>
+                        <value>Facet-supplierInfoColumnsDetail</value>
+                    </componentInstanceProperties>
+                    <componentInstanceProperties>
+                        <name>horizontalAlignment</name>
+                        <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>{!$Label.CM_Supplier_Info_Tab}</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection_supplierInfoInDetail</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.BusinessRoleHasSupplier__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>true</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
             <componentInstance>
                 <componentName>force:recordDetailPanelMobile</componentName>
                 <identifier>force_recordDetailPanelMobile</identifier>
@@ -681,6 +706,78 @@
             </componentInstance>
         </itemInstances>
         <name>Facet-supplierInfoColumns</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CM_SupplierFactoryCount__c</fieldItem>
+                <identifier>RecordCM_SupplierFactoryCount_cField_detail</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CM_SupplierRatingGrade__c</fieldItem>
+                <identifier>RecordCM_SupplierRatingGrade_cField_detail</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-supplierInfoLeftFieldsDetail</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CM_SupplierMainProducts__c</fieldItem>
+                <identifier>RecordCM_SupplierMainProducts_cField_detail</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CM_SupplierRDHeadcount__c</fieldItem>
+                <identifier>RecordCM_SupplierRDHeadcount_cField_detail</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-supplierInfoRightFieldsDetail</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-supplierInfoLeftFieldsDetail</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column_supplierInfoLeftDetail</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-supplierInfoRightFieldsDetail</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column_supplierInfoRightDetail</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-supplierInfoColumnsDetail</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -1925,7 +2022,7 @@
                 <componentName>flexipage:tab</componentName>
                 <identifier>detailTab</identifier>
                 <visibilityRule>
-                    <booleanFilter>1 OR 2</booleanFilter>
+                    <booleanFilter>1 OR 2 OR 3</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.BusinessRoleHasCustomer__c}</leftValue>
                         <operator>EQUAL</operator>
@@ -1935,6 +2032,11 @@
                         <leftValue>{!Record.BusinessRoleHasSupplier__c}</leftValue>
                         <operator>EQUAL</operator>
                         <rightValue>false</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.BusinessRoleHasSupplier__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>true</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>
@@ -2131,19 +2233,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentInstanceProperties>
-                    <name>mode</name>
-                    <value>header</value>
-                </componentInstanceProperties>
                 <componentName>cmAccountRoleIdentityBanner</componentName>
                 <identifier>c_cmSupplierIdentityBannerHeader</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!Record.BusinessRoleHasSupplier__c}</leftValue>
-                        <operator>EQUAL</operator>
-                        <rightValue>true</rightValue>
-                    </criteria>
-                </visibilityRule>
             </componentInstance>
         </itemInstances>
         <itemInstances>
