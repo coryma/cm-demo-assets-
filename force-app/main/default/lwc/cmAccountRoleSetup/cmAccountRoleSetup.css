@@ -1,0 +1,51 @@
+.intro {
+    color: #445066;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+}
+
+.panel,
+.editor-box {
+    border: 1px solid #dce4f4;
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.editor-box {
+    background: #fcfdff;
+}
+
+.status-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+}
+
+.status-label {
+    color: #52627a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.search {
+    margin-bottom: 0.75rem;
+}
+
+.roles-picklist {
+    margin-top: 0.5rem;
+}
+
+.hint-text,
+.empty-state {
+    color: #52627a;
+    line-height: 1.45;
+    margin: 0.55rem 0 0;
+}
+
+.actions {
+    margin-top: 0.85rem;
+}

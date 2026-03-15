@@ -1,0 +1,42 @@
+.banner-row {
+    align-items: center;
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.label {
+    color: #52627a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.chip {
+    background: #f3f6ff;
+    border: 1px solid #dce4f4;
+    border-radius: 999px;
+    color: #253858;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 0.1rem 0.55rem;
+}
+
+.hint-text,
+.warning-text {
+    color: #52627a;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.warning-text {
+    color: #8a5a00;
+    margin-bottom: 0.5rem;
+}

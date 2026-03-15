@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Supplier Identity" icon-name="utility:company">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <template if:true={errorMessage}>
+                <p class="warning-text">{errorMessage}</p>
+            </template>
+
+            <div class="status-row">
+                <span class="status-label">Supplier Status</span>
+                <lightning-badge label={supplierStatus}></lightning-badge>
+            </div>
+
+            <p class="meta-label">Current Roles</p>
+            <p class="meta-value">{roleSummary}</p>
+        </div>
+    </lightning-card>
+</template>

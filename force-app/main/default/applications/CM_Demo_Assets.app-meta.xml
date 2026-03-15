@@ -14,6 +14,7 @@
     <label>CM Demo Assets</label>
     <navType>Standard</navType>
     <tabs>CM_Demo_Setup</tabs>
+    <tabs>CM_Account_Role_Setup</tabs>
     <tabs>CM_Lead_AI_Scoring</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

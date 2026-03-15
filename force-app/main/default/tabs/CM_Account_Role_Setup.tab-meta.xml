@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Batch configure identity roles on selected Accounts.</description>
+    <flexiPage>CM_Account_Role_Setup</flexiPage>
+    <label>Account Role Setup</label>
+    <motif>Custom17: Sack</motif>
+</CustomTab>

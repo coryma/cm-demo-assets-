@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>CMAccountRoleSetupController</members>
+        <members>CMAccountRoleSetupControllerTest</members>
         <members>CM_LeadAIScoringDemoController</members>
         <members>CM_LeadAIScoringDemoControllerTest</members>
         <members>CMDemoTargetSetupController</members>
@@ -12,6 +14,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Account.CM_Account_Roles__c</members>
         <members>Account.CM_Is_Demo_Target__c</members>
         <members>Lead.AI_Classification__c</members>
         <members>Lead.AI_KeyTopics__c</members>
@@ -30,6 +33,7 @@
         <name>StandardValueSetTranslation</name>
     </types>
     <types>
+        <members>CM_Account_Role_Setup</members>
         <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
         <members>MFG_HOME_DISCRETE_MCO</members>
@@ -62,12 +66,16 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>cmAccountRoleIdentityBanner</members>
+        <members>cmAccountRoleSetup</members>
         <members>cmDemoTargetSetup</members>
         <members>cmLeadAiScoringLab</members>
         <members>cmLatestLeads</members>
+        <members>cmSupplierIdentityBanner</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>CM_Account_Role_Setup</members>
         <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
         <name>CustomTab</name>

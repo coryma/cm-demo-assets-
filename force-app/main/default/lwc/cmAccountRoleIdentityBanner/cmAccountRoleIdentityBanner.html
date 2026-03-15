@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Account Role Identity" icon-name="standard:account">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <template if:true={errorMessage}>
+                <p class="warning-text">{errorMessage}</p>
+            </template>
+
+            <div class="banner-row">
+                <span class="label">Identity</span>
+                <lightning-badge label={summaryLabel}></lightning-badge>
+            </div>
+
+            <template if:true={hasBadges}>
+                <div class="chips">
+                    <template for:each={badgeItems} for:item="badge">
+                        <span key={badge.key} class="chip">{badge.label}</span>
+                    </template>
+                </div>
+            </template>
+
+            <template if:false={hasBadges}>
+                <p class="hint-text">No role assigned yet.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

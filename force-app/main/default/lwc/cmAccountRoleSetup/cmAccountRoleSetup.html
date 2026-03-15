@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Account Role Setup" icon-name="standard:account">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <p class="intro">
+                Set one or more Account identity roles in batch for demo use cases.
+                Supported roles: Customer, Supplier, Partner.
+            </p>
+
+            <section class="panel">
+                <div class="status-header">
+                    <span class="status-label">Choose Accounts</span>
+                    <lightning-badge label={selectionLabel}></lightning-badge>
+                </div>
+
+                <lightning-input
+                    class="search"
+                    type="search"
+                    label="Search Account"
+                    value={searchKey}
+                    placeholder="Search by account name"
+                    onchange={handleSearchChange}
+                ></lightning-input>
+
+                <template if:true={isSearching}>
+                    <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
+                </template>
+
+                <lightning-datatable
+                    key-field="id"
+                    data={accounts}
+                    columns={columns}
+                    onrowselection={handleRowSelection}
+                    selected-rows={selectedRows}
+                ></lightning-datatable>
+
+                <template if:true={showEmptyState}>
+                    <p class="empty-state">No matching accounts found.</p>
+                </template>
+            </section>
+
+            <section class="editor-box">
+                <span class="status-label">Roles To Apply</span>
+                <lightning-dual-listbox
+                    class="roles-picklist"
+                    name="accountRoles"
+                    label="Account roles"
+                    source-label="Available roles"
+                    selected-label="Selected roles"
+                    options={roleOptions}
+                    value={selectedRoles}
+                    onchange={handleRoleChange}
+                ></lightning-dual-listbox>
+
+                <p class="hint-text">
+                    Apply overwrites <strong>CM Account Roles</strong> for all selected accounts.
+                </p>
+
+                <div class="actions">
+                    <lightning-button
+                        variant="brand"
+                        label="Apply Roles"
+                        onclick={handleApplyRoles}
+                        disabled={disableApplyButton}
+                    ></lightning-button>
+                    <lightning-button
+                        class="slds-m-left_x-small"
+                        label="Clear Roles"
+                        onclick={handleClearRoles}
+                        disabled={disableClearButton}
+                    ></lightning-button>
+                </div>
+            </section>
+        </div>
+    </lightning-card>
+</template>

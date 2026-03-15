@@ -5,6 +5,10 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>CMAccountRoleSetupController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>CMDemoTargetSetupController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -12,6 +16,11 @@
         <apexClass>CM_LeadAIScoringDemoController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.CM_Account_Roles__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>Account.CM_Is_Demo_Target__c</field>
@@ -64,6 +73,10 @@
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>CM Demo Assets</label>
+    <tabSettings>
+        <tab>CM_Account_Role_Setup</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
     <tabSettings>
         <tab>CM_Demo_Setup</tab>
         <visibility>Visible</visibility>

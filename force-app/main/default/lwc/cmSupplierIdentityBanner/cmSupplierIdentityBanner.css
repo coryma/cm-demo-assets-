@@ -1,0 +1,31 @@
+.status-row {
+    align-items: center;
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.status-label,
+.meta-label {
+    color: #52627a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.meta-label {
+    margin: 0;
+}
+
+.meta-value {
+    color: #253858;
+    line-height: 1.45;
+    margin: 0.25rem 0 0;
+}
+
+.warning-text {
+    color: #8a5a00;
+    line-height: 1.45;
+    margin: 0 0 0.5rem;
+}
