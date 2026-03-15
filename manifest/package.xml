@@ -59,5 +59,9 @@
         <members>CM_Demo_Setup</members>
         <name>CustomTab</name>
     </types>
+    <types>
+        <members>CM_Demo_Assets</members>
+        <name>CustomApplication</name>
+    </types>
     <version>66.0</version>
 </Package>
