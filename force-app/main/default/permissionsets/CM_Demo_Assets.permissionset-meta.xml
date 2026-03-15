@@ -30,7 +30,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>CM Lead AI Scoring</label>
+    <label>CM Demo Assets</label>
     <tabSettings>
         <tab>CM_Demo_Setup</tab>
         <visibility>Visible</visibility>
