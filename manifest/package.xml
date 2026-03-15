@@ -47,6 +47,12 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>Account.Business_Account</members>
+        <members>Account.SDO_Account_Partner</members>
+        <members>Account.SDO_Account_Simple</members>
+        <name>RecordType</name>
+    </types>
+    <types>
         <members>CM_Demo_Assets</members>
         <name>PermissionSet</name>
     </types>
