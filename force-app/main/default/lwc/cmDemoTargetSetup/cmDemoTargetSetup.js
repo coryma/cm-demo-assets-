@@ -2,9 +2,12 @@ import { LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import ACCOUNT_OBJECT from '@salesforce/schema/Account';
+import INDUSTRY_FIELD from '@salesforce/schema/Account.Industry';
 import getActiveDemoTarget from '@salesforce/apex/CMDemoTargetSetupController.getActiveDemoTarget';
 import searchAccounts from '@salesforce/apex/CMDemoTargetSetupController.searchAccounts';
-import setActiveDemoTarget from '@salesforce/apex/CMDemoTargetSetupController.setActiveDemoTarget';
+import saveDemoTarget from '@salesforce/apex/CMDemoTargetSetupController.saveDemoTarget';
 
 const COLUMNS = [
     {
@@ -18,7 +21,7 @@ const COLUMNS = [
     },
     { label: 'Industry', fieldName: 'industryLabel' },
     { label: 'Type', fieldName: 'typeLabel' },
-    { label: 'Context', fieldName: 'contextStatus' }
+    { label: 'Status', fieldName: 'selectionStatus' }
 ];
 
 export default class CmDemoTargetSetup extends NavigationMixin(LightningElement) {
@@ -28,11 +31,38 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
     selectedAccountId;
     selectedRows = [];
     activeTarget;
+    editorAccount;
+    industryOptions = [];
     isSearching = false;
     isSaving = false;
 
     _searchTimer;
     _wiredActiveTarget;
+
+    @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
+    objectInfo;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$defaultRecordTypeId',
+        fieldApiName: INDUSTRY_FIELD
+    })
+    wiredIndustryValues({ data, error }) {
+        if (data) {
+            this.industryOptions = data.values.map((item) => ({
+                label: item.label,
+                value: item.value
+            }));
+            this.accounts = this.accounts.map((row) => this.decorateAccount(row));
+            if (this.activeTarget) {
+                this.activeTarget = this.decorateAccount(this.activeTarget);
+            }
+            if (this.editorAccount) {
+                this.editorAccount = this.decorateAccount(this.editorAccount);
+            }
+        } else if (error) {
+            this.showToast('Industry options unavailable', this.reduceError(error), 'error');
+        }
+    }
 
     connectedCallback() {
         this.runSearch('');
@@ -45,26 +75,47 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
 
         if (data) {
             this.activeTarget = this.decorateAccount(data);
+            if (!this.editorAccount) {
+                this.selectAccount(this.activeTarget);
+            }
         } else if (error) {
             this.activeTarget = undefined;
             this.showToast('Demo target error', this.reduceError(error), 'error');
         }
     }
 
-    get activeContextStatus() {
-        return this.activeTarget?.contextStatus || 'Needs setup';
+    get defaultRecordTypeId() {
+        return this.objectInfo?.data?.defaultRecordTypeId;
     }
 
-    get disableSetButton() {
-        return !this.selectedAccountId || this.isSaving;
+    get activeContextStatus() {
+        if (!this.activeTarget) {
+            return 'Not set';
+        }
+        return this.activeTarget.hasContext ? 'Active - Ready' : 'Active - Needs setup';
+    }
+
+    get editorContextStatus() {
+        if (!this.editorAccount) {
+            return 'Select an account';
+        }
+        return this.editorAccount.hasContext ? 'Ready' : 'Needs setup';
+    }
+
+    get disableSaveButton() {
+        return !this.editorAccount?.id || this.isSaving;
     }
 
     get disableOpenButton() {
-        return !this.selectedAccountId;
+        return !this.editorAccount?.id;
     }
 
     get showEmptyState() {
         return !this.isSearching && this.accounts.length === 0;
+    }
+
+    get hasEditorAccount() {
+        return Boolean(this.editorAccount);
     }
 
     handleSearchChange(event) {
@@ -75,44 +126,64 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
 
     handleRowSelection(event) {
         const rows = event.detail.selectedRows || [];
-        this.selectedAccountId = rows.length ? rows[0].id : null;
-        this.selectedRows = this.selectedAccountId ? [this.selectedAccountId] : [];
+        if (rows.length) {
+            this.selectAccount(rows[0]);
+        } else {
+            this.selectedAccountId = null;
+            this.selectedRows = [];
+            this.editorAccount = null;
+        }
     }
 
-    async handleSetActive() {
-        if (!this.selectedAccountId) {
+    handleFieldChange(event) {
+        const fieldName = event.target.dataset.field;
+        this.editorAccount = this.decorateAccount({
+            ...this.editorAccount,
+            [fieldName]: event.detail?.value ?? event.target.value
+        });
+    }
+
+    async handleSaveDemoTarget() {
+        if (!this.editorAccount?.id) {
             return;
         }
 
         this.isSaving = true;
         try {
-            const result = await setActiveDemoTarget({ accountId: this.selectedAccountId });
-            this.activeTarget = this.decorateAccount(result);
+            const result = await saveDemoTarget({
+                accountId: this.editorAccount.id,
+                industry: this.editorAccount.industry,
+                website: this.editorAccount.website,
+                description: this.editorAccount.description
+            });
+            const decorated = this.decorateAccount(result);
+            this.activeTarget = decorated;
+            this.selectAccount(decorated);
             await refreshApex(this._wiredActiveTarget);
             await this.runSearch(this.searchKey);
 
             const variant = result.missingContext ? 'warning' : 'success';
             const message = result.missingContext
                 ? `Demo target updated. Complete the Account fields: ${result.missingContext}.`
-                : 'Demo target updated.';
+                : 'Demo target updated and activated.';
 
             this.showToast('Demo target saved', message, variant);
         } catch (error) {
-            this.showToast('Unable to set demo target', this.reduceError(error), 'error');
+            this.showToast('Unable to save demo target', this.reduceError(error), 'error');
         } finally {
             this.isSaving = false;
         }
     }
 
     handleOpenSelected() {
-        if (!this.selectedAccountId) {
+        if (!this.editorAccount?.id) {
             return;
         }
 
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
-                recordId: this.selectedAccountId,
+                recordId: this.editorAccount.id,
                 objectApiName: 'Account',
                 actionName: 'view'
             }
@@ -124,6 +195,9 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
         try {
             const data = await searchAccounts({ searchTerm });
             this.accounts = (data || []).map((row) => this.decorateAccount(row));
+            if (this.selectedAccountId) {
+                this.selectedRows = [this.selectedAccountId];
+            }
         } catch (error) {
             this.accounts = [];
             this.showToast('Search failed', this.reduceError(error), 'error');
@@ -132,14 +206,47 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
         }
     }
 
+    selectAccount(row) {
+        const decorated = this.decorateAccount(row);
+        this.selectedAccountId = decorated.id;
+        this.selectedRows = [decorated.id];
+        this.editorAccount = decorated;
+    }
+
     decorateAccount(row) {
+        const missingContext = this.getMissingContext(row);
         return {
             ...row,
+            industry: row.industry || '',
+            website: row.website || '',
+            description: row.description || '',
             recordUrl: `/${row.id}`,
-            industryLabel: row.industry || 'Not set',
+            industryLabel: row.industry ? this.getIndustryLabel(row.industry) : 'Not set',
             typeLabel: row.type || 'Not set',
-            contextStatus: row.hasContext ? 'Ready' : 'Needs setup'
+            hasContext: missingContext.length === 0,
+            missingContext: missingContext.join(', '),
+            contextStatus: missingContext.length === 0 ? 'Ready' : 'Needs setup',
+            selectionStatus: row.isDemoTarget ? 'Active' : missingContext.length === 0 ? 'Ready' : 'Needs setup'
         };
+    }
+
+    getIndustryLabel(value) {
+        const match = this.industryOptions.find((item) => item.value === value);
+        return match?.label || value;
+    }
+
+    getMissingContext(row) {
+        const missing = [];
+        if (!row?.industry) {
+            missing.push('Industry');
+        }
+        if (!row?.website) {
+            missing.push('Website');
+        }
+        if (!row?.description) {
+            missing.push('Description');
+        }
+        return missing;
     }
 
     reduceError(error) {

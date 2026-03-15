@@ -1,10 +1,10 @@
 <template>
-    <lightning-card title="Demo Target Setup" icon-name="standard:account">
+    <lightning-card title="Demo Setup" icon-name="standard:account">
         <div class="slds-p-horizontal_small slds-p-bottom_small">
             <p class="intro">
-                Select the Account currently used for demos. Before activating it, maintain the customer's
-                profile on the Account record, especially <strong>Industry</strong>, <strong>Website</strong>,
-                and <strong>Description</strong>.
+                Select the Account used for demos, then maintain its <strong>Industry</strong>,
+                <strong>Website</strong>, and <strong>Description</strong> here. Saving will also mark that
+                Account as the active demo target for Lead AI scoring.
             </p>
 
             <template if:true={activeTarget}>
@@ -30,46 +30,101 @@
                 </section>
             </template>
 
-            <lightning-input
-                class="search"
-                type="search"
-                label="Search Account"
-                value={searchKey}
-                placeholder="Search by account name"
-                onchange={handleSearchChange}
-            ></lightning-input>
+            <section class="panel">
+                <span class="status-label">Choose Account</span>
 
-            <template if:true={isSearching}>
-                <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
+                <lightning-input
+                    class="search"
+                    type="search"
+                    label="Search Account"
+                    value={searchKey}
+                    placeholder="Search by account name"
+                    onchange={handleSearchChange}
+                ></lightning-input>
+
+                <template if:true={isSearching}>
+                    <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
+                </template>
+
+                <lightning-datatable
+                    key-field="id"
+                    data={accounts}
+                    columns={columns}
+                    max-row-selection="1"
+                    onrowselection={handleRowSelection}
+                    selected-rows={selectedRows}
+                ></lightning-datatable>
+
+                <template if:true={showEmptyState}>
+                    <p class="empty-state">No matching accounts found.</p>
+                </template>
+            </section>
+
+            <template if:true={hasEditorAccount}>
+                <section class="editor-box">
+                    <div class="status-header">
+                        <div>
+                            <span class="status-label">Demo Target Profile</span>
+                            <p class="target-name">
+                                <a href={editorAccount.recordUrl} target="_blank" rel="noreferrer">{editorAccount.name}</a>
+                            </p>
+                            <p class="target-meta">Update the core company context used by your demo flows.</p>
+                        </div>
+                        <lightning-badge label={editorContextStatus}></lightning-badge>
+                    </div>
+
+                    <div class="field-grid">
+                        <lightning-combobox
+                            label="Industry"
+                            value={editorAccount.industry}
+                            options={industryOptions}
+                            placeholder="Select industry"
+                            data-field="industry"
+                            onchange={handleFieldChange}
+                        ></lightning-combobox>
+                        <lightning-input
+                            type="text"
+                            label="Website"
+                            value={editorAccount.website}
+                            data-field="website"
+                            onchange={handleFieldChange}
+                        ></lightning-input>
+                    </div>
+
+                    <lightning-textarea
+                        class="description-field"
+                        label="Description"
+                        value={editorAccount.description}
+                        data-field="description"
+                        onchange={handleFieldChange}
+                    ></lightning-textarea>
+
+                    <template if:true={editorAccount.missingContext}>
+                        <p class="warning-text">Missing context: {editorAccount.missingContext}</p>
+                    </template>
+
+                    <div class="actions">
+                        <lightning-button
+                            variant="brand"
+                            label="Save Demo Target"
+                            onclick={handleSaveDemoTarget}
+                            disabled={disableSaveButton}
+                        ></lightning-button>
+                        <lightning-button
+                            class="slds-m-left_x-small"
+                            label="Open Account"
+                            onclick={handleOpenSelected}
+                            disabled={disableOpenButton}
+                        ></lightning-button>
+                    </div>
+                </section>
             </template>
 
-            <lightning-datatable
-                key-field="id"
-                data={accounts}
-                columns={columns}
-                max-row-selection="1"
-                onrowselection={handleRowSelection}
-                selected-rows={selectedRows}
-            ></lightning-datatable>
-
-            <template if:true={showEmptyState}>
-                <p class="empty-state">No matching accounts found.</p>
+            <template if:false={hasEditorAccount}>
+                <section class="editor-box editor-box_empty">
+                    <p class="empty-state">Select an Account to edit its demo profile and activate it.</p>
+                </section>
             </template>
-
-            <div class="actions">
-                <lightning-button
-                    variant="brand"
-                    label="Set as Demo Target"
-                    onclick={handleSetActive}
-                    disabled={disableSetButton}
-                ></lightning-button>
-                <lightning-button
-                    class="slds-m-left_x-small"
-                    label="Open Selected Account"
-                    onclick={handleOpenSelected}
-                    disabled={disableOpenButton}
-                ></lightning-button>
-            </div>
         </div>
     </lightning-card>
 </template>

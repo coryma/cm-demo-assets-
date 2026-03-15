@@ -44,12 +44,6 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
-                <componentName>cmDemoTargetSetup</componentName>
-                <identifier>c_cmDemoTargetSetup</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
                 <componentInstanceProperties>
                     <name>activitiesCompleted1</name>
                     <value>90</value>

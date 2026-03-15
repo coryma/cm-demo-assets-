@@ -50,8 +50,36 @@
     color: #8a5a00;
 }
 
+.panel,
+.editor-box {
+    border: 1px solid #dce4f4;
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.editor-box {
+    background: #fcfdff;
+}
+
+.editor-box_empty {
+    background: #f8fafc;
+}
+
 .search {
     margin-bottom: 0.75rem;
+}
+
+.field-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: 0.85rem;
+}
+
+.description-field {
+    display: block;
+    margin-top: 0.75rem;
 }
 
 .actions {

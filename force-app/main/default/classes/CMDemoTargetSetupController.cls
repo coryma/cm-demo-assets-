@@ -86,6 +86,58 @@ public with sharing class CMDemoTargetSetupController {
         ]);
     }
 
+    @AuraEnabled
+    public static DemoTargetAccount saveDemoTarget(
+        Id accountId,
+        String industry,
+        String website,
+        String description
+    ) {
+        if (accountId == null) {
+            throw new AuraHandledException('Please select an Account.');
+        }
+
+        Account selected = [
+            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+            FOR UPDATE
+        ];
+
+        List<Account> updates = new List<Account>();
+
+        for (Account account : [
+            SELECT Id, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE CM_Is_Demo_Target__c = true
+            AND Id != :accountId
+        ]) {
+            account.CM_Is_Demo_Target__c = false;
+            updates.add(account);
+        }
+
+        selected.Industry = normalizeValue(industry);
+        selected.Website = normalizeValue(website);
+        selected.Description = normalizeValue(description);
+        selected.CM_Is_Demo_Target__c = true;
+        updates.add(selected);
+
+        update updates;
+
+        return toDto([
+            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ]);
+    }
+
+    private static String normalizeValue(String value) {
+        String normalized = value == null ? null : value.trim();
+        return String.isBlank(normalized) ? null : normalized;
+    }
+
     private static DemoTargetAccount toDto(Account account) {
         DemoTargetAccount dto = new DemoTargetAccount();
         dto.id = account.Id;

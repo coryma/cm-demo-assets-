@@ -27,6 +27,7 @@
         <name>StandardValueSetTranslation</name>
     </types>
     <types>
+        <members>CM_Demo_Setup</members>
         <members>MFG_HOME_DISCRETE_MCO</members>
         <name>FlexiPage</name>
     </types>
@@ -53,6 +54,10 @@
         <members>cmDemoTargetSetup</members>
         <members>cmLatestLeads</members>
         <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>CM_Demo_Setup</members>
+        <name>CustomTab</name>
     </types>
     <version>66.0</version>
 </Package>

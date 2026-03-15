@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Configure the active demo target account and its company profile.</description>
+    <flexiPage>CM_Demo_Setup</flexiPage>
+    <label>Demo Setup</label>
+    <motif>Custom14: Hands</motif>
+</CustomTab>
