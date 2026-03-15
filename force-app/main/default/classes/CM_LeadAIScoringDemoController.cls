@@ -1,5 +1,6 @@
 public with sharing class CM_LeadAIScoringDemoController {
     private static final Integer SEARCH_LIMIT = 25;
+    private static final Integer MAX_GENERATION_COUNT = 10;
     private static final String DESCRIPTION_PROMPT_TEMPLATE = 'CM_Lead_Description_Quality_Demo';
 
     @TestVisible
@@ -69,10 +70,14 @@ public with sharing class CM_LeadAIScoringDemoController {
     }
 
     @AuraEnabled
-    public static List<LeadGenerationResult> generateDescriptionsAndScore(List<Id> leadIds) {
-        List<Id> orderedLeadIds = normalizeLeadIds(leadIds);
-        if (orderedLeadIds.size() != QUALITY_TIERS.size()) {
-            throw new AuraHandledException('Please select exactly 5 Leads.');
+    public static List<LeadGenerationResult> generateDescriptionsAndScore(List<LeadGenerationInput> leadInputs) {
+        List<GenerationSelection> selections = normalizeSelections(leadInputs);
+
+        if (selections.isEmpty()) {
+            throw new AuraHandledException('Please select at least 1 Lead.');
+        }
+        if (selections.size() > MAX_GENERATION_COUNT) {
+            throw new AuraHandledException('You can generate up to 10 Leads at a time.');
         }
 
         Id demoTargetAccountId = getActiveDemoTargetAccountId();
@@ -82,17 +87,22 @@ public with sharing class CM_LeadAIScoringDemoController {
             );
         }
 
+        Set<Id> leadIds = new Set<Id>();
+        for (GenerationSelection selection : selections) {
+            leadIds.add(selection.leadId);
+        }
+
         Map<Id, Lead> selectedById = new Map<Id, Lead>([
             SELECT Id, Name, Company, Title, Email, Description,
                    AI_Score__c, AI_Classification__c, AI_Reason__c,
                    AI_KeyTopics__c, AI_ReplyRecommendation__c
             FROM Lead
-            WHERE Id IN :orderedLeadIds
+            WHERE Id IN :leadIds
             AND IsDeleted = false
             AND IsConverted = false
         ]);
 
-        if (selectedById.size() != orderedLeadIds.size()) {
+        if (selectedById.size() != selections.size()) {
             throw new AuraHandledException(
                 'Some selected Leads are unavailable. Please refresh the list and try again.'
             );
@@ -101,15 +111,17 @@ public with sharing class CM_LeadAIScoringDemoController {
         Map<Id, String> qualityByLeadId = new Map<Id, String>();
         List<Lead> descriptionUpdates = new List<Lead>();
 
-        for (Integer i = 0; i < orderedLeadIds.size(); i++) {
-            Id leadId = orderedLeadIds[i];
-            String qualityTier = QUALITY_TIERS[i];
-            Lead leadRecord = selectedById.get(leadId);
-            String generatedDescription = generateDescription(leadRecord, demoTargetAccountId, qualityTier);
+        for (GenerationSelection selection : selections) {
+            Lead leadRecord = selectedById.get(selection.leadId);
+            String generatedDescription = generateDescription(
+                leadRecord,
+                demoTargetAccountId,
+                selection.qualityTier
+            );
 
-            qualityByLeadId.put(leadId, qualityTier);
+            qualityByLeadId.put(selection.leadId, selection.qualityTier);
             descriptionUpdates.add(new Lead(
-                Id = leadId,
+                Id = selection.leadId,
                 Description = generatedDescription
             ));
         }
@@ -118,9 +130,9 @@ public with sharing class CM_LeadAIScoringDemoController {
 
         List<CM_LeadAIScoringInvoker.Requests> scoringRequests =
             new List<CM_LeadAIScoringInvoker.Requests>();
-        for (Id leadId : orderedLeadIds) {
+        for (GenerationSelection selection : selections) {
             CM_LeadAIScoringInvoker.Requests request = new CM_LeadAIScoringInvoker.Requests();
-            request.leadId = leadId;
+            request.leadId = selection.leadId;
             scoringRequests.add(request);
         }
 
@@ -128,8 +140,8 @@ public with sharing class CM_LeadAIScoringDemoController {
             CM_LeadAIScoringInvoker.generate(scoringRequests);
 
         List<Lead> scoringUpdates = new List<Lead>();
-        for (Integer i = 0; i < orderedLeadIds.size(); i++) {
-            Id leadId = orderedLeadIds[i];
+        for (Integer i = 0; i < selections.size(); i++) {
+            Id leadId = selections[i].leadId;
             CM_LeadAIScoringInvoker.Results scoreResult =
                 i < scoringResults.size() ? scoringResults[i] : null;
 
@@ -155,17 +167,17 @@ public with sharing class CM_LeadAIScoringDemoController {
                    AI_Score__c, AI_Classification__c, AI_Reason__c,
                    AI_KeyTopics__c, AI_ReplyRecommendation__c
             FROM Lead
-            WHERE Id IN :orderedLeadIds
+            WHERE Id IN :leadIds
         ]);
 
         List<LeadGenerationResult> results = new List<LeadGenerationResult>();
-        for (Id leadId : orderedLeadIds) {
-            Lead leadRecord = refreshedById.get(leadId);
+        for (GenerationSelection selection : selections) {
+            Lead leadRecord = refreshedById.get(selection.leadId);
             LeadGenerationResult dto = new LeadGenerationResult();
             dto.id = leadRecord.Id;
             dto.name = leadRecord.Name;
             dto.company = leadRecord.Company;
-            dto.qualityTier = qualityByLeadId.get(leadId);
+            dto.qualityTier = qualityByLeadId.get(selection.leadId);
             dto.generatedDescription = leadRecord.Description;
             dto.aiScore = leadRecord.AI_Score__c;
             dto.aiClassification = leadRecord.AI_Classification__c;
@@ -289,22 +301,45 @@ public with sharing class CM_LeadAIScoringDemoController {
         return wrapped;
     }
 
-    private static List<Id> normalizeLeadIds(List<Id> leadIds) {
-        List<Id> ordered = new List<Id>();
+    private static List<GenerationSelection> normalizeSelections(List<LeadGenerationInput> leadInputs) {
+        List<GenerationSelection> ordered = new List<GenerationSelection>();
         Set<Id> seen = new Set<Id>();
 
-        if (leadIds == null) {
+        if (leadInputs == null) {
             return ordered;
         }
 
-        for (Id leadId : leadIds) {
-            if (leadId == null || seen.contains(leadId)) {
+        for (LeadGenerationInput input : leadInputs) {
+            if (input == null || input.leadId == null || seen.contains(input.leadId)) {
                 continue;
             }
-            ordered.add(leadId);
-            seen.add(leadId);
+
+            GenerationSelection selection = new GenerationSelection();
+            selection.leadId = input.leadId;
+            selection.qualityTier = normalizeQualityTier(input.qualityTier, ordered.size());
+            ordered.add(selection);
+            seen.add(input.leadId);
         }
         return ordered;
+    }
+
+    private static String normalizeQualityTier(String inputQualityTier, Integer indexForDefault) {
+        String normalized = inputQualityTier == null ? null : inputQualityTier.trim();
+        if (String.isBlank(normalized)) {
+            Integer defaultIndex = Integer.valueOf(
+                String.valueOf(Math.mod(indexForDefault, QUALITY_TIERS.size()))
+            );
+            return QUALITY_TIERS[defaultIndex];
+        }
+
+        String normalizedLower = normalized.toLowerCase();
+        for (String qualityTier : QUALITY_TIERS) {
+            if (qualityTier.toLowerCase() == normalizedLower) {
+                return qualityTier;
+            }
+        }
+
+        throw new AuraHandledException('Invalid quality tier: ' + normalized + '.');
     }
 
     private static LeadOption toLeadOption(Lead leadRecord) {
@@ -367,6 +402,11 @@ public with sharing class CM_LeadAIScoringDemoController {
         @AuraEnabled public String recordUrl;
     }
 
+    public class LeadGenerationInput {
+        @AuraEnabled public Id leadId;
+        @AuraEnabled public String qualityTier;
+    }
+
     public class LeadGenerationResult {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
@@ -379,5 +419,10 @@ public with sharing class CM_LeadAIScoringDemoController {
         @AuraEnabled public String aiKeyTopics;
         @AuraEnabled public String aiReplyRecommendation;
         @AuraEnabled public String recordUrl;
+    }
+
+    private class GenerationSelection {
+        Id leadId;
+        String qualityTier;
     }
 }

@@ -1,7 +1,26 @@
 @IsTest
 private class CM_LeadAIScoringDemoControllerTest {
+    private static List<CM_LeadAIScoringDemoController.LeadGenerationInput> toInputs(
+        List<Lead> leads,
+        List<String> qualityTiers
+    ) {
+        List<CM_LeadAIScoringDemoController.LeadGenerationInput> inputs =
+            new List<CM_LeadAIScoringDemoController.LeadGenerationInput>();
+
+        for (Integer i = 0; i < leads.size(); i++) {
+            CM_LeadAIScoringDemoController.LeadGenerationInput inputRow =
+                new CM_LeadAIScoringDemoController.LeadGenerationInput();
+            inputRow.leadId = leads[i].Id;
+            inputRow.qualityTier = qualityTiers == null || i >= qualityTiers.size()
+                ? null
+                : qualityTiers[i];
+            inputs.add(inputRow);
+        }
+        return inputs;
+    }
+
     @IsTest
-    static void generateDescriptionsAndScoresFiveLeads() {
+    static void generateDescriptionsAndScoresWithConfigurableTiers() {
         Account demoTarget = new Account(
             Name = 'WNC Demo',
             Industry = 'Electronics',
@@ -31,20 +50,27 @@ private class CM_LeadAIScoringDemoControllerTest {
         CM_LeadAIScoringInvoker.testPromptResponse =
             '{"classification":"Open","score":86,"reason":"Strong intent.","key_topics":["RFQ","Timeline"],"reply_recommendation":"Follow up now."}';
 
-        List<Id> orderedIds = new List<Id>{
-            leads[0].Id, leads[1].Id, leads[2].Id, leads[3].Id, leads[4].Id
+        List<String> configuredTiers = new List<String>{
+            'Low', 'Very High', 'Medium', 'Very Low', 'High'
         };
+        List<Id> orderedIds = new List<Id>();
+        for (Lead leadRecord : leads) {
+            orderedIds.add(leadRecord.Id);
+        }
 
         Test.startTest();
         List<CM_LeadAIScoringDemoController.LeadGenerationResult> results =
-            CM_LeadAIScoringDemoController.generateDescriptionsAndScore(orderedIds);
+            CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
+                toInputs(leads, configuredTiers)
+            );
         Test.stopTest();
 
         System.assertEquals(5, results.size(), 'Should return exactly 5 rows.');
-        System.assertEquals('Very High', results[0].qualityTier);
-        System.assertEquals('Very Low', results[4].qualityTier);
-        System.assertEquals('Very High description', results[0].generatedDescription);
-        System.assertEquals('Very Low description', results[4].generatedDescription);
+        System.assertEquals('Low', results[0].qualityTier);
+        System.assertEquals('Very High', results[1].qualityTier);
+        System.assertEquals('High', results[4].qualityTier);
+        System.assertEquals('Low description', results[0].generatedDescription);
+        System.assertEquals('Very High description', results[1].generatedDescription);
         System.assertEquals(86, Integer.valueOf(String.valueOf(results[0].aiScore)));
         System.assertEquals('Open', results[0].aiClassification);
 
@@ -54,15 +80,21 @@ private class CM_LeadAIScoringDemoControllerTest {
             WHERE Id IN :orderedIds
         ]);
 
-        System.assertEquals('Very High description', updatedById.get(leads[0].Id).Description);
+        System.assertEquals('Low description', updatedById.get(leads[0].Id).Description);
         System.assertEquals(86, Integer.valueOf(String.valueOf(updatedById.get(leads[0].Id).AI_Score__c)));
         System.assertEquals('Open', updatedById.get(leads[0].Id).AI_Classification__c);
     }
 
     @IsTest
-    static void throwsWhenSelectedCountIsNotFive() {
+    static void throwsWhenSelectedCountExceedsTen() {
+        Account demoTarget = new Account(
+            Name = 'Limit Demo',
+            CM_Is_Demo_Target__c = true
+        );
+        insert demoTarget;
+
         List<Lead> leads = new List<Lead>();
-        for (Integer i = 0; i < 4; i++) {
+        for (Integer i = 0; i < 11; i++) {
             leads.add(new Lead(
                 LastName = 'Few ' + i,
                 Company = 'Small Co ' + i
@@ -73,12 +105,12 @@ private class CM_LeadAIScoringDemoControllerTest {
         Boolean failed = false;
         try {
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                new List<Id>{ leads[0].Id, leads[1].Id, leads[2].Id, leads[3].Id }
+                toInputs(leads, null)
             );
         } catch (AuraHandledException ex) {
             failed = true;
         }
-        System.assertEquals(true, failed, 'Method should fail when not selecting exactly 5 leads.');
+        System.assertEquals(true, failed, 'Method should fail when selecting more than 10 leads.');
     }
 
     @IsTest
@@ -103,12 +135,42 @@ private class CM_LeadAIScoringDemoControllerTest {
         Boolean failed = false;
         try {
             CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
-                new List<Id>{ leads[0].Id, leads[1].Id, leads[2].Id, leads[3].Id, leads[4].Id }
+                toInputs(leads, null)
             );
         } catch (AuraHandledException ex) {
             failed = true;
         }
         System.assertEquals(true, failed, 'Method should fail when demo target is not configured.');
+    }
+
+    @IsTest
+    static void throwsWhenQualityTierInvalid() {
+        Account demoTarget = new Account(
+            Name = 'Quality Demo',
+            CM_Is_Demo_Target__c = true
+        );
+        insert demoTarget;
+
+        Lead leadRecord = new Lead(
+            LastName = 'Invalid Tier',
+            Company = 'Invalid Co'
+        );
+        insert leadRecord;
+
+        CM_LeadAIScoringDemoController.LeadGenerationInput inputRow =
+            new CM_LeadAIScoringDemoController.LeadGenerationInput();
+        inputRow.leadId = leadRecord.Id;
+        inputRow.qualityTier = 'Ultra High';
+
+        Boolean failed = false;
+        try {
+            CM_LeadAIScoringDemoController.generateDescriptionsAndScore(
+                new List<CM_LeadAIScoringDemoController.LeadGenerationInput>{ inputRow }
+            );
+        } catch (AuraHandledException ex) {
+            failed = true;
+        }
+        System.assertEquals(true, failed, 'Method should fail when tier is outside allowed values.');
     }
 
     @IsTest

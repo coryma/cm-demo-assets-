@@ -62,7 +62,7 @@
 }
 
 .tier-row {
-    align-items: baseline;
+    align-items: center;
     border-top: 1px dashed #e4eaf7;
     display: flex;
     gap: 0.55rem;
@@ -74,10 +74,28 @@
     padding-top: 0.15rem;
 }
 
-.tier-label {
-    color: #0b5cab;
-    font-weight: 700;
-    min-width: 5.4rem;
+.tier-details {
+    min-width: 0;
+}
+
+.tier-lead,
+.tier-meta {
+    margin: 0;
+}
+
+.tier-lead {
+    color: #173b66;
+    font-weight: 600;
+}
+
+.tier-meta {
+    color: #5f6f86;
+    font-size: 0.8rem;
+}
+
+.tier-picker {
+    margin-left: auto;
+    min-width: 10rem;
 }
 
 .actions {

@@ -2,7 +2,7 @@
     <lightning-card title="Lead AI Scoring" icon-name="standard:lead">
         <div class="slds-p-horizontal_small slds-p-bottom_small">
             <p class="intro">
-                Select exactly 5 Leads. The system will generate 5 different description quality tiers and
+                Select up to 10 Leads. Set a Quality Tier for each Lead, then generate descriptions and
                 run Lead AI scoring immediately.
             </p>
 
@@ -51,7 +51,7 @@
                     key-field="id"
                     data={leads}
                     columns={leadColumns}
-                    max-row-selection="5"
+                    max-row-selection="10"
                     selected-rows={selectedLeadIds}
                     onrowselection={handleRowSelection}
                     wrap-text-max-lines="3"
@@ -63,8 +63,18 @@
                     <span class="status-label">Quality Tier Mapping</span>
                     <template for:each={selectedLeadPreview} for:item="item">
                         <div key={item.id} class="tier-row">
-                            <span class="tier-label">{item.qualityTier}</span>
-                            <span>{item.name} ({item.company})</span>
+                            <div class="tier-details">
+                                <p class="tier-lead">{item.name}</p>
+                                <p class="tier-meta">{item.company}</p>
+                            </div>
+                            <lightning-combobox
+                                class="tier-picker"
+                                variant="label-hidden"
+                                value={item.qualityTier}
+                                data-id={item.id}
+                                options={qualityTierOptions}
+                                onchange={handleQualityTierChange}
+                            ></lightning-combobox>
                         </div>
                     </template>
                 </section>
@@ -73,7 +83,7 @@
             <div class="actions">
                 <lightning-button
                     variant="brand"
-                    label="Generate 5 Descriptions + Score"
+                    label="Generate Descriptions + Score"
                     onclick={handleGenerateClick}
                     disabled={disableGenerateButton}
                 ></lightning-button>

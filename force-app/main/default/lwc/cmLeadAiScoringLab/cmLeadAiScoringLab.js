@@ -4,6 +4,9 @@ import getDemoTargetSummary from '@salesforce/apex/CM_LeadAIScoringDemoControlle
 import searchLeads from '@salesforce/apex/CM_LeadAIScoringDemoController.searchLeads';
 import generateDescriptionsAndScore from '@salesforce/apex/CM_LeadAIScoringDemoController.generateDescriptionsAndScore';
 
+const MAX_GENERATION_COUNT = 10;
+const QUALITY_TIERS = ['Very High', 'High', 'Medium', 'Low', 'Very Low'];
+
 const LEAD_COLUMNS = [
     {
         label: 'Lead',
@@ -31,15 +34,20 @@ const RESULT_COLUMNS = [
     { label: 'Reason', fieldName: 'aiReason', wrapText: true }
 ];
 
-const QUALITY_TIERS = ['Very High', 'High', 'Medium', 'Low', 'Very Low'];
+const QUALITY_TIER_OPTIONS = QUALITY_TIERS.map((tier) => ({
+    label: tier,
+    value: tier
+}));
 
 export default class CmLeadAiScoringLab extends LightningElement {
     leadColumns = LEAD_COLUMNS;
     resultColumns = RESULT_COLUMNS;
+    qualityTierOptions = QUALITY_TIER_OPTIONS;
+
     leads = [];
     results = [];
-    selectedLeadIds = [];
     selectedLeadRows = [];
+    selectedLeadIds = [];
     searchKey = '';
     isSearching = false;
     isGenerating = false;
@@ -53,11 +61,16 @@ export default class CmLeadAiScoringLab extends LightningElement {
     }
 
     get selectedCountLabel() {
-        return `${this.selectedLeadIds.length} / 5 selected`;
+        return `${this.selectedLeadIds.length} / ${MAX_GENERATION_COUNT} selected`;
     }
 
     get canGenerate() {
-        return this.selectedLeadIds.length === 5 && !this.isGenerating;
+        return (
+            this.selectedLeadRows.length > 0 &&
+            this.selectedLeadRows.length <= MAX_GENERATION_COUNT &&
+            this.selectedLeadRows.every((row) => Boolean(row.qualityTier)) &&
+            !this.isGenerating
+        );
     }
 
     get disableGenerateButton() {
@@ -79,17 +92,15 @@ export default class CmLeadAiScoringLab extends LightningElement {
         return this.demoTarget.hasContext ? 'Ready' : 'Needs context fields';
     }
 
-    get selectedLeadPreview() {
-        return this.selectedLeadRows.map((row, index) => ({
-            id: row.id,
-            name: row.name || row.id,
-            company: row.company || 'Not set',
-            qualityTier: QUALITY_TIERS[index] || '-'
-        }));
+    get hasSelectedLeadPreview() {
+        return this.selectedLeadRows.length > 0;
     }
 
-    get hasSelectedLeadPreview() {
-        return this.selectedLeadPreview.length > 0;
+    get selectedLeadPreview() {
+        return this.selectedLeadRows.map((row) => ({
+            ...row,
+            company: row.company || 'Not set'
+        }));
     }
 
     handleSearchChange(event) {
@@ -102,29 +113,56 @@ export default class CmLeadAiScoringLab extends LightningElement {
 
     handleRowSelection(event) {
         const rows = event.detail.selectedRows || [];
-        this.selectedLeadRows = rows.map((row) => ({
+        const previousTierById = new Map(
+            this.selectedLeadRows.map((row) => [row.id, row.qualityTier])
+        );
+
+        this.selectedLeadRows = rows.map((row, index) => ({
             id: row.id,
             name: row.name,
-            company: row.company
+            company: row.company,
+            qualityTier: previousTierById.get(row.id) || this.defaultTierByIndex(index)
         }));
         this.selectedLeadIds = this.selectedLeadRows.map((row) => row.id);
     }
 
+    handleQualityTierChange(event) {
+        const leadId = event.target.dataset.id;
+        const value = event.detail.value;
+        this.selectedLeadRows = this.selectedLeadRows.map((row) =>
+            row.id === leadId ? { ...row, qualityTier: value } : row
+        );
+    }
+
+    defaultTierByIndex(index) {
+        return QUALITY_TIERS[index % QUALITY_TIERS.length];
+    }
+
     async handleGenerateClick() {
-        if (this.selectedLeadIds.length !== 5) {
-            this.showToast('Lead AI Scoring', 'Please select exactly 5 Leads.', 'warning');
+        if (!this.selectedLeadRows.length) {
+            this.showToast('Lead AI Scoring', 'Please select at least 1 Lead.', 'warning');
+            return;
+        }
+        if (this.selectedLeadRows.length > MAX_GENERATION_COUNT) {
+            this.showToast('Lead AI Scoring', 'You can generate up to 10 Leads at a time.', 'warning');
             return;
         }
 
         this.isGenerating = true;
         try {
-            const payload = await generateDescriptionsAndScore({ leadIds: this.selectedLeadIds });
+            const leadInputs = this.selectedLeadRows.map((row) => ({
+                leadId: row.id,
+                qualityTier: row.qualityTier
+            }));
+
+            const payload = await generateDescriptionsAndScore({ leadInputs });
             this.results = (payload || []).map((row) => this.decorateResult(row));
             await this.runSearch(this.searchKey);
             await this.loadDemoTarget();
+
             this.showToast(
                 'Lead AI Scoring',
-                'Generated 5 quality-tier descriptions and refreshed Lead AI scores.',
+                `Generated ${this.results.length} descriptions and refreshed Lead AI scores.`,
                 'success'
             );
         } catch (error) {
