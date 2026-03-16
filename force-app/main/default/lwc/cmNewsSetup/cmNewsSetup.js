@@ -50,7 +50,7 @@ const ACCOUNT_COLUMNS = [
     },
     { label: 'Has Account News', fieldName: 'hasNewsLabel' },
     { label: 'Has Related News', fieldName: 'hasRelatedNewsLabel' },
-    { label: 'Last Modified', fieldName: 'lastModifiedLabel' }
+    { label: 'Latest Update', fieldName: 'latestUpdateLabel' }
 ];
 
 const TEST_COLUMNS = [
@@ -163,6 +163,9 @@ export default class CmNewsSetup extends LightningElement {
             relatedNewsQueryInput: row.relatedNewsQuery || '',
             hasNewsLabel: row.hasNews ? 'Yes' : 'No',
             hasRelatedNewsLabel: row.hasRelatedNews ? 'Yes' : 'No',
+            latestUpdate: row.latestUpdate || '',
+            latestUpdateLabel:
+                row.latestUpdate || (row.lastModifiedDate ? `Last Modified: ${new Date(row.lastModifiedDate).toLocaleString()}` : ''),
             lastModifiedLabel: row.lastModifiedDate ? new Date(row.lastModifiedDate).toLocaleString() : ''
         };
     }
@@ -275,6 +278,7 @@ export default class CmNewsSetup extends LightningElement {
             const relatedNewsQuery = saved.relatedNewsQuery || '';
             const hasNews = !!saved.hasNews;
             const hasRelatedNews = !!saved.hasRelatedNews;
+            const latestUpdate = saved.latestUpdate !== undefined ? saved.latestUpdate : row.latestUpdate;
             const lastModifiedDate = saved.lastModifiedDate || row.lastModifiedDate;
 
             return {
@@ -287,6 +291,9 @@ export default class CmNewsSetup extends LightningElement {
                 hasRelatedNews,
                 hasNewsLabel: hasNews ? 'Yes' : 'No',
                 hasRelatedNewsLabel: hasRelatedNews ? 'Yes' : 'No',
+                latestUpdate,
+                latestUpdateLabel:
+                    latestUpdate || (lastModifiedDate ? `Last Modified: ${new Date(lastModifiedDate).toLocaleString()}` : ''),
                 lastModifiedDate,
                 lastModifiedLabel: lastModifiedDate ? new Date(lastModifiedDate).toLocaleString() : ''
             };

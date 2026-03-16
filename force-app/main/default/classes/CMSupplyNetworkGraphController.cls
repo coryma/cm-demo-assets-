@@ -10,7 +10,7 @@ public with sharing class CMSupplyNetworkGraphController {
   private static final String DEMO_TEMPLATE_NAME = 'DEMO_QUINCY_V1';
   private static final String MANUAL_TEMPLATE_NAME = 'CM_MANUAL_RELATIONSHIP_V1';
   private static final String PROMPT_TEMPLATE_DEVELOPER_NAME = 'CM_Account_Supply_Network_Discovery';
-  private static final String WNC_IMPACT_PROMPT_TEMPLATE_DEVELOPER_NAME = 'CM_Account_WNC_Impact_Analysis_V21_SCENARIO';
+  private static final String WNC_IMPACT_PROMPT_TEMPLATE_DEVELOPER_NAME = 'CM_Account_WNC_Impact_Analysis';
   private static final String PROMPT_APPLICATION_NAME = 'PromptBuilderPreview';
   private static final String DEFAULT_FOCUS_COMPANY_NAME = '啟碁科技 WNC';
   private static final String DEFAULT_FOCUS_COMPANY_ALIAS = 'WNC';
@@ -44,6 +44,7 @@ public with sharing class CMSupplyNetworkGraphController {
   private static final String SUPPLY_SCENARIO_ENTERPRISE_WIFI_AP = 'ENTERPRISE_WIFI_AP';
   private static final String SUPPLY_SCENARIO_AUTOMOTIVE_TELEMATICS = 'AUTOMOTIVE_TELEMATICS';
   private static final String SUPPLY_SCENARIO_LEGACY_UNSCOPED = 'LEGACY_UNSCOPED';
+  private static final Map<String, String> SUPPLY_SCENARIO_ALIAS_TO_CANONICAL = buildSupplyScenarioAliasMap();
   private static final Set<String> DEFAULT_SUPPORTED_SUPPLY_SCENARIOS = new Set<String>{
     SUPPLY_SCENARIO_FWA_5G,
     SUPPLY_SCENARIO_ENTERPRISE_WIFI_AP,
@@ -2903,9 +2904,9 @@ public with sharing class CMSupplyNetworkGraphController {
       List<String> segments = trimmedLine.contains('|')
         ? trimmedLine.split('\\|')
         : new List<String>{ trimmedLine };
-      String scenarioCode = normalizeStoredSupplyScenario(
-        segments.isEmpty() ? null : segments[0]
-      );
+      String rawScenarioToken = segments.isEmpty() ? null : segments[0];
+      String normalizedScenarioToken = normalizeScenarioToken(rawScenarioToken);
+      String scenarioCode = canonicalizeSupplyScenario(normalizedScenarioToken);
       if (String.isBlank(scenarioCode) || addedCodes.contains(scenarioCode)) {
         continue;
       }
@@ -2913,7 +2914,15 @@ public with sharing class CMSupplyNetworkGraphController {
 
       String scenarioLabel = segments.size() > 1 ? normalizeText(segments[1]) : null;
       if (String.isBlank(scenarioLabel)) {
-        scenarioLabel = buildScenarioLabelFromCode(scenarioCode);
+        if (
+          !String.isBlank(rawScenarioToken) &&
+          !String.isBlank(normalizedScenarioToken) &&
+          normalizedScenarioToken != scenarioCode
+        ) {
+          scenarioLabel = rawScenarioToken.trim();
+        } else {
+          scenarioLabel = buildScenarioLabelFromCode(scenarioCode);
+        }
       }
       Boolean aiSupported = parseAiSupportFlag(
         segments.size() > 2 ? segments[2] : null,
@@ -2983,6 +2992,83 @@ public with sharing class CMSupplyNetworkGraphController {
     };
   }
 
+  private static Map<String, String> buildSupplyScenarioAliasMap() {
+    Map<String, String> aliasMap = new Map<String, String>();
+    registerSupplyScenarioAliases(
+      aliasMap,
+      SUPPLY_SCENARIO_FWA_5G,
+      new List<String>{
+        SUPPLY_SCENARIO_FWA_5G,
+        '5G_FWA',
+        '5GFWA',
+        'FWA5G',
+        '5G_FIXED_WIRELESS_ACCESS',
+        'FIXED_WIRELESS_ACCESS_5G'
+      }
+    );
+    registerSupplyScenarioAliases(
+      aliasMap,
+      SUPPLY_SCENARIO_ENTERPRISE_WIFI_AP,
+      new List<String>{
+        SUPPLY_SCENARIO_ENTERPRISE_WIFI_AP,
+        'ENTERPRISE_WIFI',
+        'WIFI_AP',
+        'WIFIAP',
+        '企業級_WIFI_AP',
+        '企業級_WIFI',
+        '企業級無線_AP'
+      }
+    );
+    registerSupplyScenarioAliases(
+      aliasMap,
+      SUPPLY_SCENARIO_AUTOMOTIVE_TELEMATICS,
+      new List<String>{
+        SUPPLY_SCENARIO_AUTOMOTIVE_TELEMATICS,
+        'AUTOMOTIVE',
+        'TELEMATICS',
+        '車聯網模組',
+        '車聯網',
+        '車用模組'
+      }
+    );
+    registerSupplyScenarioAliases(
+      aliasMap,
+      SUPPLY_SCENARIO_LEGACY_UNSCOPED,
+      new List<String>{
+        SUPPLY_SCENARIO_LEGACY_UNSCOPED,
+        'LEGACY',
+        'MIXED',
+        'LEGACY_MIXED',
+        'UNSCOPED'
+      }
+    );
+    return aliasMap;
+  }
+
+  private static void registerSupplyScenarioAliases(
+    Map<String, String> aliasMap,
+    String canonicalScenario,
+    List<String> rawAliases
+  ) {
+    String canonicalToken = normalizeScenarioToken(canonicalScenario);
+    if (String.isBlank(canonicalToken)) {
+      return;
+    }
+
+    aliasMap.put(canonicalToken, canonicalScenario);
+    if (rawAliases == null || rawAliases.isEmpty()) {
+      return;
+    }
+
+    for (String rawAlias : rawAliases) {
+      String aliasToken = normalizeScenarioToken(rawAlias);
+      if (String.isBlank(aliasToken)) {
+        continue;
+      }
+      aliasMap.put(aliasToken, canonicalScenario);
+    }
+  }
+
   private static String buildScenarioLabelFromCode(String scenarioCode) {
     String normalizedCode = normalizeStoredSupplyScenario(scenarioCode);
     if (normalizedCode == SUPPLY_SCENARIO_FWA_5G) {
@@ -3038,6 +3124,20 @@ public with sharing class CMSupplyNetworkGraphController {
         ? SUPPLY_SCENARIO_LEGACY_UNSCOPED
         : supplyScenario;
       generationInput.inputParams.put('Input:SupplyScenario', scenarioInput);
+      ConnectApi.WrappedValue focusCompanyNameInput = new ConnectApi.WrappedValue();
+      focusCompanyNameInput.value = resolvePromptFocusCompanyName(rootAccount);
+      generationInput.inputParams.put(
+        'Input:FocusCompanyName',
+        focusCompanyNameInput
+      );
+      ConnectApi.WrappedValue focusCompanyDomainInput = new ConnectApi.WrappedValue();
+      focusCompanyDomainInput.value = resolvePromptFocusCompanyDomain(
+        rootAccount
+      );
+      generationInput.inputParams.put(
+        'Input:FocusCompanyDomain',
+        focusCompanyDomainInput
+      );
       generationInput.additionalConfig = new ConnectApi.EinsteinLlmAdditionalConfigInput();
       generationInput.additionalConfig.applicationName = PROMPT_APPLICATION_NAME;
       generationInput.isPreview = false;
@@ -3214,6 +3314,20 @@ public with sharing class CMSupplyNetworkGraphController {
   }
 
   private static String normalizeStoredSupplyScenario(String rawScenario) {
+    return canonicalizeSupplyScenario(normalizeScenarioToken(rawScenario));
+  }
+
+  private static String canonicalizeSupplyScenario(String normalizedScenario) {
+    if (String.isBlank(normalizedScenario)) {
+      return null;
+    }
+
+    return SUPPLY_SCENARIO_ALIAS_TO_CANONICAL.containsKey(normalizedScenario)
+      ? SUPPLY_SCENARIO_ALIAS_TO_CANONICAL.get(normalizedScenario)
+      : normalizedScenario;
+  }
+
+  private static String normalizeScenarioToken(String rawScenario) {
     if (String.isBlank(rawScenario)) {
       return null;
     }

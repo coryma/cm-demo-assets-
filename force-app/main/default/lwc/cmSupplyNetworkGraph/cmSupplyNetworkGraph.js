@@ -448,6 +448,7 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
   wncImpactExpanded = false;
   isGraphFullscreen = false;
   isUsingNativeFullscreen = false;
+  nativeFullscreenAccessBlocked = false;
   pendingViewportRefit = false;
   laneExpandModeEnabled = false;
 
@@ -694,6 +695,15 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
   async handleToggleGraphFullscreen() {
     const graphShell = this.getGraphShellElement();
     if (!graphShell) {
+      return;
+    }
+
+    if (this.nativeFullscreenAccessBlocked) {
+      this.isUsingNativeFullscreen = false;
+      this.isGraphFullscreen = !this.isGraphFullscreen;
+      this.setBodyScrollLock(this.isGraphFullscreen);
+      this.hideNodeTooltip();
+      this.requestViewportRefit();
       return;
     }
 
@@ -1267,17 +1277,30 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
       this.graphHorizontalSpacing,
       this.graphVerticalSpacing
     );
+    const focusNodeContext = {
+      focusCompanyName: this.focusCompanyName,
+      impactFocusCompanyName: this.wncImpactFocusCompany,
+      focusCompanyAlias: this.resolveFocusCompanyAlias(this.focusCompanyName),
+      focusCompanyDomain: this.focusCompanyDomain
+    };
     const positionsByNode = this.mergeManualPositions(
       nodes,
       computedPositionsByNode
     );
     const filteredElements = this.isStoryMode
-      ? buildStoryElements(nodes, edges, this.selectedFilter, positionsByNode)
+      ? buildStoryElements(
+          nodes,
+          edges,
+          this.selectedFilter,
+          positionsByNode,
+          focusNodeContext
+        )
       : buildFilteredElements(
           nodes,
           edges,
           this.selectedFilter,
-          positionsByNode
+          positionsByNode,
+          focusNodeContext
         );
     const laneResizeHandleElements = this.shouldRenderLaneResizeHandles
       ? this.buildLaneResizeHandleElements(filteredElements.nodes)
@@ -2245,6 +2268,10 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
     return this.isLoading && !this.hasData;
   }
 
+  get disableViewportZoomActions() {
+    return !this.cy || !this.hasData;
+  }
+
   get relationshipModeOptions() {
     return RELATIONSHIP_MODE_OPTIONS;
   }
@@ -2582,12 +2609,37 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
     this.scheduleViewportSync({ refit: true });
   }
 
+  getZoomAnchorPosition() {
+    const graphContainer = this.template.querySelector('[data-id="graph"]');
+    if (!graphContainer) {
+      return null;
+    }
+
+    const width = Number(graphContainer.clientWidth);
+    const height = Number(graphContainer.clientHeight);
+    if (!Number.isFinite(width) || !Number.isFinite(height)) {
+      return null;
+    }
+    if (width <= 0 || height <= 0) {
+      return null;
+    }
+
+    return {
+      x: width / 2,
+      y: height / 2
+    };
+  }
+
   adjustGraphZoom(multiplier) {
     if (!this.cy || !Number.isFinite(multiplier) || multiplier <= 0) {
       return;
     }
 
-    const currentZoom = this.cy.zoom();
+    const currentZoom = Number(this.cy.zoom());
+    if (!Number.isFinite(currentZoom) || currentZoom <= 0) {
+      return;
+    }
+
     const minZoom = Number.isFinite(this.cy.minZoom())
       ? this.cy.minZoom()
       : 0.1;
@@ -2596,19 +2648,24 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
       maxZoom,
       Math.max(minZoom, currentZoom * multiplier)
     );
+    if (!Number.isFinite(nextZoom)) {
+      return;
+    }
+    if (Math.abs(nextZoom - currentZoom) < 0.0001) {
+      return;
+    }
 
-    const graphContainer = this.template.querySelector('[data-id="graph"]');
-    const renderedPosition = graphContainer
-      ? {
-          x: graphContainer.clientWidth / 2,
-          y: graphContainer.clientHeight / 2
-        }
-      : undefined;
+    const renderedPosition = this.getZoomAnchorPosition();
 
-    this.cy.zoom({
-      level: nextZoom,
-      renderedPosition
-    });
+    if (renderedPosition) {
+      this.cy.zoom({
+        level: nextZoom,
+        renderedPosition
+      });
+      return;
+    }
+
+    this.cy.zoom(nextZoom);
   }
 
   syncViewport(shouldRefit = false) {
@@ -3183,6 +3240,26 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
     return `${normalizedText.slice(0, maxLength).trimEnd()}…`;
   }
 
+  resolveFocusCompanyAlias(focusCompanyName) {
+    if (typeof focusCompanyName !== "string") {
+      return null;
+    }
+
+    const normalized = focusCompanyName.trim();
+    if (!normalized) {
+      return null;
+    }
+
+    const tokens = normalized
+      .split(/[\s/|,;:()（）\-_.]+/)
+      .map((token) => token.trim())
+      .filter((token) => token.length > 0);
+    if (!tokens.length) {
+      return null;
+    }
+    return tokens[tokens.length - 1];
+  }
+
   setBodyScrollLock(isLocked) {
     if (typeof document === "undefined" || !document.body) {
       return;
@@ -3198,9 +3275,16 @@ export default class CmSupplyNetworkGraph extends NavigationMixin(
     if (typeof document === "undefined") {
       return null;
     }
-    return (
-      document.fullscreenElement || document.webkitFullscreenElement || null
-    );
+    try {
+      return (
+        document.fullscreenElement || document.webkitFullscreenElement || null
+      );
+    } catch {
+      // In some orgs, Lightning Web Security blocks direct fullscreenElement access.
+      // Returning null allows graceful fallback to CSS fullscreen mode.
+      this.nativeFullscreenAccessBlocked = true;
+      return null;
+    }
   }
 
   async enterNativeFullscreen(graphShell) {

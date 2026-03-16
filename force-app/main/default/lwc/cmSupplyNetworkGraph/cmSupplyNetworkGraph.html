@@ -77,7 +77,7 @@
               class="toolbar-icon-button"
               type="button"
               onclick={handleZoomOut}
-              disabled={isBusy}
+              disabled={disableViewportZoomActions}
               title="縮小關係圖"
               aria-label="縮小關係圖"
             >
@@ -92,7 +92,7 @@
               class="toolbar-icon-button"
               type="button"
               onclick={handleFitGraph}
-              disabled={isBusy}
+              disabled={disableViewportZoomActions}
               title="置中並適應視窗"
               aria-label="置中並適應視窗"
             >
@@ -107,7 +107,7 @@
               class="toolbar-icon-button"
               type="button"
               onclick={handleZoomIn}
-              disabled={isBusy}
+              disabled={disableViewportZoomActions}
               title="放大關係圖"
               aria-label="放大關係圖"
             >

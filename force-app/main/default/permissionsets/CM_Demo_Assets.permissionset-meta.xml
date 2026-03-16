@@ -93,6 +93,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Account.CM_LatestUpdate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>CM_Supply_Relationship__c.Supply_Scenario_Code__c</field>
         <readable>true</readable>
     </fieldPermissions>

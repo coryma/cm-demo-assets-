@@ -97,7 +97,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>LatestUpdate__c</field>
+                <field>CM_LatestUpdate__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>

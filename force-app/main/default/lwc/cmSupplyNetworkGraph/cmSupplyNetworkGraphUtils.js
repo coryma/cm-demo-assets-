@@ -11,7 +11,7 @@ export const DISPLAY_MODES = Object.freeze({
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
 const COMPETITOR_DIRECTION = 'COMPETITOR';
-const WNC_ACCOUNT_ID_SET = new Set(['001al000026yk9baag']);
+const LEGACY_WNC_ACCOUNT_ID_SET = new Set(['001al000026yk9baag']);
 
 export function computeNodePositions(nodes, horizontalSpacing = 220, verticalSpacing = 180) {
     const positions = {};
@@ -68,19 +68,23 @@ export function computeNodePositions(nodes, horizontalSpacing = 220, verticalSpa
     return positions;
 }
 
-export function buildFilteredElements(nodes, edges, filterValue, positionsByNode = {}) {
+export function buildFilteredElements(nodes, edges, filterValue, positionsByNode = {}, focusContext = {}) {
     const activeFilter = normalizeFilter(filterValue);
+    const focusMatcher = buildFocusMatcher(focusContext);
     const candidateNodeElements = (nodes || [])
         .filter((node) => shouldIncludeNode(node, activeFilter))
         .map((node) => {
             const nodeInsight = buildNodeInsight(node);
-            const isWnc = isWncNode(node);
+            const isFocusCompany =
+                isFocusCompanyNode(node, focusMatcher) ||
+                (!focusMatcher.hasCandidates && isLegacyWncNode(node));
             return {
                 data: {
                     id: node.id,
                     label: node.label,
                     accountId: node.accountId || null,
-                    isWnc,
+                    isFocusCompany,
+                    companyDomain: node.companyDomain || '',
                     signedLevel: node.signedLevel,
                     isRoot: node.isRoot,
                     accountType: node.accountType || '',
@@ -92,7 +96,7 @@ export function buildFilteredElements(nodes, edges, filterValue, positionsByNode
                     isVirtual: false
                 },
                 position: positionsByNode[node.id] || DEFAULT_POSITION,
-                classes: getNodeClasses(node)
+                classes: getNodeClasses(node, isFocusCompany)
             };
         });
     const allowedNodeIds = new Set(
@@ -143,10 +147,22 @@ export function buildFilteredElements(nodes, edges, filterValue, positionsByNode
     };
 }
 
-export function buildStoryElements(nodes, edges, filterValue, positionsByNode = {}) {
+export function buildStoryElements(
+    nodes,
+    edges,
+    filterValue,
+    positionsByNode = {},
+    focusContext = {}
+) {
     const hasProvidedPositions = Object.keys(positionsByNode || {}).length > 0;
     const basePositions = hasProvidedPositions ? positionsByNode : computeNodePositions(nodes, 260, 200);
-    const coreElements = buildFilteredElements(nodes, edges, filterValue, basePositions);
+    const coreElements = buildFilteredElements(
+        nodes,
+        edges,
+        filterValue,
+        basePositions,
+        focusContext
+    );
 
     if (!coreElements.nodes.length) {
         return coreElements;
@@ -177,7 +193,7 @@ function shouldIncludeNode(node, filterValue) {
     return node.isRoot || (node.signedLevel >= 0 && !isCompetitorNode(node));
 }
 
-function getNodeClasses(node) {
+function getNodeClasses(node, isFocusCompany) {
     const classes = ['entity', 'interactive'];
     if (node.isRoot) {
         classes.push('root', 'role-design');
@@ -199,8 +215,8 @@ function getNodeClasses(node) {
         classes.push('neutral');
     }
 
-    if (isWncNode(node)) {
-        classes.push('wnc-focus');
+    if (isFocusCompany) {
+        classes.push('wnc-focus', 'focus-company');
     }
 
     return classes.join(' ');
@@ -441,10 +457,13 @@ function isBlank(value) {
     return value === null || value === undefined || String(value).trim() === '';
 }
 
-function isWncNode(node) {
+function isLegacyWncNode(node) {
     const normalizedNodeId = normalizeNodeId(node?.id);
     const normalizedAccountId = normalizeNodeId(node?.accountId);
-    if (WNC_ACCOUNT_ID_SET.has(normalizedNodeId) || WNC_ACCOUNT_ID_SET.has(normalizedAccountId)) {
+    if (
+        LEGACY_WNC_ACCOUNT_ID_SET.has(normalizedNodeId) ||
+        LEGACY_WNC_ACCOUNT_ID_SET.has(normalizedAccountId)
+    ) {
         return true;
     }
 
@@ -459,6 +478,148 @@ function isWncNode(node) {
 
     const normalizedAccountType = normalizeNodeLabel(node?.accountType);
     return normalizedAccountType.includes('wnc');
+}
+
+function buildFocusMatcher(focusContext) {
+    const nameCandidates = new Set();
+    const compactNameCandidates = new Set();
+    const domainCandidates = new Set();
+    addNameCandidate(nameCandidates, compactNameCandidates, focusContext?.focusCompanyName);
+    addNameCandidate(nameCandidates, compactNameCandidates, focusContext?.impactFocusCompanyName);
+    addNameCandidate(nameCandidates, compactNameCandidates, focusContext?.focusCompanyAlias);
+    addDomainCandidate(domainCandidates, focusContext?.focusCompanyDomain);
+
+    return {
+        nameCandidates,
+        compactNameCandidates,
+        domainCandidates,
+        hasCandidates:
+            nameCandidates.size > 0 ||
+            compactNameCandidates.size > 0 ||
+            domainCandidates.size > 0
+    };
+}
+
+function addNameCandidate(nameCandidates, compactNameCandidates, rawName) {
+    const normalized = normalizeNodeLabel(rawName);
+    if (!normalized) {
+        return;
+    }
+    nameCandidates.add(normalized);
+    const compactNormalized = toCompactLabel(normalized);
+    if (compactNormalized) {
+        compactNameCandidates.add(compactNormalized);
+    }
+
+    normalized
+        .split(/[\s/|,;:()（）\-_.]+/)
+        .map((token) => token.trim())
+        .filter((token) => token.length >= 2)
+        .forEach((token) => {
+            if (token.length >= 3 || hasCjkCharacters(token)) {
+                nameCandidates.add(token);
+                const compactToken = toCompactLabel(token);
+                if (compactToken) {
+                    compactNameCandidates.add(compactToken);
+                }
+            }
+        });
+}
+
+function addDomainCandidate(domainCandidates, rawDomain) {
+    const normalized = normalizeDomain(rawDomain);
+    if (normalized) {
+        domainCandidates.add(normalized);
+    }
+}
+
+function isFocusCompanyNode(node, focusMatcher) {
+    if (!node || !focusMatcher?.hasCandidates) {
+        return false;
+    }
+
+    const nodeDomain = normalizeDomain(node.companyDomain);
+    if (nodeDomain && focusMatcher.domainCandidates.has(nodeDomain)) {
+        return true;
+    }
+
+    const normalizedLabel = normalizeNodeLabel(node?.label);
+    const compactLabel = toCompactLabel(normalizedLabel);
+    if (matchesNameCandidates(normalizedLabel, compactLabel, focusMatcher)) {
+        return true;
+    }
+
+    const normalizedAccountType = normalizeNodeLabel(node?.accountType);
+    const compactAccountType = toCompactLabel(normalizedAccountType);
+    return matchesNameCandidates(
+        normalizedAccountType,
+        compactAccountType,
+        focusMatcher
+    );
+}
+
+function matchesNameCandidates(normalizedValue, compactValue, focusMatcher) {
+    if (!normalizedValue && !compactValue) {
+        return false;
+    }
+
+    if (normalizedValue) {
+        for (const candidate of focusMatcher.nameCandidates) {
+            if (normalizedValue === candidate) {
+                return true;
+            }
+            if (
+                candidate.length >= 4 &&
+                (hasCjkCharacters(candidate) || /^[a-z0-9]+$/i.test(candidate)) &&
+                normalizedValue.includes(candidate)
+            ) {
+                return true;
+            }
+        }
+    }
+
+    if (compactValue) {
+        for (const compactCandidate of focusMatcher.compactNameCandidates) {
+            if (compactValue === compactCandidate) {
+                return true;
+            }
+            if (
+                compactCandidate.length >= 4 &&
+                compactValue.includes(compactCandidate)
+            ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function normalizeDomain(rawValue) {
+    const normalized = String(rawValue || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '');
+    if (!normalized) {
+        return '';
+    }
+    const slashIndex = normalized.indexOf('/');
+    return slashIndex > -1 ? normalized.slice(0, slashIndex) : normalized;
+}
+
+function toCompactLabel(rawValue) {
+    if (!rawValue) {
+        return '';
+    }
+    return String(rawValue)
+        .trim()
+        .toLowerCase()
+        .replace(/[\s/|,;:()（）\-_.]+/g, '');
+}
+
+function hasCjkCharacters(rawValue) {
+    return /[\u3400-\u9FFF]/.test(String(rawValue || ''));
 }
 
 function normalizeNodeLabel(label) {

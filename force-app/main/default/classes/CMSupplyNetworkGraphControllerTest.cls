@@ -857,7 +857,7 @@ private class CMSupplyNetworkGraphControllerTest {
     System.assertEquals('HIGH', response.impactLevel);
     System.assertEquals(true, response.summary.contains('WNC'));
     System.assertEquals(
-      'CM_Account_WNC_Impact_Analysis_V21_SCENARIO',
+      'CM_Account_WNC_Impact_Analysis',
       response.promptTemplateName
     );
     System.assertNotEquals(null, response.generatedAt);
@@ -868,6 +868,52 @@ private class CMSupplyNetworkGraphControllerTest {
     System.assertEquals(1, response.keyRisks.size());
     System.assertEquals(1, response.positiveSignals.size());
     System.assertEquals(1, response.recommendedActions.size());
+  }
+
+  @IsTest
+  static void analyzeWncImpact_acceptsScenarioAliasesFromCatalog() {
+    Account nonDemo = [
+      SELECT Id, Name
+      FROM Account
+      WHERE Name = 'Non-Demo Account'
+      LIMIT 1
+    ];
+    update new Account(
+      Id = nonDemo.Id,
+      CM_Is_Demo_Target__c = true,
+      CM_Supply_Scenario_Catalog__c = '車聯網模組\n5G FWA',
+      CM_Supply_Network_Prompt_JSON__c = '{"schema_version":"3.0","analysis_scenario":{"code":"FWA_5G","label":"5G FWA"},"relationships":[{"source_company_name":"TSMC","target_company_name":"Qualcomm"}]}'
+    );
+
+    CMSupplyNetworkGraphController.testWncImpactPromptFailureMessage = null;
+    CMSupplyNetworkGraphController.testWncImpactPromptJson =
+      '{' +
+      '"analysis_version":"1.0",' +
+      '"analysis_scenario":{"code":"FWA_5G","label":"5G FWA"},' +
+      '"root_account":"Non-Demo Account",' +
+      '"focus_company":"WT Technology",' +
+      '"impact_level":"MEDIUM",' +
+      '"overall_assessment":"測試用摘要",' +
+      '"summary_for_ui":"測試用 UI 摘要",' +
+      '"key_risks":[],' +
+      '"positive_signals":[],' +
+      '"recommended_actions":[]' +
+      '}';
+
+    Test.startTest();
+    CMSupplyNetworkGraphController.ImpactAnalysisResponse response = CMSupplyNetworkGraphController.analyzeWncImpact(
+      nonDemo.Id,
+      '5G_FWA'
+    );
+    Test.stopTest();
+
+    CMSupplyNetworkGraphController.testWncImpactPromptJson = null;
+
+    System.assertEquals('FWA_5G', response.supplyScenario);
+    System.assertEquals(
+      'CM_Account_WNC_Impact_Analysis',
+      response.promptTemplateName
+    );
   }
 
   @IsTest

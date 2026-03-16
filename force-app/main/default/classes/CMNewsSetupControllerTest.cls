@@ -36,8 +36,9 @@ private class CMNewsSetupControllerTest {
         Test.stopTest();
 
         System.assertEquals(1, result.successCount);
-        Account refreshed = [SELECT Account_News__c FROM Account WHERE Id = :target.Id];
+        Account refreshed = [SELECT Account_News__c, CM_LatestUpdate__c FROM Account WHERE Id = :target.Id];
         System.assert(refreshed.Account_News__c.contains('Sample title'));
+        System.assert(refreshed.CM_LatestUpdate__c.contains('Provider: GDELT'));
     }
 
     @IsTest
@@ -59,6 +60,7 @@ private class CMNewsSetupControllerTest {
         System.assertEquals('Supply chain', saved[0].relatedNewsQuery);
         System.assertEquals(false, saved[0].hasNews);
         System.assertEquals(false, saved[0].hasRelatedNews);
+        System.assertEquals(null, saved[0].latestUpdate);
         System.assertNotEquals(null, saved[0].lastModifiedDate);
     }
 
@@ -89,7 +91,7 @@ private class CMNewsSetupControllerTest {
         System.assertEquals(1, result.accountNewsSuccessCount);
         System.assertEquals(1, result.relatedNewsSuccessCount);
         Account refreshed = [
-            SELECT Account_News_Query__c, Account_News__c, Related_News_Query__c, Related_News__c
+            SELECT Account_News_Query__c, Account_News__c, Related_News_Query__c, Related_News__c, CM_LatestUpdate__c
             FROM Account
             WHERE Id = :target.Id
         ];
@@ -97,6 +99,8 @@ private class CMNewsSetupControllerTest {
         System.assert(refreshed.Account_News__c.contains('Related title'));
         System.assertEquals('SAP', refreshed.Related_News_Query__c);
         System.assert(refreshed.Related_News__c.contains('Related title'));
+        System.assert(refreshed.CM_LatestUpdate__c.contains('Account Query: Beta custom keyword'));
+        System.assert(refreshed.CM_LatestUpdate__c.contains('Related Query: SAP'));
     }
 
     @IsTest

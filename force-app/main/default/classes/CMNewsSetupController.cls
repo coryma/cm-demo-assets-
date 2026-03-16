@@ -15,7 +15,7 @@ public with sharing class CMNewsSetupController {
 
         if (String.isBlank(normalized)) {
             accounts = [
-                SELECT Id, Name, Industry, Website, Account_News__c, Account_News_Query__c, Related_News__c, Related_News_Query__c, LastModifiedDate
+                SELECT Id, Name, Industry, Website, Account_News__c, Account_News_Query__c, Related_News__c, Related_News_Query__c, CM_LatestUpdate__c, LastModifiedDate
                 FROM Account
                 ORDER BY LastModifiedDate DESC
                 LIMIT :SEARCH_LIMIT
@@ -23,7 +23,7 @@ public with sharing class CMNewsSetupController {
         } else {
             String likeTerm = '%' + normalized + '%';
             accounts = [
-                SELECT Id, Name, Industry, Website, Account_News__c, Account_News_Query__c, Related_News__c, Related_News_Query__c, LastModifiedDate
+                SELECT Id, Name, Industry, Website, Account_News__c, Account_News_Query__c, Related_News__c, Related_News_Query__c, CM_LatestUpdate__c, LastModifiedDate
                 FROM Account
                 WHERE Name LIKE :likeTerm
                 ORDER BY Name
@@ -42,6 +42,7 @@ public with sharing class CMNewsSetupController {
             option.accountNewsQuery = accountRecord.Account_News_Query__c;
             option.hasRelatedNews = !String.isBlank(accountRecord.Related_News__c);
             option.relatedNewsQuery = accountRecord.Related_News_Query__c;
+            option.latestUpdate = accountRecord.CM_LatestUpdate__c;
             option.lastModifiedDate = accountRecord.LastModifiedDate;
             results.add(option);
         }
@@ -122,7 +123,7 @@ public with sharing class CMNewsSetupController {
         }
 
         Map<Id, Account> savedById = new Map<Id, Account>([
-            SELECT Id, Account_News_Query__c, Related_News_Query__c, Account_News__c, Related_News__c, LastModifiedDate
+            SELECT Id, Account_News_Query__c, Related_News_Query__c, Account_News__c, Related_News__c, CM_LatestUpdate__c, LastModifiedDate
             FROM Account
             WHERE Id IN :accountIds
         ]);
@@ -139,6 +140,7 @@ public with sharing class CMNewsSetupController {
             item.relatedNewsQuery = saved.Related_News_Query__c;
             item.hasNews = !String.isBlank(saved.Account_News__c);
             item.hasRelatedNews = !String.isBlank(saved.Related_News__c);
+            item.latestUpdate = saved.CM_LatestUpdate__c;
             item.lastModifiedDate = saved.LastModifiedDate;
             results.add(item);
         }
@@ -185,12 +187,20 @@ public with sharing class CMNewsSetupController {
             updateRecord.Account_News__c = accountPayload;
             accountNewsSuccessCount++;
 
-            if (!String.isBlank(relatedNewsQuery)) {
+            Boolean hasRelatedNewsQuery = !String.isBlank(relatedNewsQuery);
+            if (hasRelatedNewsQuery) {
                 String relatedPayload = fetchNewsPayload(relatedNewsQuery, normalizedLanguage, normalizedProvider, normalizedAuth);
                 updateRecord.Related_News__c = relatedPayload;
                 relatedNewsSuccessCount++;
             }
 
+            updateRecord.CM_LatestUpdate__c = buildLatestUpdateText(
+                accountNewsQuery,
+                relatedNewsQuery,
+                normalizedProvider,
+                normalizedLanguage,
+                hasRelatedNewsQuery
+            );
             updates.add(updateRecord);
 
             NewsGenerationItem item = new NewsGenerationItem();
@@ -294,6 +304,24 @@ public with sharing class CMNewsSetupController {
         return apiProvider == PROVIDER_NEWS_API || apiProvider == PROVIDER_GNEWS_API;
     }
 
+    private static String buildLatestUpdateText(
+        String accountNewsQuery,
+        String relatedNewsQuery,
+        String apiProvider,
+        String language,
+        Boolean includeRelatedQuery
+    ) {
+        List<String> segments = new List<String>();
+        segments.add('Updated At (UTC): ' + Datetime.now().formatGmt('yyyy-MM-dd HH:mm:ss'));
+        segments.add('Provider: ' + apiProvider);
+        segments.add('Language: ' + (String.isBlank(language) ? 'ANY' : language));
+        segments.add('Account Query: ' + (String.isBlank(accountNewsQuery) ? '' : accountNewsQuery));
+        if (includeRelatedQuery && !String.isBlank(relatedNewsQuery)) {
+            segments.add('Related Query: ' + relatedNewsQuery);
+        }
+        return String.join(segments, ' | ');
+    }
+
     private static String trimToNull(String value) {
         String trimmed = value == null ? null : value.trim();
         return String.isBlank(trimmed) ? null : trimmed;
@@ -349,6 +377,7 @@ public with sharing class CMNewsSetupController {
         @AuraEnabled public String accountNewsQuery;
         @AuraEnabled public Boolean hasRelatedNews;
         @AuraEnabled public String relatedNewsQuery;
+        @AuraEnabled public String latestUpdate;
         @AuraEnabled public Datetime lastModifiedDate;
     }
 
@@ -381,6 +410,7 @@ public with sharing class CMNewsSetupController {
         @AuraEnabled public String relatedNewsQuery;
         @AuraEnabled public Boolean hasNews;
         @AuraEnabled public Boolean hasRelatedNews;
+        @AuraEnabled public String latestUpdate;
         @AuraEnabled public Datetime lastModifiedDate;
     }
 

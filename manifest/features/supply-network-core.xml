@@ -22,6 +22,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>CM_Account_WNC_Impact_Analysis</members>
         <members>CM_Account_Supply_Network_Discovery</members>
         <members>CM_Account_Supply_Network_Discovery_V21_SCENARIO</members>
         <members>CM_Account_WNC_Impact_Analysis_V21_SCENARIO</members>
