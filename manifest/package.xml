@@ -3,6 +3,11 @@
     <types>
         <members>CMAccountRoleSetupController</members>
         <members>CMAccountRoleSetupControllerTest</members>
+        <members>CMEmailSimulationController</members>
+        <members>CMEmailTimelineSimulationService</members>
+        <members>CM_Get_News_BY_API</members>
+        <members>CMNewsSetupController</members>
+        <members>CMNewsSetupControllerTest</members>
         <members>CM_LeadAIScoringDemoController</members>
         <members>CM_LeadAIScoringDemoControllerTest</members>
         <members>CMDemoTargetSetupController</members>
@@ -14,6 +19,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Account.Account_News__c</members>
         <members>Account.CM_Account_Roles__c</members>
         <members>Account.CM_Is_Demo_Target__c</members>
         <members>Lead.AI_Classification__c</members>
@@ -36,15 +42,28 @@
         <members>CM_Account_Role_Setup</members>
         <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
+        <members>CM_Email_Simulation</members>
+        <members>CM_News_Setup</members>
         <members>MFG_ACCOUNT_DISCRETE_ALL</members>
         <members>MFG_HOME_DISCRETE_MCO</members>
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>Account.Generate_Simulated_Emails</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
         <members>CM_Update_Lead_AI_Related_Fields</members>
+        <members>CM_Generate_Simulated_Emails</members>
+        <members>CM_Get_News_Prompt_Template_Flow</members>
         <name>Flow</name>
     </types>
     <types>
+        <members>CM_Account_News</members>
+        <members>CM_Account_News_Update</members>
+        <members>CM_Email_Timeline_Simulation_Draft</members>
+        <members>CM_Draft_Mock_Email</members>
+        <members>CM_Mock_Email_Background_Context</members>
         <members>CM_Lead_Description_Quality_Demo</members>
         <members>CM_Lead_Auto_Screening_Demo</members>
         <name>GenAiPromptTemplate</name>
@@ -67,9 +86,13 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>cmAccountNewsSidebar</members>
         <members>cmAccountRoleIdentityBanner</members>
         <members>cmAccountRoleSetup</members>
         <members>cmDemoTargetSetup</members>
+        <members>cmEmailSimulationManager</members>
+        <members>cmEmailSimulationSetup</members>
+        <members>cmNewsSetup</members>
         <members>cmLeadAiScoringLab</members>
         <members>cmLatestLeads</members>
         <members>cmSupplierIdentityBanner</members>
@@ -79,11 +102,20 @@
         <members>CM_Account_Role_Setup</members>
         <members>CM_Lead_AI_Scoring</members>
         <members>CM_Demo_Setup</members>
+        <members>CM_Email_Simulation</members>
+        <members>CM_News_Setup</members>
         <name>CustomTab</name>
     </types>
     <types>
         <members>CM_Demo_Assets</members>
         <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>GDELT_API</members>
+        <members>GNEWS_API</members>
+        <members>GOOGLE_NEWS_RSS</members>
+        <members>NEWS_API</members>
+        <name>RemoteSiteSetting</name>
     </types>
     <version>66.0</version>
 </Package>

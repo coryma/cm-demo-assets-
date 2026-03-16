@@ -5,7 +5,7 @@
         <label>GetNews</label>
         <locationX>176</locationX>
         <locationY>134</locationY>
-        <actionName>CM_Get_News_By_GDELT_API</actionName>
+        <actionName>CM_Get_News_BY_API</actionName>
         <actionType>apex</actionType>
         <connector>
             <targetReference>X1</targetReference>
@@ -17,7 +17,7 @@
                 <elementReference>regCompanyName</elementReference>
             </value>
         </inputParameters>
-        <nameSegment>CM_Get_News_By_GDELT_API</nameSegment>
+        <nameSegment>CM_Get_News_BY_API</nameSegment>
         <offset>0</offset>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>

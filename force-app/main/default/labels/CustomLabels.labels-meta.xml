@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CM_Latest_Account_News_Title</fullName>
+        <categories>CM Demo Assets</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Latest account news section title</shortDescription>
+        <value>Latest Account News</value>
+    </labels>
+    <labels>
+        <fullName>CM_Latest_Related_News_Title</fullName>
+        <categories>CM Demo Assets</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Latest related news section title</shortDescription>
+        <value>Latest Related News</value>
+    </labels>
+    <labels>
+        <fullName>CM_Supplier_Info_Tab</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CM_Supplier_Info_Tab</shortDescription>
+        <value>Supplier Information</value>
+    </labels>
+    <labels>
+        <fullName>CM_Supply_Chain_Analysis_Tab</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CM_Supply_Chain_Analysis_Tab</shortDescription>
+        <value>Supply Chain Analysis</value>
+    </labels>
+</CustomLabels>

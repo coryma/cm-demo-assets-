@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>為此 Account 建立模擬郵件活動資料</description>
+    <flowDefinition>CM_Generate_Simulated_Emails</flowDefinition>
+    <label>模擬郵件</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>Flow</type>
+</QuickAction>

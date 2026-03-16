@@ -1,0 +1,51 @@
+<template>
+    <lightning-card title="News" icon-name="standard:news">
+        <div class="wrap">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading news" size="small"></lightning-spinner>
+            </template>
+
+            <section class="news-section">
+                <h3 class="section-title">{labels.accountTitle}</h3>
+                <template if:true={hasAccountData}>
+                    <ul class="news-list">
+                        <template for:each={accountItems} for:item="item">
+                            <li key={item.id} class="news-item">
+                                <a href={item.url} target="_blank" rel="noopener noreferrer" class="news-title">
+                                    {item.title}
+                                </a>
+                                <div class="news-date">{item.publishedDate}</div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={hasAccountData}>
+                    <template if:false={isLoading}>
+                        <div class="empty">No account news available.</div>
+                    </template>
+                </template>
+            </section>
+
+            <section class="news-section">
+                <h3 class="section-title">{labels.relatedTitle}</h3>
+                <template if:true={hasRelatedData}>
+                    <ul class="news-list">
+                        <template for:each={relatedItems} for:item="item">
+                            <li key={item.id} class="news-item">
+                                <a href={item.url} target="_blank" rel="noopener noreferrer" class="news-title">
+                                    {item.title}
+                                </a>
+                                <div class="news-date">{item.publishedDate}</div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={hasRelatedData}>
+                    <template if:false={isLoading}>
+                        <div class="empty">No related news available. Set related query in News Setup.</div>
+                    </template>
+                </template>
+            </section>
+        </div>
+    </lightning-card>
+</template>

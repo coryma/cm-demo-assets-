@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_1</activeVersionIdentifier>
+    <developerName>CM_Draft_Mock_Email</developerName>
+    <masterLabel>CM - Draft Mock Email</masterLabel>
+    <templateVersions>
+        <content>您是系統的資料轉換與模擬助手。您的任務是根據提供的「背景資料」，撰寫一封完整的電子郵件，並嚴格封裝進指定的 JSON 格式中，供系統批次建立 EmailMessage 測試資料。
+
+輸入資料：
+- 產業類別 (Industry)： {!$Input:Company.Industry}
+- 公司名稱 (CompanyName) {!$Input:Company.Name}
+- 部門名稱 (DepartmentName)： {!$Input:Department}
+- 郵件方向 (Direction)：{!$Input:Direction}
+- 郵件背景資料 (BackgroundContext)：{!$Input:BackgroundContext}
+
+請嚴格遵循以下規則撰寫郵件：
+1. 內容語言必須使用 {!$User.LanguageLocaleKey}，並完全依照「郵件背景資料」指示的視角、語氣與內容細節來撰寫。
+2. 內文 (htmlBody) 必須為有效 HTML，至少使用 &lt;p&gt; 段落；如有條列請使用 &lt;ul&gt;&lt;li&gt;。
+3. 【郵件方向與排版規則】請嚴格執行：
+  - 若 Direction 為 Outbound：主旨為全新主旨。這是一封標準的寄出信件。
+  - 若 Direction 為 Inbound：主旨 (subject) 開頭必須加上「Re: 」或「回覆: 」。信件內容必須是外部單位寫給「 {!$Input:Company.Name}」的口吻。
+  - 若 Direction 為 Mixed：主旨開頭必須加上「Re: 」。在 htmlBody 的最新回覆下方，必須使用 &lt;hr&gt; 分隔線，並用 &lt;blockquote&gt; 標籤包裝一段或多段「歷史信件內容」（請模擬包含 From:, To:, Date:, Subject: 等表頭資訊），以呈現真實的信件往返樣貌。
+
+【輸出格式嚴格要求】
+1. 絕對只輸出一個有效的純 JSON 物件，開頭必須是 {，結尾必須是 }。
+2. 嚴禁輸出任何 Markdown 標記（包含 ```json 與 ```）。
+3. 嚴禁包含任何開場白、結語或說明文字。
+4. 若 JSON 字串值內包含雙引號 (&quot;)，請務必正確使用反斜線 (\) 跳脫。
+5. htmlBody 內的 HTML 標籤屬性（如 style=&quot;color:red;&quot;）的雙引號也必須正確跳脫。
+
+預期 JSON Schema：
+{
+ &quot;email_draft&quot;: {
+  &quot;subject&quot;: &quot;String&quot;,
+  &quot;htmlBody&quot;: &quot;String&quot;
+ }
+}
+</content>
+        <inputs>
+            <apiName>Company</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Company</masterLabel>
+            <referenceName>Input:Company</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Direction</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Direction</masterLabel>
+            <referenceName>Input:Direction</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Department</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Department</masterLabel>
+            <referenceName>Input:Department</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>BackgroundContext</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>BackgroundContext</masterLabel>
+            <referenceName>Input:BackgroundContext</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

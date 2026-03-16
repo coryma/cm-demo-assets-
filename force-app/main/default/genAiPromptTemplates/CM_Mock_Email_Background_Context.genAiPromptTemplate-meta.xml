@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_2</activeVersionIdentifier>
+    <developerName>CM_Mock_Email_Background_Context</developerName>
+    <masterLabel>CM - Mock Email Background Context</masterLabel>
+    <templateVersions>
+        <content>您是一位專業的企業系統測試資料生成專家。您的任務是根據使用者提供的產業別、公司、部門名稱以及郵件方向，產生一段極度逼真的「模擬郵件背景資料」(Background Context)。
+
+輸入變數：
+- 產業類別 (Industry)： {!$Input:Company.Industry}
+- 公司名稱 (CompanyName) {!$Input:Company.Name}
+- 部門名稱 (DepartmentName)： {!$Input:Department}
+- 郵件方向 (Direction)：{!$Input:Direction}
+
+【方向設定規則】
+請嚴格根據「{!$Input:Direction}」設定情境的發信視角：
+1. 若為 Outbound：情境為「{!$Input:Company.Name}」的「 {!$Input:Department}」主動發信給外部單位（如供應商、客戶或合作夥伴）。
+2. 若為 Inbound：情境為外部單位回信或主動發信給「{!$Input:Company.Name}」的「 {!$Input:Department}」。請完全以「外部單位」的視角與口吻來設定背景。
+3. 若為 Mixed：情境為雙方已經有過幾次信件來回，請描述這是一封「帶有前期討論脈絡」的回覆信件（發信方可以是內部或外部）。
+
+【情境生成規則】
+請根據「{!$Input:Company.Industry}」的專屬特性與行話，以及該部門的實際職能，設想一個最符合其日常營運的真實商務溝通情境。
+
+【輸出要求】
+請直接輸出一段約 150 到 300 字的「郵件背景設定」，必須包含：
+1. 郵件的主要目的與當前進度。
+2. 具體的業務細節（請虛構高度貼合該產業的專有名詞、合約號碼、料號、活動名稱或金額等）。
+3. 發信的建議語氣與重點（例如：急迫催促、客氣報價、嚴謹稽核等）。
+
+請直接輸出這段背景描述，嚴禁包含任何開場白（如「好的」、「為您生成」）、結語或 Markdown 標記，純文字輸出即可。
+</content>
+        <inputs>
+            <apiName>Company</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Company</masterLabel>
+            <referenceName>Input:Company</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Department</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Department</masterLabel>
+            <referenceName>Input:Department</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Direction</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Direction</masterLabel>
+            <referenceName>Input:Direction</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
+        <status>Draft</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>您是一位專業的企業系統測試資料生成專家。您的任務是根據使用者提供的產業別、公司、部門名稱以及郵件方向，產生一段極度逼真的「模擬郵件背景資料」(Background Context)。
+
+輸入變數：
+- 產業類別 (Industry)： {!$Input:Company.Industry}
+- 公司名稱 (CompanyName) {!$Input:Company.Name}
+- 部門名稱 (DepartmentName)： {!$Input:Department}
+- 郵件方向 (Direction)：{!$Input:Direction}
+
+【方向設定規則】
+請嚴格根據「{!$Input:Direction}」設定情境的發信視角：
+1. 若為 Outbound：情境為「{!$Input:Company.Name}」的「 {!$Input:Department}」主動發信給外部單位（如供應商、客戶或合作夥伴）。
+2. 若為 Inbound：情境為外部單位回信或主動發信給「{!$Input:Company.Name}」的「 {!$Input:Department}」。請完全以「外部單位」的視角與口吻來設定背景。
+3. 若為 Mixed：情境為雙方已經有過幾次信件來回，請描述這是一封「帶有前期討論脈絡」的回覆信件（發信方可以是內部或外部）。
+
+【情境生成規則】
+請根據「{!$Input:Company.Industry}」的專屬特性與行話，以及該部門的實際職能，設想一個最符合其日常營運的真實商務溝通情境。
+
+【輸出要求】
+請直接輸出一段約 150 到 300 字的「郵件背景設定」，必須包含：
+1. 郵件的主要目的與當前進度。
+2. 具體的業務細節（請虛構高度貼合該產業的專有名詞、合約號碼、料號、活動名稱或金額等）。
+3. 發信的建議語氣與重點（例如：急迫催促、客氣報價、嚴謹稽核等）。
+4. 使用語言為 {!$User.LanguageLocaleKey}
+
+請直接輸出這段背景描述，嚴禁包含任何開場白（如「好的」、「為您生成」）、結語或 Markdown 標記，純文字輸出即可。
+</content>
+        <inputs>
+            <apiName>Company</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Company</masterLabel>
+            <referenceName>Input:Company</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Department</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Department</masterLabel>
+            <referenceName>Input:Department</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Direction</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Direction</masterLabel>
+            <referenceName>Input:Direction</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_2</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

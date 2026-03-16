@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Email Simulation Setup</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="simulationContext" type="String" label="Simulation Context" />
+            <property name="emailCount" type="Integer" label="Email Count" />
+            <property name="simulationDirection" type="String" label="Simulation Direction" />
+            <property name="startDate" type="String" label="Start Date" />
+            <property name="endDate" type="String" label="End Date" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

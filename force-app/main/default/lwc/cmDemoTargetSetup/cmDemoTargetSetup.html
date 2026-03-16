@@ -3,8 +3,9 @@
         <div class="slds-p-horizontal_small slds-p-bottom_small">
             <p class="intro">
                 Select the Account used for demos, then maintain its <strong>Industry</strong>,
-                <strong>Website</strong>, and <strong>Description</strong> here. Saving will also mark that
-                Account as the active demo target for Lead AI scoring.
+                <strong>Website</strong>, <strong>Description</strong>, and
+                <strong>CM_Supply_Scenario_Catalog</strong> here. Saving will also mark that
+                Account as the active demo target for Lead AI scoring and Supply Network Graph settings.
             </p>
 
             <template if:true={activeTarget}>
@@ -97,6 +98,15 @@
                         value={editorAccount.description}
                         data-field="description"
                         onchange={handleFieldChange}
+                    ></lightning-textarea>
+
+                    <lightning-textarea
+                        class="description-field"
+                        label="CM_Supply_Scenario_Catalog (one scenario per line)"
+                        value={editorAccount.supplyScenarioCatalog}
+                        data-field="supplyScenarioCatalog"
+                        onchange={handleFieldChange}
+                        placeholder="FWA_5G|5G FWA|AI&#10;AUTOMOTIVE_TELEMATICS|車聯網模組|AI&#10;LEGACY_UNSCOPED|Legacy / Unscoped|NO_AI"
                     ></lightning-textarea>
 
                     <template if:true={editorAccount.missingContext}>

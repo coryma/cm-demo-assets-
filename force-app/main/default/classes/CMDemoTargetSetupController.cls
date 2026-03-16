@@ -4,7 +4,15 @@ public with sharing class CMDemoTargetSetupController {
     @AuraEnabled(cacheable=true)
     public static DemoTargetAccount getActiveDemoTarget() {
         List<Account> accounts = [
-            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Name,
+                Industry,
+                Type,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE CM_Is_Demo_Target__c = true
             ORDER BY LastModifiedDate DESC
@@ -21,7 +29,15 @@ public with sharing class CMDemoTargetSetupController {
 
         if (String.isBlank(normalized)) {
             accounts = [
-                SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+                SELECT
+                    Id,
+                    Name,
+                    Industry,
+                    Type,
+                    Website,
+                    Description,
+                    CM_Is_Demo_Target__c,
+                    CM_Supply_Scenario_Catalog__c
                 FROM Account
                 ORDER BY LastModifiedDate DESC
                 LIMIT :SEARCH_LIMIT
@@ -29,7 +45,15 @@ public with sharing class CMDemoTargetSetupController {
         } else {
             String likeTerm = '%' + normalized + '%';
             accounts = [
-                SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+                SELECT
+                    Id,
+                    Name,
+                    Industry,
+                    Type,
+                    Website,
+                    Description,
+                    CM_Is_Demo_Target__c,
+                    CM_Supply_Scenario_Catalog__c
                 FROM Account
                 WHERE Name LIKE :likeTerm
                 ORDER BY Name
@@ -51,7 +75,15 @@ public with sharing class CMDemoTargetSetupController {
         }
 
         Account selected = [
-            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Name,
+                Industry,
+                Type,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE Id = :accountId
             LIMIT 1
@@ -79,7 +111,15 @@ public with sharing class CMDemoTargetSetupController {
         }
 
         return toDto([
-            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Name,
+                Industry,
+                Type,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE Id = :accountId
             LIMIT 1
@@ -91,14 +131,23 @@ public with sharing class CMDemoTargetSetupController {
         Id accountId,
         String industry,
         String website,
-        String description
+        String description,
+        String supplyScenarioCatalog
     ) {
         if (accountId == null) {
             throw new AuraHandledException('Please select an Account.');
         }
 
         Account selected = [
-            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Name,
+                Industry,
+                Type,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE Id = :accountId
             LIMIT 1
@@ -120,13 +169,24 @@ public with sharing class CMDemoTargetSetupController {
         selected.Industry = normalizeValue(industry);
         selected.Website = normalizeValue(website);
         selected.Description = normalizeValue(description);
+        selected.CM_Supply_Scenario_Catalog__c = normalizeScenarioCatalog(
+            supplyScenarioCatalog
+        );
         selected.CM_Is_Demo_Target__c = true;
         updates.add(selected);
 
         update updates;
 
         return toDto([
-            SELECT Id, Name, Industry, Type, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Name,
+                Industry,
+                Type,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE Id = :accountId
             LIMIT 1
@@ -138,6 +198,26 @@ public with sharing class CMDemoTargetSetupController {
         return String.isBlank(normalized) ? null : normalized;
     }
 
+    private static String normalizeScenarioCatalog(String value) {
+        if (String.isBlank(value)) {
+            return null;
+        }
+
+        List<String> normalizedLines = new List<String>();
+        String normalizedText = value.replace('\r', '\n');
+        while (normalizedText.contains('\n\n')) {
+            normalizedText = normalizedText.replace('\n\n', '\n');
+        }
+
+        for (String rawLine : normalizedText.split('\n')) {
+            if (String.isBlank(rawLine)) {
+                continue;
+            }
+            normalizedLines.add(rawLine.trim());
+        }
+        return normalizedLines.isEmpty() ? null : String.join(normalizedLines, '\n');
+    }
+
     private static DemoTargetAccount toDto(Account account) {
         DemoTargetAccount dto = new DemoTargetAccount();
         dto.id = account.Id;
@@ -146,6 +226,7 @@ public with sharing class CMDemoTargetSetupController {
         dto.type = account.Type;
         dto.website = account.Website;
         dto.description = account.Description;
+        dto.supplyScenarioCatalog = account.CM_Supply_Scenario_Catalog__c;
         dto.isDemoTarget = account.CM_Is_Demo_Target__c;
 
         List<String> missing = new List<String>();
@@ -157,6 +238,9 @@ public with sharing class CMDemoTargetSetupController {
         }
         if (String.isBlank(account.Description)) {
             missing.add('Description');
+        }
+        if (String.isBlank(account.CM_Supply_Scenario_Catalog__c)) {
+            missing.add('CM_Supply_Scenario_Catalog');
         }
 
         dto.hasContext = missing.isEmpty();
@@ -171,6 +255,7 @@ public with sharing class CMDemoTargetSetupController {
         @AuraEnabled public String type;
         @AuraEnabled public String website;
         @AuraEnabled public String description;
+        @AuraEnabled public String supplyScenarioCatalog;
         @AuraEnabled public Boolean isDemoTarget;
         @AuraEnabled public Boolean hasContext;
         @AuraEnabled public String missingContext;

@@ -30,7 +30,10 @@ private class CMDemoTargetSetupControllerTest {
         System.assertEquals(firstAccount.Id, activeBefore.id);
         System.assertEquals(secondAccount.Id, activeAfter.id);
         System.assertEquals(false, activeAfter.hasContext);
-        System.assertEquals('Website', activeAfter.missingContext);
+        System.assertEquals(
+            'Website, CM_Supply_Scenario_Catalog',
+            activeAfter.missingContext
+        );
 
         Map<Id, Account> refreshed = new Map<Id, Account>([
             SELECT Id, CM_Is_Demo_Target__c
@@ -62,7 +65,8 @@ private class CMDemoTargetSetupControllerTest {
                 secondAccount.Id,
                 'IC Distribution',
                 'www.micron.example.com',
-                'Global IC distributor focused on memory and storage-related demand patterns.'
+                'Global IC distributor focused on memory and storage-related demand patterns.',
+                'FWA_5G|5G FWA|AI' + '\n' + 'AUTOMOTIVE_TELEMATICS|車聯網模組|AI'
             );
         Test.stopTest();
 
@@ -73,12 +77,22 @@ private class CMDemoTargetSetupControllerTest {
             'Global IC distributor focused on memory and storage-related demand patterns.',
             result.description
         );
+        System.assertEquals(
+            'FWA_5G|5G FWA|AI' + '\n' + 'AUTOMOTIVE_TELEMATICS|車聯網模組|AI',
+            result.supplyScenarioCatalog
+        );
         System.assertEquals(true, result.isDemoTarget);
         System.assertEquals(true, result.hasContext);
         System.assertEquals('', result.missingContext);
 
         Map<Id, Account> refreshed = new Map<Id, Account>([
-            SELECT Id, Industry, Website, Description, CM_Is_Demo_Target__c
+            SELECT
+                Id,
+                Industry,
+                Website,
+                Description,
+                CM_Is_Demo_Target__c,
+                CM_Supply_Scenario_Catalog__c
             FROM Account
             WHERE Id IN :new Set<Id>{ firstAccount.Id, secondAccount.Id }
         ]);
@@ -89,6 +103,10 @@ private class CMDemoTargetSetupControllerTest {
         System.assertEquals(
             'Global IC distributor focused on memory and storage-related demand patterns.',
             refreshed.get(secondAccount.Id).Description
+        );
+        System.assertEquals(
+            'FWA_5G|5G FWA|AI' + '\n' + 'AUTOMOTIVE_TELEMATICS|車聯網模組|AI',
+            refreshed.get(secondAccount.Id).CM_Supply_Scenario_Catalog__c
         );
     }
 }

@@ -154,7 +154,8 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
                 accountId: this.editorAccount.id,
                 industry: this.editorAccount.industry,
                 website: this.editorAccount.website,
-                description: this.editorAccount.description
+                description: this.editorAccount.description,
+                supplyScenarioCatalog: this.editorAccount.supplyScenarioCatalog
             });
             const decorated = this.decorateAccount(result);
             this.activeTarget = decorated;
@@ -220,6 +221,7 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
             industry: row.industry || '',
             website: row.website || '',
             description: row.description || '',
+            supplyScenarioCatalog: row.supplyScenarioCatalog || '',
             recordUrl: `/${row.id}`,
             industryLabel: row.industry ? this.getIndustryLabel(row.industry) : 'Not set',
             typeLabel: row.type || 'Not set',
@@ -245,6 +247,9 @@ export default class CmDemoTargetSetup extends NavigationMixin(LightningElement)
         }
         if (!row?.description) {
             missing.push('Description');
+        }
+        if (!row?.supplyScenarioCatalog) {
+            missing.push('CM_Supply_Scenario_Catalog');
         }
         return missing;
     }

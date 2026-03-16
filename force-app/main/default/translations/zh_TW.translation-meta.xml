@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <name>CM_Latest_Account_News_Title</name>
+        <label>最新新聞</label>
+    </customLabels>
+    <customLabels>
+        <name>CM_Latest_Related_News_Title</name>
+        <label>相關新聞</label>
+    </customLabels>
+</Translations>

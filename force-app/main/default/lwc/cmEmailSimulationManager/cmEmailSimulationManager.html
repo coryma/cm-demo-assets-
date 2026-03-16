@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Email Simulation" icon-name="standard:email">
+        <div class="container">
+            <p class="intro">
+                Select Accounts, clear existing email activities, then generate simulated EmailMessage records.
+            </p>
+
+            <lightning-input
+                type="search"
+                label="Search Account"
+                value={searchKey}
+                placeholder="Search by account name"
+                onchange={handleSearchChange}
+            ></lightning-input>
+
+            <template if:true={isLoadingAccounts}>
+                <lightning-spinner size="small" alternative-text="Loading accounts"></lightning-spinner>
+            </template>
+
+            <div class="account-table-wrap">
+                <lightning-datatable
+                    key-field="id"
+                    data={accounts}
+                    columns={accountColumns}
+                    selected-rows={selectedAccountIds}
+                    onrowselection={handleRowSelection}
+                ></lightning-datatable>
+            </div>
+
+            <div class="config-grid">
+                <lightning-input
+                    type="number"
+                    label="Email Count Per Account"
+                    value={emailCount}
+                    min="1"
+                    max="10"
+                    onchange={handleEmailCountChange}
+                ></lightning-input>
+                <lightning-combobox
+                    label="Direction"
+                    value={simulationDirection}
+                    options={directionOptions}
+                    onchange={handleDirectionChange}
+                ></lightning-combobox>
+                <lightning-input
+                    type="text"
+                    label="Department"
+                    value={department}
+                    onchange={handleDepartmentChange}
+                ></lightning-input>
+                <lightning-input
+                    type="date"
+                    label="Start Date"
+                    value={startDate}
+                    onchange={handleStartDateChange}
+                ></lightning-input>
+                <lightning-input
+                    type="date"
+                    label="End Date"
+                    value={endDate}
+                    onchange={handleEndDateChange}
+                ></lightning-input>
+            </div>
+
+            <lightning-input
+                type="checkbox"
+                label="I understand this will delete all existing EmailMessage records for selected Accounts."
+                checked={confirmDelete}
+                onchange={handleConfirmDeleteChange}
+            ></lightning-input>
+
+            <div class="actions">
+                <lightning-button
+                    variant="brand"
+                    label="Clear And Generate"
+                    onclick={handleRun}
+                    disabled={disableRun}
+                ></lightning-button>
+            </div>
+
+            <template if:true={isRunning}>
+                <lightning-spinner size="small" alternative-text="Running simulation"></lightning-spinner>
+            </template>
+
+            <template if:true={hasResults}>
+                <lightning-datatable
+                    key-field="accountId"
+                    data={results}
+                    columns={resultColumns}
+                ></lightning-datatable>
+            </template>
+        </div>
+    </lightning-card>
+</template>

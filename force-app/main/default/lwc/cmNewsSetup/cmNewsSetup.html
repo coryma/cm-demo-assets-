@@ -1,0 +1,143 @@
+<template>
+    <lightning-card title="News Setup" icon-name="standard:news">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-title">Account News Batch Editor</span>
+                    <lightning-badge label={selectedCountLabel}></lightning-badge>
+                </div>
+
+                <lightning-input
+                    type="search"
+                    label="Search Account"
+                    value={searchKey}
+                    placeholder="Search by account name"
+                    onchange={handleSearchChange}
+                ></lightning-input>
+
+                <template if:true={isSearching}>
+                    <lightning-spinner alternative-text="Searching accounts" size="small"></lightning-spinner>
+                </template>
+
+                <div class="account-table-wrap">
+                    <lightning-datatable
+                        key-field="id"
+                        data={accounts}
+                        columns={accountColumns}
+                        selected-rows={selectedAccountIds}
+                        draft-values={draftValues}
+                        onrowselection={handleRowSelection}
+                        oncellchange={handleCellChange}
+                        onsave={handleInlineSave}
+                        max-row-selection="20"
+                    ></lightning-datatable>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-title">Generate News</span>
+                </div>
+
+                <lightning-combobox
+                    label="API Provider"
+                    value={generateApiProvider}
+                    options={apiOptions}
+                    onchange={handleGenerateApiProviderChange}
+                ></lightning-combobox>
+
+                <lightning-combobox
+                    label="News Language"
+                    value={generateLanguage}
+                    options={generateLanguageOptions}
+                    onchange={handleGenerateLanguageChange}
+                ></lightning-combobox>
+
+                <template if:true={isGenerateAuthRequired}>
+                    <lightning-input
+                        type="password"
+                        label="API Auth"
+                        value={generateApiAuth}
+                        placeholder="Input API key/token"
+                        onchange={handleGenerateApiAuthChange}
+                    ></lightning-input>
+                </template>
+
+                <div class="button-row actions">
+                    <lightning-button
+                        variant="brand"
+                        label="Generate Selected"
+                        onclick={handleGenerateSelected}
+                        disabled={disableGenerateSelectedButton}
+                    ></lightning-button>
+                    <lightning-button
+                        variant="neutral"
+                        label="Generate All In List"
+                        onclick={handleGenerateAll}
+                        disabled={disableGenerateAllButton}
+                    ></lightning-button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <span class="panel-title">API Test</span>
+                </div>
+
+                <lightning-input
+                    type="text"
+                    label="Query String"
+                    value={testQuery}
+                    placeholder="Ex: Tesla"
+                    onchange={handleTestQueryChange}
+                ></lightning-input>
+                <lightning-combobox
+                    label="Language"
+                    value={testLanguage}
+                    options={testLanguageOptions}
+                    onchange={handleTestLanguageChange}
+                ></lightning-combobox>
+                <lightning-combobox
+                    label="API Provider"
+                    value={testApiProvider}
+                    options={apiOptions}
+                    onchange={handleTestApiProviderChange}
+                ></lightning-combobox>
+                <template if:true={isTestAuthRequired}>
+                    <lightning-input
+                        type="password"
+                        label="API Auth"
+                        value={testApiAuth}
+                        placeholder="Input API key/token"
+                        onchange={handleTestApiAuthChange}
+                    ></lightning-input>
+                </template>
+
+                <div class="actions">
+                    <lightning-button
+                        variant="neutral"
+                        label="Test API"
+                        onclick={handleTestQuery}
+                        disabled={disableTestButton}
+                    ></lightning-button>
+                </div>
+
+                <template if:true={hasTestRows}>
+                    <lightning-datatable
+                        key-field="id"
+                        data={testRows}
+                        columns={testColumns}
+                        hide-checkbox-column
+                    ></lightning-datatable>
+                </template>
+
+                <lightning-textarea
+                    class="raw-box"
+                    label="Raw Response"
+                    value={rawPayload}
+                    readonly
+                ></lightning-textarea>
+            </section>
+        </div>
+    </lightning-card>
+</template>

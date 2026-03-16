@@ -1,0 +1,27 @@
+.setup-panel {
+    display: grid;
+    gap: 1rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+}
+
+.direction-field {
+    grid-column: 1 / -1;
+}
+
+.helper-text {
+    color: #5c5c5c;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+@media (max-width: 48rem) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

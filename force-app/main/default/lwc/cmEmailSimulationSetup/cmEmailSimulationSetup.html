@@ -1,0 +1,53 @@
+<template>
+    <div class="setup-panel">
+        <lightning-textarea
+            label={contextLabel}
+            value={simulationContext}
+            required
+            maxlength="4000"
+            placeholder={contextPlaceholder}
+            onchange={handleContextChange}
+        ></lightning-textarea>
+
+        <div class="grid">
+            <lightning-input
+                type="number"
+                label={countLabel}
+                value={emailCount}
+                min="1"
+                max="10"
+                required
+                onchange={handleCountChange}
+            ></lightning-input>
+
+            <lightning-input
+                type="date"
+                label={startDateLabel}
+                value={startDate}
+                required
+                onchange={handleStartDateChange}
+            ></lightning-input>
+
+            <lightning-input
+                type="date"
+                label={endDateLabel}
+                value={endDate}
+                required
+                onchange={handleEndDateChange}
+            ></lightning-input>
+
+            <div class="direction-field">
+                <lightning-radio-group
+                    label={directionLabel}
+                    options={directionOptions}
+                    value={simulationDirection}
+                    type="button"
+                    required
+                    onchange={handleDirectionChange}
+                ></lightning-radio-group>
+            </div>
+        </div>
+
+        <p class="helper-text">{helperText}</p>
+    </div>
+</template>

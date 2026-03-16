@@ -1,0 +1,39 @@
+.panel {
+    border: 1px solid #dddbda;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    background: #ffffff;
+}
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.panel-title {
+    font-weight: 700;
+}
+
+.actions {
+    margin-top: 0.75rem;
+}
+
+.button-row {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.raw-box {
+    margin-top: 0.75rem;
+}
+
+.account-table-wrap {
+    max-height: 22rem;
+    overflow: auto;
+    margin-top: 0.5rem;
+}
