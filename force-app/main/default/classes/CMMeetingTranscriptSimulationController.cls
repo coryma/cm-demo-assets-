@@ -3,6 +3,7 @@ public with sharing class CMMeetingTranscriptSimulationController {
     private static final Integer MAX_SEARCH_LIMIT = 100;
     private static final Integer MAX_ACCOUNTS_PER_RUN = 30;
     private static final Integer DEFAULT_DURATION_MINUTES = 45;
+    private static final String PROMPT_TEMPLATE_NAME = 'CM_Meeting_Transcript_Simulation_Gen';
 
     private static final List<String> WNC_SPEAKERS = new List<String>{
         'WNC 供應鏈經理',
@@ -10,6 +11,9 @@ public with sharing class CMMeetingTranscriptSimulationController {
         'WNC 產品經理',
         'WNC 品質主管'
     };
+
+    @TestVisible
+    static String testPromptResponse;
 
     public class FocusContextPayload {
         @AuraEnabled public Id focusCompanyId;
@@ -181,8 +185,9 @@ public with sharing class CMMeetingTranscriptSimulationController {
                 continue;
             }
 
-            TranscriptPackage transcript = buildTranscriptPackage(
+            TranscriptPackage transcript = buildTranscriptPackageFromPrompt(
                 focusCompany.Name,
+                counterpart.Id,
                 counterpart.Name,
                 counterpart.Industry,
                 DEFAULT_DURATION_MINUTES
@@ -297,6 +302,178 @@ public with sharing class CMMeetingTranscriptSimulationController {
             return null;
         }
         return focusCompanies[0];
+    }
+
+    private static TranscriptPackage buildTranscriptPackageFromPrompt(
+        String focusCompanyName,
+        Id counterpartyAccountId,
+        String counterpartyName,
+        String counterpartyIndustry,
+        Integer durationMinutes
+    ) {
+        TranscriptPackage fallbackPackage = buildTranscriptPackage(
+            focusCompanyName,
+            counterpartyName,
+            counterpartyIndustry,
+            durationMinutes
+        );
+
+        String safeFocusCompanyName = String.isBlank(focusCompanyName) ? 'Focus Company' : focusCompanyName;
+        String safeCounterpartyName = String.isBlank(counterpartyName) ? 'Account' : counterpartyName;
+        String safeIndustry = String.isBlank(counterpartyIndustry) ? '電子產業' : counterpartyIndustry;
+        Integer safeDuration = durationMinutes == null || durationMinutes <= 0
+            ? DEFAULT_DURATION_MINUTES
+            : durationMinutes;
+
+        String rawPromptResponse = callTranscriptPromptTemplate(
+            safeFocusCompanyName,
+            counterpartyAccountId,
+            safeCounterpartyName,
+            safeIndustry,
+            safeDuration
+        );
+        Map<String, Object> parsed = parsePromptOutput(rawPromptResponse);
+        if (parsed == null) {
+            throw new AuraHandledException('Prompt template output is not valid JSON.');
+        }
+
+        String transcript = asString(parsed.get('transcript'));
+        if (String.isBlank(transcript)) {
+            throw new AuraHandledException('Prompt template output must include a non-empty "transcript".');
+        }
+
+        String summary = asString(parsed.get('summary'));
+        String actionItems = normalizeActionItems(
+            parsed.containsKey('action_items')
+                ? parsed.get('action_items')
+                : parsed.get('actionItems')
+        );
+
+        TranscriptPackage promptPackage = new TranscriptPackage();
+        promptPackage.summary = truncateForLongText(
+            String.isBlank(summary) ? fallbackPackage.summary : summary
+        );
+        promptPackage.transcript = truncateForLongText(transcript);
+        promptPackage.actionItems = truncateForLongText(
+            String.isBlank(actionItems) ? fallbackPackage.actionItems : actionItems
+        );
+        promptPackage.promptResponse = truncateForLongText(rawPromptResponse);
+        return promptPackage;
+    }
+
+    private static String callTranscriptPromptTemplate(
+        String focusCompanyName,
+        Id counterpartyAccountId,
+        String counterpartyName,
+        String counterpartyIndustry,
+        Integer durationMinutes
+    ) {
+        if (counterpartyAccountId == null) {
+            throw new AuraHandledException('Counterparty Account is required for transcript prompt generation.');
+        }
+        if (Test.isRunningTest() && testPromptResponse != null) {
+            return testPromptResponse;
+        }
+
+        try {
+            Map<String, ConnectApi.WrappedValue> inputParams = new Map<String, ConnectApi.WrappedValue>();
+            inputParams.put('Input:FocusCompany', toPrimitiveInput(focusCompanyName));
+            inputParams.put('Input:RootAccount', toSObjectInput(counterpartyAccountId));
+            inputParams.put('Input:CounterpartyName', toPrimitiveInput(counterpartyName));
+            inputParams.put('Input:CounterpartyIndustry', toPrimitiveInput(counterpartyIndustry));
+            inputParams.put('Input:MeetingDurationMinutes', toPrimitiveInput(String.valueOf(durationMinutes)));
+
+            ConnectApi.EinsteinPromptTemplateGenerationsInput promptInput =
+                new ConnectApi.EinsteinPromptTemplateGenerationsInput();
+            promptInput.inputParams = inputParams;
+            promptInput.isPreview = false;
+
+            ConnectApi.EinsteinLlmAdditionalConfigInput additionalConfig =
+                new ConnectApi.EinsteinLlmAdditionalConfigInput();
+            additionalConfig.applicationName = 'PromptTemplateGenerationsInvocable';
+            promptInput.additionalConfig = additionalConfig;
+
+            ConnectApi.EinsteinPromptTemplateGenerationsRepresentation promptResult =
+                ConnectApi.EinsteinLLM.generateMessagesForPromptTemplate(PROMPT_TEMPLATE_NAME, promptInput);
+
+            if (promptResult == null || promptResult.generations == null || promptResult.generations.isEmpty()) {
+                throw new AuraHandledException('Prompt template returned no generation text.');
+            }
+            String generatedText = promptResult.generations[0].text;
+            if (String.isBlank(generatedText)) {
+                throw new AuraHandledException('Prompt template returned empty text.');
+            }
+            return generatedText;
+        } catch (AuraHandledException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new AuraHandledException('Prompt generation failed: ' + ex.getMessage());
+        }
+    }
+
+    private static Map<String, Object> parsePromptOutput(String rawText) {
+        if (String.isBlank(rawText)) {
+            return null;
+        }
+
+        String normalized = normalizePromptOutput(rawText);
+        Integer firstBrace = normalized.indexOf('{');
+        Integer lastBrace = normalized.lastIndexOf('}');
+        if (firstBrace < 0 || lastBrace < 0 || lastBrace <= firstBrace) {
+            return null;
+        }
+
+        String jsonText = normalized.substring(firstBrace, lastBrace + 1);
+        try {
+            Object parsed = JSON.deserializeUntyped(jsonText);
+            return parsed instanceof Map<String, Object> ? (Map<String, Object>) parsed : null;
+        } catch (Exception ex) {
+            throw new AuraHandledException('Prompt template output is not valid JSON: ' + ex.getMessage());
+        }
+    }
+
+    private static String normalizePromptOutput(String rawText) {
+        if (rawText == null) {
+            return '';
+        }
+        return rawText
+            .replace('```json', '')
+            .replace('```', '')
+            .trim();
+    }
+
+    private static String normalizeActionItems(Object rawValue) {
+        if (rawValue == null) {
+            return null;
+        }
+        if (rawValue instanceof List<Object>) {
+            List<String> lines = new List<String>();
+            for (Object item : (List<Object>) rawValue) {
+                String text = asString(item);
+                if (!String.isBlank(text)) {
+                    lines.add('- ' + text);
+                }
+            }
+            return lines.isEmpty() ? null : String.join(lines, '\n');
+        }
+        return asString(rawValue);
+    }
+
+    private static String asString(Object value) {
+        return value == null ? null : String.valueOf(value).trim();
+    }
+
+    private static ConnectApi.WrappedValue toSObjectInput(Id recordId) {
+        Map<String, String> recordRef = new Map<String, String>{ 'id' => String.valueOf(recordId) };
+        ConnectApi.WrappedValue wrappedValue = new ConnectApi.WrappedValue();
+        wrappedValue.value = recordRef;
+        return wrappedValue;
+    }
+
+    private static ConnectApi.WrappedValue toPrimitiveInput(String value) {
+        ConnectApi.WrappedValue wrappedValue = new ConnectApi.WrappedValue();
+        wrappedValue.value = value;
+        return wrappedValue;
     }
 
     private static TranscriptPackage buildTranscriptPackage(

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>cmMeetingTranscriptSimulationGenV1=_1</activeVersionIdentifier>
+    <developerName>CM_Meeting_Transcript_Simulation_Gen</developerName>
+    <masterLabel>CM - Meeting Transcript Simulation Gen</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>你是 WNC 的企業會議模擬助理。
+
+請根據以下輸入，生成一份「45 分鐘商務會議模擬逐字稿」：
+- Focus Company: {!$Input:FocusCompany}
+- Counterparty Account: {!$Input:RootAccount.Name}
+- Counterparty Industry: {!$Input:CounterpartyIndustry}
+- Duration Minutes: {!$Input:MeetingDurationMinutes}
+
+產出要求：
+1. 使用繁體中文。
+2. 逐字稿需有時間戳（例如 [00:00]）、發言者、發言內容。
+3. 內容應呈現雙方討論交期、成本、風險、後續追蹤等商務議題。
+4. 發言者需有我方角色與對方角色，至少 12 輪對話。
+5. 請避免虛構精確機密數字，使用合理商務情境描述。
+
+你必須只輸出合法 JSON，且不得輸出 Markdown 或任何額外說明。
+
+JSON 結構必須嚴格如下：
+{
+  "summary": "string",
+  "transcript": "string",
+  "action_items": [
+    "string",
+    "string",
+    "string"
+  ]
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>FocusCompany</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Company</masterLabel>
+            <referenceName>Input:FocusCompany</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RootAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Root Account</masterLabel>
+            <referenceName>Input:RootAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyIndustry</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Industry</masterLabel>
+            <referenceName>Input:CounterpartyIndustry</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyName</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Name</masterLabel>
+            <referenceName>Input:CounterpartyName</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>MeetingDurationMinutes</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Meeting Duration Minutes</masterLabel>
+            <referenceName>Input:MeetingDurationMinutes</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <versionIdentifier>cmMeetingTranscriptSimulationGenV1=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

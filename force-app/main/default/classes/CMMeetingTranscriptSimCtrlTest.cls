@@ -43,6 +43,9 @@ private class CMMeetingTranscriptSimCtrlTest {
         Account secondCounterparty = new Account(Name = 'Zen Assembly', Industry = 'Industrial');
         insert new List<Account>{ focusAccount, firstCounterparty, secondCounterparty };
 
+        CMMeetingTranscriptSimulationController.testPromptResponse =
+            '{"summary":"模擬會議摘要","transcript":"[00:00] WNC 供應鏈經理：會議開場與議程確認。\\n[00:05] Alpha Components 業務總監：確認供貨與交期規劃。","action_items":["下週提供 12 週 forecast","月底前提交 OTD 改善計畫","兩週後召開 checkpoint"]}';
+
         Test.startTest();
         CMMeetingTranscriptSimulationController.StartSimulationResult startResult =
             CMMeetingTranscriptSimulationController.startSimulation(
@@ -84,6 +87,7 @@ private class CMMeetingTranscriptSimCtrlTest {
             System.assertNotEquals(null, row.Prompt_Response__c);
             System.assertEquals(null, row.Error_Message__c);
             System.assertNotEquals(null, row.Generated_At__c);
+            System.assert(row.Prompt_Response__c.contains('"transcript"'));
         }
 
         System.assertEquals(startResult.batchId, batchStatus.batchId);
@@ -95,6 +99,8 @@ private class CMMeetingTranscriptSimCtrlTest {
         System.assertEquals(true, batchStatus.done);
         System.assertEquals(2, batchStatus.rows.size());
         System.assert(batchStatus.rows[0].recordUrl.contains('/lightning/r/CM_Meeting_Transcript__c/'));
+
+        CMMeetingTranscriptSimulationController.testPromptResponse = null;
     }
 
     @IsTest
