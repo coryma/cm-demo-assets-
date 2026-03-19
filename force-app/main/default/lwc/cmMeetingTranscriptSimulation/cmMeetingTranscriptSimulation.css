@@ -1,0 +1,51 @@
+.container {
+    display: grid;
+    gap: 1rem;
+    padding: 0.75rem;
+}
+
+.intro {
+    margin: 0;
+    color: #3e3e3c;
+}
+
+.account-table-wrap {
+    max-height: min(65vh, 32rem);
+    overflow: auto;
+}
+
+.result-table-wrap {
+    max-height: min(45vh, 22rem);
+    overflow: auto;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.selected-count {
+    color: #514f4d;
+}
+
+.helper {
+    margin: 0;
+    color: #706e6b;
+}
+
+.missing-focus {
+    border-radius: 0.25rem;
+    border: 1px solid #dddbda;
+    background: #f3f3f3;
+    color: #3e3e3c;
+    padding: 0.75rem;
+}
+
+@media (max-width: 42rem) {
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

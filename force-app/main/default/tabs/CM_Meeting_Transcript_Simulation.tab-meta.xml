@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Select accounts and generate 45-minute simulated meeting transcripts against the current demo target account.</description>
+    <flexiPage>CM_Meeting_Transcript_Simulation</flexiPage>
+    <label>Meeting Transcript</label>
+    <motif>Custom12: Circle</motif>
+</CustomTab>

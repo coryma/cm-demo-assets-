@@ -19,5 +19,6 @@
     <tabs>CM_Account_Role_Setup</tabs>
     <tabs>CM_Lead_AI_Scoring</tabs>
     <tabs>CM_Email_Simulation</tabs>
+    <tabs>CM_Meeting_Transcript_Simulation</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

@@ -1,0 +1,79 @@
+<template>
+    <lightning-card title="Meeting Transcript Simulation" icon-name="standard:task2">
+        <div class="container">
+            <p class="intro">
+                Select accounts and generate a deterministic 45-minute simulated meeting transcript between the
+                currently configured demo target account and each selected account.
+            </p>
+
+            <template if:true={isLoadingContext}>
+                <lightning-spinner size="small" alternative-text="Loading focus company"></lightning-spinner>
+            </template>
+
+            <template if:false={isLoadingContext}>
+                <template if:true={hasFocusCompany}>
+                    <lightning-input
+                        type="text"
+                        label="Current Focus Company (Read-only)"
+                        value={focusCompanyName}
+                        disabled
+                    ></lightning-input>
+
+                    <lightning-input
+                        type="search"
+                        label="Search Accounts"
+                        value={searchKey}
+                        placeholder="Search by account name"
+                        onchange={handleSearchChange}
+                    ></lightning-input>
+
+                    <template if:true={isLoadingAccounts}>
+                        <lightning-spinner size="small" alternative-text="Loading accounts"></lightning-spinner>
+                    </template>
+
+                    <div class="account-table-wrap">
+                        <lightning-datatable
+                            key-field="id"
+                            data={accounts}
+                            columns={accountColumns}
+                            selected-rows={selectedAccountIds}
+                            onrowselection={handleRowSelection}
+                            max-row-selection="30"
+                        ></lightning-datatable>
+                    </div>
+
+                    <template if:true={showNoAccounts}>
+                        <p class="helper">No matching account found.</p>
+                    </template>
+
+                    <div class="actions">
+                        <span class="selected-count">{selectedCountLabel}</span>
+                        <lightning-button
+                            variant="brand"
+                            label="Generate 45-Min Transcript"
+                            onclick={handleGenerate}
+                            disabled={disableGenerate}
+                        ></lightning-button>
+                    </div>
+
+                    <template if:true={isGenerating}>
+                        <lightning-spinner size="small" alternative-text="Generating transcripts"></lightning-spinner>
+                    </template>
+
+                    <template if:true={hasResults}>
+                        <p class="helper">Latest batch: {batchId}</p>
+                        <div class="result-table-wrap">
+                            <lightning-datatable key-field="transcriptId" data={results} columns={resultColumns}></lightning-datatable>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:false={hasFocusCompany}>
+                    <div class="missing-focus">
+                        Demo target account is not configured. Please set a FocusCompany in Demo Setup first.
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
