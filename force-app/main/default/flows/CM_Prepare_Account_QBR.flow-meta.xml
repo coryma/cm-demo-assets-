@@ -1,5 +1,318 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Call_Generate_QBR</name>
+        <label>產生 QBR 簡報</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CM_QBRFlowService</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Start_Draft_Generation</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>quarter</name>
+            <value>
+                <elementReference>varQuarter</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>meetingDate</name>
+            <value>
+                <elementReference>varMeetingDate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>meetingObjectives</name>
+            <value>
+                <elementReference>varMeetingObjectives</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>outputMode</name>
+            <value>
+                <elementReference>varOutputMode</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>primaryFocus</name>
+            <value>
+                <elementReference>varPrimaryFocus</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>selectedContactIds</name>
+            <value>
+                <elementReference>varSelectedContactIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>swotDecision</name>
+            <value>
+                <elementReference>varSwotDecision</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>editedStrengthsHtml</name>
+            <value>
+                <elementReference>varEditedStrengthsHtml</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>editedWeaknessesHtml</name>
+            <value>
+                <elementReference>varEditedWeaknessesHtml</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>editedOpportunitiesHtml</name>
+            <value>
+                <elementReference>varEditedOpportunitiesHtml</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>editedThreatsHtml</name>
+            <value>
+                <elementReference>varEditedThreatsHtml</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CM_QBRFlowService</nameSegment>
+        <offset>0</offset>
+        <outputParameters>
+            <assignToReference>varGenerateStatusMessage</assignToReference>
+            <name>statusMessage</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varBriefingHtml</assignToReference>
+            <name>briefingHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varAttendeeStrategyHtml</assignToReference>
+            <name>attendeeStrategyHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotHtml</assignToReference>
+            <name>swotHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varKeyTalkingPointsHtml</assignToReference>
+            <name>keyTalkingPointsHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varActionRequestsHtml</assignToReference>
+            <name>actionRequestsHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varEmailSubject</assignToReference>
+            <name>emailSubject</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varEmailBody</assignToReference>
+            <name>emailBody</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Start_Draft_Generation</name>
+        <label>背景產生會後草稿</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CMQBRAsyncEmailDraftService</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Review_Briefing</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>meetingNotes</name>
+            <value>
+                <elementReference>varEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CMQBRAsyncEmailDraftService</nameSegment>
+        <offset>0</offset>
+        <outputParameters>
+            <assignToReference>varDraftBufferId</assignToReference>
+            <name>bufferId</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varDraftGenerationStatus</assignToReference>
+            <name>status</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varDraftGenerationMessage</assignToReference>
+            <name>message</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Call_Generate_SWOT</name>
+        <label>產生 SWOT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CM_AccountPlanSWOTInvoker</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Refresh_Latest_SWOT</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>accountPlanId</name>
+            <value>
+                <elementReference>varSwotAccountPlanId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CM_AccountPlanSWOTInvoker</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <actionCalls>
+        <name>Inspect_Latest_SWOT</name>
+        <label>檢查最新 SWOT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CM_QBRSwotInspector</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>SWOT_Check</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CM_QBRSwotInspector</nameSegment>
+        <offset>0</offset>
+        <outputParameters>
+            <assignToReference>varSwotHasAccountPlan</assignToReference>
+            <name>hasAccountPlan</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotHasExistingData</assignToReference>
+            <name>hasExistingSwot</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotIsComplete</assignToReference>
+            <name>isCompleteSwot</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotCanGenerate</assignToReference>
+            <name>canGenerate</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotAccountPlanId</assignToReference>
+            <name>accountPlanId</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotAccountPlanName</assignToReference>
+            <name>accountPlanName</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotLastModifiedLabel</assignToReference>
+            <name>lastModifiedLabel</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotStatusMessage</assignToReference>
+            <name>statusMessage</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotStrengthsPreviewHtml</assignToReference>
+            <name>strengthsPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotWeaknessesPreviewHtml</assignToReference>
+            <name>weaknessesPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotOpportunitiesPreviewHtml</assignToReference>
+            <name>opportunitiesPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotThreatsPreviewHtml</assignToReference>
+            <name>threatsPreviewHtml</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Refresh_Latest_SWOT</name>
+        <label>重新讀取最新 SWOT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CM_QBRSwotInspector</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>SWOT_Check</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CM_QBRSwotInspector</nameSegment>
+        <offset>0</offset>
+        <outputParameters>
+            <assignToReference>varSwotHasAccountPlan</assignToReference>
+            <name>hasAccountPlan</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotHasExistingData</assignToReference>
+            <name>hasExistingSwot</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotIsComplete</assignToReference>
+            <name>isCompleteSwot</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotCanGenerate</assignToReference>
+            <name>canGenerate</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotAccountPlanId</assignToReference>
+            <name>accountPlanId</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotAccountPlanName</assignToReference>
+            <name>accountPlanName</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotLastModifiedLabel</assignToReference>
+            <name>lastModifiedLabel</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotStatusMessage</assignToReference>
+            <name>statusMessage</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotStrengthsPreviewHtml</assignToReference>
+            <name>strengthsPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotWeaknessesPreviewHtml</assignToReference>
+            <name>weaknessesPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotOpportunitiesPreviewHtml</assignToReference>
+            <name>opportunitiesPreviewHtml</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>varSwotThreatsPreviewHtml</assignToReference>
+            <name>threatsPreviewHtml</name>
+        </outputParameters>
+    </actionCalls>
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <customProperties>
@@ -8,10 +321,35 @@
             <stringValue>{&quot;location&quot;:&quot;top&quot;,&quot;type&quot;:&quot;path&quot;}</stringValue>
         </value>
     </customProperties>
+    <decisions>
+        <name>Evaluate_SWOT_Decision</name>
+        <label>判斷 SWOT 處理方式</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Select_Contacts</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>使用目前或略過</defaultConnectorLabel>
+        <rules>
+            <name>Regenerate_SWOT</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varSwotDecision</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>REGENERATE</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SWOT_Generating</targetReference>
+            </connector>
+            <label>重新產生 SWOT</label>
+        </rules>
+    </decisions>
     <description>為 Account 準備結構化 QBR 會前簡報草稿 / Prepare a structured QBR briefing draft for an Account.</description>
     <environments>Default</environments>
     <interviewLabel>準備 Account QBR {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>CM - Prepare Account QBR</label>
+    <label>準備 Account QBR</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -32,57 +370,138 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <screens>
-        <name>Export_Presentation</name>
-        <label>輸出簡報 / Export Presentation</label>
+        <name>Draft_Email</name>
+        <label>選擇收件人與寄送郵件 / Draft &amp; Send Email</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
-            <name>ExportIntro</name>
-            <fieldText>&lt;p&gt;最後一步：勾選要輸出的議題，生成簡報檔。&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>PresentationExport</name>
-            <extensionName>c:cmQbrPresentationExport</extensionName>
+            <name>DraftEmailComponent</name>
+            <extensionName>c:cmQbrDraftEmail</extensionName>
             <fieldType>ComponentInstance</fieldType>
             <inputParameters>
-                <name>qbrMeetingId</name>
+                <name>accountId</name>
                 <value>
-                    <elementReference>varQbrMeetingId</elementReference>
+                    <elementReference>recordId</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>selectedContactIds</name>
+                <value>
+                    <elementReference>varSelectedContactIds</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>draftBufferId</name>
+                <value>
+                    <elementReference>varDraftBufferId</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>outputMode</name>
+                <value>
+                    <elementReference>varOutputMode</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>recipientContactIds</name>
+                <value>
+                    <elementReference>varRecipientContactIds</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>internalRecipients</name>
+                <value>
+                    <elementReference>varInternalRecipients</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>selectedUserIds</name>
+                <value>
+                    <elementReference>varSelectedUserIds</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedEmailSubject</name>
+                <value>
+                    <elementReference>varEditedEmailSubject</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedEmailBody</name>
+                <value>
+                    <elementReference>varEditedEmailBody</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>sendStatusMessage</name>
+                <value>
+                    <elementReference>varSendStatusMessage</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>emailSent</name>
+                <value>
+                    <elementReference>varEmailSent</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>emailSubject</name>
+                <value>
+                    <elementReference>varEmailSubject</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>emailBody</name>
+                <value>
+                    <elementReference>varEmailBody</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>includeActionItems</name>
+                <value>
+                    <elementReference>varIncludeActionItems</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>includePricingAsks</name>
+                <value>
+                    <elementReference>varIncludePricingAsks</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>includeRiskAlerts</name>
+                <value>
+                    <elementReference>varIncludeRiskAlerts</elementReference>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
-                <assignToReference>varSelectedSlideNumbers</assignToReference>
-                <name>selectedSlideNumbers</name>
+                <assignToReference>varEditedEmailSubject</assignToReference>
+                <name>editedEmailSubject</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varPresentationFileUrl</assignToReference>
-                <name>generatedFileUrl</name>
+                <assignToReference>varEditedEmailBody</assignToReference>
+                <name>editedEmailBody</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varPresentationFileName</assignToReference>
-                <name>generatedFileName</name>
+                <assignToReference>varRecipientContactIds</assignToReference>
+                <name>recipientContactIds</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varPresentationContentDocumentId</assignToReference>
-                <name>generatedContentDocumentId</name>
+                <assignToReference>varSelectedUserIds</assignToReference>
+                <name>selectedUserIds</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varPresentationContentVersionId</assignToReference>
-                <name>generatedContentVersionId</name>
+                <assignToReference>varSendStatusMessage</assignToReference>
+                <name>sendStatusMessage</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varEmailSent</assignToReference>
+                <name>emailSent</name>
             </outputParameters>
             <styleProperties>
                 <verticalAlignment>
@@ -96,7 +515,7 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
         <stageReference>
-            <elementReference>Export_Stage</elementReference>
+            <elementReference>Email_Stage</elementReference>
         </stageReference>
     </screens>
     <screens>
@@ -104,15 +523,15 @@
         <label>會議設定 / Meeting Setup</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <allowBack>true</allowBack>
+        <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Topic_Editor</targetReference>
+            <targetReference>Inspect_Latest_SWOT</targetReference>
         </connector>
         <fields>
             <name>SetupIntro</name>
-            <fieldText>&lt;p&gt;&lt;strong&gt;QBR 會議準備（使用者編修版）&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;此流程不會重新生成 9 頁內容，只會讀取 QBR Setup 已產生的預設資料，供你編修。&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;strong&gt;準備 QBR / Prepare QBR&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;請先確認會議資訊、輸出模式與核心焦點，再由系統組裝本次 QBR 簡報內容。&lt;br/&gt;Capture the core meeting details, output mode, and primary focus before the system assembles the QBR briefing package.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -133,54 +552,6 @@
                     <elementReference>recordId</elementReference>
                 </value>
             </inputParameters>
-            <inputParameters>
-                <name>quarter</name>
-                <value>
-                    <elementReference>varQuarter</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>meetingDate</name>
-                <value>
-                    <elementReference>varMeetingDate</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>screenMode</name>
-                <value>
-                    <stringValue>setup</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>qbrMeetingId</name>
-                <value>
-                    <elementReference>varQbrMeetingId</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideOneHtml</name>
-                <value>
-                    <elementReference>varSlideOneHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideTwoHtml</name>
-                <value>
-                    <elementReference>varSlideTwoHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideThreeHtml</name>
-                <value>
-                    <elementReference>varSlideThreeHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideFourHtml</name>
-                <value>
-                    <elementReference>varSlideFourHtml</elementReference>
-                </value>
-            </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
@@ -192,24 +563,16 @@
                 <name>meetingDate</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varQbrMeetingId</assignToReference>
-                <name>qbrMeetingId</name>
+                <assignToReference>varMeetingObjectives</assignToReference>
+                <name>meetingObjectives</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varSlideOneHtml</assignToReference>
-                <name>slideOneHtml</name>
+                <assignToReference>varOutputMode</assignToReference>
+                <name>outputMode</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varSlideTwoHtml</assignToReference>
-                <name>slideTwoHtml</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varSlideThreeHtml</assignToReference>
-                <name>slideThreeHtml</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varSlideFourHtml</assignToReference>
-                <name>slideFourHtml</name>
+                <assignToReference>varPrimaryFocus</assignToReference>
+                <name>primaryFocus</name>
             </outputParameters>
             <styleProperties>
                 <verticalAlignment>
@@ -227,19 +590,19 @@
         </stageReference>
     </screens>
     <screens>
-        <name>Topic_Editor</name>
-        <label>議題編修 / Topic Editor</label>
+        <name>Review_Briefing</name>
+        <label>檢視簡報 / Review Briefing</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Export_Presentation</targetReference>
+            <targetReference>Draft_Email</targetReference>
         </connector>
         <fields>
-            <name>EditorIntro</name>
-            <fieldText>&lt;p&gt;請使用 Tab 編修議題內容。完成後按「下一步」進入輸出。&lt;/p&gt;</fieldText>
+            <name>ReviewStatus</name>
+            <fieldText>&lt;p&gt;{!varGenerateStatusMessage}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -251,84 +614,46 @@
             </styleProperties>
         </fields>
         <fields>
-            <name>TopicEditorPanel</name>
-            <extensionName>c:cmQbrSetupPanel</extensionName>
+            <name>QbrReviewBriefing</name>
+            <extensionName>c:cmQbrReviewBriefing</extensionName>
             <fieldType>ComponentInstance</fieldType>
             <inputParameters>
-                <name>accountId</name>
+                <name>attendeeStrategyHtml</name>
                 <value>
-                    <elementReference>recordId</elementReference>
+                    <elementReference>varAttendeeStrategyHtml</elementReference>
                 </value>
             </inputParameters>
             <inputParameters>
-                <name>quarter</name>
+                <name>swotHtml</name>
                 <value>
-                    <elementReference>varQuarter</elementReference>
+                    <elementReference>varSwotHtml</elementReference>
                 </value>
             </inputParameters>
             <inputParameters>
-                <name>meetingDate</name>
+                <name>keyTalkingPointsHtml</name>
                 <value>
-                    <elementReference>varMeetingDate</elementReference>
+                    <elementReference>varKeyTalkingPointsHtml</elementReference>
                 </value>
             </inputParameters>
             <inputParameters>
-                <name>screenMode</name>
+                <name>actionRequestsHtml</name>
                 <value>
-                    <stringValue>editor</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>qbrMeetingId</name>
-                <value>
-                    <elementReference>varQbrMeetingId</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideOneHtml</name>
-                <value>
-                    <elementReference>varSlideOneHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideTwoHtml</name>
-                <value>
-                    <elementReference>varSlideTwoHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideThreeHtml</name>
-                <value>
-                    <elementReference>varSlideThreeHtml</elementReference>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>slideFourHtml</name>
-                <value>
-                    <elementReference>varSlideFourHtml</elementReference>
+                    <elementReference>varActionRequestsHtml</elementReference>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <outputParameters>
-                <assignToReference>varQbrMeetingId</assignToReference>
-                <name>qbrMeetingId</name>
+                <assignToReference>varIncludeActionItems</assignToReference>
+                <name>includeActionItems</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varSlideOneHtml</assignToReference>
-                <name>slideOneHtml</name>
+                <assignToReference>varIncludePricingAsks</assignToReference>
+                <name>includePricingAsks</name>
             </outputParameters>
             <outputParameters>
-                <assignToReference>varSlideTwoHtml</assignToReference>
-                <name>slideTwoHtml</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varSlideThreeHtml</assignToReference>
-                <name>slideThreeHtml</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varSlideFourHtml</assignToReference>
-                <name>slideFourHtml</name>
+                <assignToReference>varIncludeRiskAlerts</assignToReference>
+                <name>includeRiskAlerts</name>
             </outputParameters>
             <styleProperties>
                 <verticalAlignment>
@@ -342,26 +667,280 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
         <stageReference>
-            <elementReference>Editor_Stage</elementReference>
+            <elementReference>Review_Stage</elementReference>
+        </stageReference>
+    </screens>
+    <screens>
+        <name>Select_Contacts</name>
+        <label>選擇與會者 / Select Contacts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Call_Generate_QBR</targetReference>
+        </connector>
+        <fields>
+            <name>ContactIntro</name>
+            <fieldText>&lt;p&gt;請選擇會影響本次 QBR 準備方向的外部與會者。&lt;br/&gt;Select the external attendees whose roles and negotiation posture should shape the QBR preparation package.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <fields>
+            <name>QbrContactPicker</name>
+            <extensionName>c:cmQbrContactPicker</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>accountId</name>
+                <value>
+                    <elementReference>recordId</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>varSelectedContactIds</assignToReference>
+                <name>selectedContactIds</name>
+            </outputParameters>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+        <stageReference>
+            <elementReference>Attendees_Stage</elementReference>
+        </stageReference>
+    </screens>
+    <screens>
+        <name>SWOT_Check</name>
+        <label>確認 SWOT / Review SWOT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Evaluate_SWOT_Decision</targetReference>
+        </connector>
+        <fields>
+            <name>QbrSwotDecision</name>
+            <extensionName>c:cmQbrSwotDecision</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>hasAccountPlan</name>
+                <value>
+                    <elementReference>varSwotHasAccountPlan</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>hasExistingSwot</name>
+                <value>
+                    <elementReference>varSwotHasExistingData</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>isCompleteSwot</name>
+                <value>
+                    <elementReference>varSwotIsComplete</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>canGenerate</name>
+                <value>
+                    <elementReference>varSwotCanGenerate</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>accountPlanName</name>
+                <value>
+                    <elementReference>varSwotAccountPlanName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>lastModifiedLabel</name>
+                <value>
+                    <elementReference>varSwotLastModifiedLabel</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>statusMessage</name>
+                <value>
+                    <elementReference>varSwotStatusMessage</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>strengthsPreviewHtml</name>
+                <value>
+                    <elementReference>varSwotStrengthsPreviewHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>weaknessesPreviewHtml</name>
+                <value>
+                    <elementReference>varSwotWeaknessesPreviewHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>opportunitiesPreviewHtml</name>
+                <value>
+                    <elementReference>varSwotOpportunitiesPreviewHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>threatsPreviewHtml</name>
+                <value>
+                    <elementReference>varSwotThreatsPreviewHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedStrengthsHtml</name>
+                <value>
+                    <elementReference>varEditedStrengthsHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedWeaknessesHtml</name>
+                <value>
+                    <elementReference>varEditedWeaknessesHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedOpportunitiesHtml</name>
+                <value>
+                    <elementReference>varEditedOpportunitiesHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>editedThreatsHtml</name>
+                <value>
+                    <elementReference>varEditedThreatsHtml</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>varSwotDecision</assignToReference>
+                <name>swotDecision</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varEditedStrengthsHtml</assignToReference>
+                <name>editedStrengthsHtml</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varEditedWeaknessesHtml</assignToReference>
+                <name>editedWeaknessesHtml</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varEditedOpportunitiesHtml</assignToReference>
+                <name>editedOpportunitiesHtml</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varEditedThreatsHtml</assignToReference>
+                <name>editedThreatsHtml</name>
+            </outputParameters>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+        <stageReference>
+            <elementReference>SWOT_Stage</elementReference>
+        </stageReference>
+    </screens>
+    <screens>
+        <name>SWOT_Generating</name>
+        <label>Prep: SWOT Generating</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Call_Generate_SWOT</targetReference>
+        </connector>
+        <fields>
+            <name>SwotGeneratingIndicator</name>
+            <extensionName>c:cmQbrProgressSimulator</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>titleText</name>
+                <value>
+                    <stringValue>AI 正在產生 SWOT 分析，請稍候...</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>autoAdvanceMs</name>
+                <value>
+                    <numberValue>1200.0</numberValue>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>false</showFooter>
+        <showHeader>false</showHeader>
+        <stageReference>
+            <elementReference>SWOT_Stage</elementReference>
         </stageReference>
     </screens>
     <stages>
-        <name>Editor_Stage</name>
+        <name>Attendees_Stage</name>
         <isActive>true</isActive>
-        <label>議題編修</label>
-        <stageOrder>20</stageOrder>
+        <label>選擇與會者</label>
+        <stageOrder>30</stageOrder>
     </stages>
     <stages>
-        <name>Export_Stage</name>
+        <name>Email_Stage</name>
         <isActive>true</isActive>
-        <label>輸出簡報</label>
-        <stageOrder>30</stageOrder>
+        <label>建立郵件</label>
+        <stageOrder>50</stageOrder>
+    </stages>
+    <stages>
+        <name>Review_Stage</name>
+        <isActive>true</isActive>
+        <label>總結QBR會前準備</label>
+        <stageOrder>40</stageOrder>
     </stages>
     <stages>
         <name>Setup_Stage</name>
         <isActive>true</isActive>
         <label>會議資訊</label>
         <stageOrder>10</stageOrder>
+    </stages>
+    <stages>
+        <name>SWOT_Stage</name>
+        <isActive>true</isActive>
+        <label>確認 SWOT</label>
+        <stageOrder>20</stageOrder>
     </stages>
     <start>
         <locationX>0</locationX>
@@ -379,6 +958,153 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>varActionRequestsHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varAttendeeStrategyHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varBriefingHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDraftBufferId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDraftGenerationMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDraftGenerationStatus</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedEmailSubject</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedOpportunitiesHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedStrengthsHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedThreatsHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEditedWeaknessesHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEmailSent</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varEmailSubject</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varGenerateStatusMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varIncludeActionItems</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varIncludePricingAsks</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varIncludeRiskAlerts</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varInternalRecipients</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varKeyTalkingPointsHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>varMeetingDate</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -386,35 +1112,21 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varPresentationContentDocumentId</name>
+        <name>varMeetingObjectives</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varPresentationContentVersionId</name>
+        <name>varOutputMode</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varPresentationFileName</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>varPresentationFileUrl</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>varQbrMeetingId</name>
+        <name>varPrimaryFocus</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
@@ -428,35 +1140,126 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varSelectedSlideNumbers</name>
+        <name>varRecipientContactIds</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varSlideFourHtml</name>
+        <name>varSelectedContactIds</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varSlideOneHtml</name>
+        <name>varSelectedUserIds</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varSlideThreeHtml</name>
+        <name>varSendStatusMessage</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>varSlideTwoHtml</name>
+        <name>varSwotAccountPlanId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotAccountPlanName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotCanGenerate</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotDecision</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotHasAccountPlan</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotHasExistingData</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotIsComplete</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotLastModifiedLabel</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotOpportunitiesPreviewHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotStatusMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotStrengthsPreviewHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotThreatsPreviewHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varSwotWeaknessesPreviewHtml</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
