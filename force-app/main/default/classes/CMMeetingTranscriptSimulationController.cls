@@ -24,9 +24,7 @@ public with sharing class CMMeetingTranscriptSimulationController {
     public class AccountRow {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
-        @AuraEnabled public String industry;
-        @AuraEnabled public String type;
-        @AuraEnabled public Datetime lastModifiedDate;
+        @AuraEnabled public Boolean hasMeetingRecord;
     }
 
     public class StartSimulationResult {
@@ -94,13 +92,13 @@ public with sharing class CMMeetingTranscriptSimulationController {
         if (String.isBlank(normalizedSearchTerm)) {
             rows = focusCompanyId == null
                 ? [
-                    SELECT Id, Name, Industry, Type, LastModifiedDate
+                    SELECT Id, Name
                     FROM Account
                     ORDER BY LastModifiedDate DESC
                     LIMIT :safeLimit
                 ]
                 : [
-                    SELECT Id, Name, Industry, Type, LastModifiedDate
+                    SELECT Id, Name
                     FROM Account
                     WHERE Id != :focusCompanyId
                     ORDER BY LastModifiedDate DESC
@@ -109,14 +107,14 @@ public with sharing class CMMeetingTranscriptSimulationController {
         } else {
             rows = focusCompanyId == null
                 ? [
-                    SELECT Id, Name, Industry, Type, LastModifiedDate
+                    SELECT Id, Name
                     FROM Account
                     WHERE Name LIKE :likeTerm
                     ORDER BY Name
                     LIMIT :safeLimit
                 ]
                 : [
-                    SELECT Id, Name, Industry, Type, LastModifiedDate
+                    SELECT Id, Name
                     FROM Account
                     WHERE Name LIKE :likeTerm
                       AND Id != :focusCompanyId
@@ -125,14 +123,30 @@ public with sharing class CMMeetingTranscriptSimulationController {
                 ];
         }
 
+        Set<Id> accountIds = new Set<Id>();
+        for (Account accountRow : rows) {
+            accountIds.add(accountRow.Id);
+        }
+
+        Set<Id> accountsWithRecords = new Set<Id>();
+        if (!accountIds.isEmpty() && focusCompanyId != null) {
+            for (AggregateResult item : [
+                SELECT Counterparty_Account__c accountId, COUNT(Id) totalCount
+                FROM CM_Meeting_Transcript__c
+                WHERE Focus_Company__c = :focusCompanyId
+                  AND Counterparty_Account__c IN :accountIds
+                GROUP BY Counterparty_Account__c
+            ]) {
+                accountsWithRecords.add((Id) item.get('accountId'));
+            }
+        }
+
         List<AccountRow> results = new List<AccountRow>();
         for (Account accountRow : rows) {
             AccountRow output = new AccountRow();
             output.id = accountRow.Id;
             output.name = accountRow.Name;
-            output.industry = accountRow.Industry;
-            output.type = accountRow.Type;
-            output.lastModifiedDate = accountRow.LastModifiedDate;
+            output.hasMeetingRecord = accountsWithRecords.contains(accountRow.Id);
             results.add(output);
         }
         return results;
@@ -176,7 +190,6 @@ public with sharing class CMMeetingTranscriptSimulationController {
         }
 
         String batchId = buildBatchId();
-        Datetime generatedAt = System.now();
         List<CM_Meeting_Transcript__c> inserts = new List<CM_Meeting_Transcript__c>();
 
         for (Id accountId : normalizedIds) {
@@ -185,26 +198,18 @@ public with sharing class CMMeetingTranscriptSimulationController {
                 continue;
             }
 
-            TranscriptPackage transcript = buildTranscriptPackageFromPrompt(
-                focusCompany.Name,
-                counterpart.Id,
-                counterpart.Name,
-                counterpart.Industry,
-                DEFAULT_DURATION_MINUTES
-            );
-
             CM_Meeting_Transcript__c record = new CM_Meeting_Transcript__c();
             record.Focus_Company__c = focusCompany.Id;
             record.Counterparty_Account__c = counterpart.Id;
             record.Duration_Minutes__c = DEFAULT_DURATION_MINUTES;
             record.Batch_Id__c = batchId;
-            record.Status__c = 'Completed';
-            record.Summary__c = transcript.summary;
-            record.Transcript__c = transcript.transcript;
-            record.Action_Items__c = transcript.actionItems;
-            record.Prompt_Response__c = transcript.promptResponse;
+            record.Status__c = 'Queued';
+            record.Summary__c = null;
+            record.Transcript__c = null;
+            record.Action_Items__c = null;
+            record.Prompt_Response__c = null;
             record.Error_Message__c = null;
-            record.Generated_At__c = generatedAt;
+            record.Generated_At__c = null;
             inserts.add(record);
         }
 
@@ -213,14 +218,15 @@ public with sharing class CMMeetingTranscriptSimulationController {
         }
 
         insert inserts;
+        System.enqueueJob(new TranscriptGenerationQueueable(batchId));
 
         StartSimulationResult result = new StartSimulationResult();
         result.batchId = batchId;
         result.createdCount = inserts.size();
         result.message =
-            'Generated '
+            'Queued '
             + String.valueOf(inserts.size())
-            + ' simulated meeting transcript(s) for '
+            + ' meeting transcript generation job(s) for '
             + focusCompany.Name
             + '.';
         return result;
@@ -282,6 +288,69 @@ public with sharing class CMMeetingTranscriptSimulationController {
 
         payload.done = payload.queuedCount == 0 && payload.processingCount == 0;
         return payload;
+    }
+
+    private class TranscriptGenerationQueueable implements Queueable, Database.AllowsCallouts {
+        private final String batchId;
+
+        TranscriptGenerationQueueable(String batchId) {
+            this.batchId = batchId;
+        }
+
+        public void execute(QueueableContext context) {
+            if (String.isBlank(batchId)) {
+                return;
+            }
+
+            List<CM_Meeting_Transcript__c> pendingRecords = [
+                SELECT
+                    Id,
+                    Focus_Company__c,
+                    Focus_Company__r.Name,
+                    Counterparty_Account__c,
+                    Counterparty_Account__r.Name,
+                    Counterparty_Account__r.Industry,
+                    Duration_Minutes__c
+                FROM CM_Meeting_Transcript__c
+                WHERE Batch_Id__c = :batchId
+                  AND Status__c = 'Queued'
+                ORDER BY CreatedDate ASC
+                LIMIT 200
+            ];
+
+            if (pendingRecords.isEmpty()) {
+                return;
+            }
+
+            Datetime generatedAt = System.now();
+            for (CM_Meeting_Transcript__c record : pendingRecords) {
+                try {
+                    TranscriptPackage transcript = buildTranscriptPackageFromPrompt(
+                        record.Focus_Company__r == null ? null : record.Focus_Company__r.Name,
+                        record.Counterparty_Account__c,
+                        record.Counterparty_Account__r == null ? null : record.Counterparty_Account__r.Name,
+                        record.Counterparty_Account__r == null ? null : record.Counterparty_Account__r.Industry,
+                        record.Duration_Minutes__c == null
+                            ? DEFAULT_DURATION_MINUTES
+                            : Integer.valueOf(String.valueOf(record.Duration_Minutes__c))
+                    );
+
+                    record.Status__c = 'Completed';
+                    record.Summary__c = transcript.summary;
+                    record.Transcript__c = transcript.transcript;
+                    record.Action_Items__c = transcript.actionItems;
+                    record.Prompt_Response__c = transcript.promptResponse;
+                    record.Error_Message__c = null;
+                    record.Generated_At__c = generatedAt;
+                } catch (Exception ex) {
+                    record.Status__c = 'Failed';
+                    record.Error_Message__c = truncateForLongText(ex.getMessage());
+                    record.Generated_At__c = generatedAt;
+                }
+            }
+
+            update pendingRecords;
+        }
     }
 
     private static Account getActiveDemoTargetAccount(Boolean required) {
@@ -371,8 +440,24 @@ public with sharing class CMMeetingTranscriptSimulationController {
         if (counterpartyAccountId == null) {
             throw new AuraHandledException('Counterparty Account is required for transcript prompt generation.');
         }
-        if (Test.isRunningTest() && testPromptResponse != null) {
-            return testPromptResponse;
+        if (Test.isRunningTest()) {
+            if (testPromptResponse != null) {
+                return testPromptResponse;
+            }
+            return JSON.serialize(
+                new Map<String, Object>{
+                    'summary' => '測試用模擬會議摘要',
+                    'transcript' =>
+                        '[00:00] WNC 供應鏈經理：會議開場與目標確認。'
+                        + '\n'
+                        + '[00:05] ' + counterpartyName + ' 業務總監：確認交期與需求視窗。',
+                    'action_items' => new List<String>{
+                        '下週提供 12 週 forecast',
+                        '月底前回覆 OTD 改善計畫',
+                        '兩週後召開 checkpoint'
+                    }
+                }
+            );
         }
 
         try {

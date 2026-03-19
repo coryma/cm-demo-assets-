@@ -2,8 +2,8 @@
     <lightning-card title="Meeting Transcript Simulation" icon-name="standard:task2">
         <div class="container">
             <p class="intro">
-                Select accounts and generate a 45-minute simulated meeting transcript using Prompt Template output
-                between the currently configured demo target account and each selected account.
+                Select accounts, submit background transcript generation jobs, and monitor batch status for each
+                selected account.
             </p>
 
             <template if:true={isLoadingContext}>
@@ -50,14 +50,14 @@
                         <span class="selected-count">{selectedCountLabel}</span>
                         <lightning-button
                             variant="brand"
-                            label="Generate 45-Min Transcript"
+                            label="Queue Transcript Generation"
                             onclick={handleGenerate}
                             disabled={disableGenerate}
                         ></lightning-button>
                     </div>
 
                     <template if:true={isGenerating}>
-                        <lightning-spinner size="small" alternative-text="Generating transcripts"></lightning-spinner>
+                        <lightning-spinner size="small" alternative-text="Running background generation"></lightning-spinner>
                     </template>
 
                     <template if:true={hasResults}>

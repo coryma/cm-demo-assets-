@@ -7,20 +7,14 @@ import getBatchStatus from '@salesforce/apex/CMMeetingTranscriptSimulationContro
 
 const SEARCH_DEBOUNCE_MS = 250;
 const SEARCH_LIMIT = 100;
+const STATUS_POLL_INTERVAL_MS = 2000;
 
 const ACCOUNT_COLUMNS = [
     { label: 'Account', fieldName: 'name' },
-    { label: 'Industry', fieldName: 'industry' },
-    { label: 'Type', fieldName: 'type' },
     {
-        label: 'Last Modified',
-        fieldName: 'lastModifiedDate',
-        type: 'date',
-        typeAttributes: {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        }
+        label: 'Has Meeting Record',
+        fieldName: 'hasMeetingRecord',
+        type: 'boolean'
     }
 ];
 
@@ -70,6 +64,7 @@ export default class CmMeetingTranscriptSimulation extends LightningElement {
     results = [];
 
     _searchTimer;
+    _statusTimer;
 
     connectedCallback() {
         this.initialize();
@@ -79,6 +74,7 @@ export default class CmMeetingTranscriptSimulation extends LightningElement {
         if (this._searchTimer) {
             clearTimeout(this._searchTimer);
         }
+        this.clearStatusPoll();
     }
 
     get hasFocusCompany() {
@@ -173,19 +169,65 @@ export default class CmMeetingTranscriptSimulation extends LightningElement {
         }
 
         this.isGenerating = true;
+        this.clearStatusPoll();
         try {
             const started = await startSimulation({ accountIds: this.selectedAccountIds });
             this.batchId = started.batchId || '';
+            this.results = [];
 
+            const count = started?.createdCount || 0;
+            this.showToast('Queued', `Queued ${count} account(s) for background generation.`, 'info');
+            await this.pollBatchStatus();
+        } catch (error) {
+            this.showToast('Generation failed', this.reduceError(error), 'error');
+            this.isGenerating = false;
+            this.clearStatusPoll();
+        }
+    }
+
+    async pollBatchStatus() {
+        if (!this.batchId) {
+            this.isGenerating = false;
+            return;
+        }
+
+        try {
             const status = await getBatchStatus({ batchId: this.batchId });
             this.results = (status?.rows || []).map((row) => ({ ...row }));
 
-            const count = started?.createdCount || 0;
-            this.showToast('Completed', `Generated transcript for ${count} account(s).`, 'success');
+            if (status?.done) {
+                this.isGenerating = false;
+                this.clearStatusPoll();
+                await this.loadAccounts(this.searchKey);
+                const completedCount = status?.completedCount || 0;
+                const failedCount = status?.failedCount || 0;
+                this.showToast(
+                    'Completed',
+                    `Completed ${completedCount} account(s), failed ${failedCount} account(s).`,
+                    failedCount > 0 ? 'warning' : 'success'
+                );
+                return;
+            }
+
+            this.scheduleStatusPoll();
         } catch (error) {
-            this.showToast('Generation failed', this.reduceError(error), 'error');
-        } finally {
             this.isGenerating = false;
+            this.clearStatusPoll();
+            this.showToast('Status check failed', this.reduceError(error), 'error');
+        }
+    }
+
+    scheduleStatusPoll() {
+        this.clearStatusPoll();
+        this._statusTimer = setTimeout(() => {
+            this.pollBatchStatus();
+        }, STATUS_POLL_INTERVAL_MS);
+    }
+
+    clearStatusPoll() {
+        if (this._statusTimer) {
+            clearTimeout(this._statusTimer);
+            this._statusTimer = null;
         }
     }
 

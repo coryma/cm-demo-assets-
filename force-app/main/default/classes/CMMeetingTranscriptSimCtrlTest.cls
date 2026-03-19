@@ -30,6 +30,25 @@ private class CMMeetingTranscriptSimCtrlTest {
         System.assertEquals(false, searchedIds.contains(focusAccount.Id));
         System.assertEquals(true, searchedIds.contains(firstCounterparty.Id));
         System.assertEquals(true, searchedIds.contains(secondCounterparty.Id));
+        for (CMMeetingTranscriptSimulationController.AccountRow row : rows) {
+            System.assertEquals(false, row.hasMeetingRecord);
+        }
+
+        insert new CM_Meeting_Transcript__c(
+            Focus_Company__c = focusAccount.Id,
+            Counterparty_Account__c = firstCounterparty.Id,
+            Duration_Minutes__c = 45,
+            Batch_Id__c = 'TEST-BATCH-1',
+            Status__c = 'Completed',
+            Summary__c = 'Existing transcript',
+            Transcript__c = 'Existing transcript body',
+            Generated_At__c = System.now()
+        );
+
+        List<CMMeetingTranscriptSimulationController.AccountRow> refreshedRows =
+            CMMeetingTranscriptSimulationController.searchAccounts('Acme', 10);
+        System.assertEquals(1, refreshedRows.size());
+        System.assertEquals(true, refreshedRows[0].hasMeetingRecord);
     }
 
     @IsTest
@@ -43,21 +62,25 @@ private class CMMeetingTranscriptSimCtrlTest {
         Account secondCounterparty = new Account(Name = 'Zen Assembly', Industry = 'Industrial');
         insert new List<Account>{ focusAccount, firstCounterparty, secondCounterparty };
 
-        CMMeetingTranscriptSimulationController.testPromptResponse =
-            '{"summary":"模擬會議摘要","transcript":"[00:00] WNC 供應鏈經理：會議開場與議程確認。\\n[00:05] Alpha Components 業務總監：確認供貨與交期規劃。","action_items":["下週提供 12 週 forecast","月底前提交 OTD 改善計畫","兩週後召開 checkpoint"]}';
-
         Test.startTest();
         CMMeetingTranscriptSimulationController.StartSimulationResult startResult =
             CMMeetingTranscriptSimulationController.startSimulation(
                 new List<Id>{ focusAccount.Id, firstCounterparty.Id, secondCounterparty.Id }
             );
+        CMMeetingTranscriptSimulationController.BatchStatusPayload queuedStatus =
+            CMMeetingTranscriptSimulationController.getBatchStatus(startResult.batchId);
+        System.assertEquals(2, queuedStatus.totalCount);
+        System.assertEquals(2, queuedStatus.queuedCount);
+        System.assertEquals(0, queuedStatus.completedCount);
+        System.assertEquals(false, queuedStatus.done);
+        Test.stopTest();
+
         CMMeetingTranscriptSimulationController.BatchStatusPayload batchStatus =
             CMMeetingTranscriptSimulationController.getBatchStatus(startResult.batchId);
-        Test.stopTest();
 
         System.assertNotEquals(null, startResult.batchId);
         System.assertEquals(2, startResult.createdCount);
-        System.assert(startResult.message.contains('simulated meeting transcript'));
+        System.assert(startResult.message.contains('Queued'));
 
         List<CM_Meeting_Transcript__c> created = [
             SELECT
@@ -99,8 +122,6 @@ private class CMMeetingTranscriptSimCtrlTest {
         System.assertEquals(true, batchStatus.done);
         System.assertEquals(2, batchStatus.rows.size());
         System.assert(batchStatus.rows[0].recordUrl.contains('/lightning/r/CM_Meeting_Transcript__c/'));
-
-        CMMeetingTranscriptSimulationController.testPromptResponse = null;
     }
 
     @IsTest
