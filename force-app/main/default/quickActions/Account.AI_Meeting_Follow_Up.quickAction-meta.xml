@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>以 AI 分析會議內容並建立跟進紀錄與郵件草稿</description>
+    <flowDefinition>CM_AI_Advisor_Meeting_Screenflow</flowDefinition>
+    <label>🤖 QBR 會議跟進</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>Flow</type>
+</QuickAction>

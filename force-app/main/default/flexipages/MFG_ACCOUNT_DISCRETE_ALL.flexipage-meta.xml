@@ -13,6 +13,9 @@
                             <value>Account.Prepare_QBR</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Account.AI_Meeting_Follow_Up</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Global.LogACall</value>
                         </valueListItems>
                     </valueList>
@@ -35,7 +38,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>numVisibleActions</name>
-                    <value>3</value>
+                    <value>4</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
                 <identifier>force_highlightsPanel</identifier>

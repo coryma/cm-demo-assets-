@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>874i9ea0BY9iNG/kX+jAvCUJotRjvuLeU3OmFjuWpl8=_3</activeVersionIdentifier>
+    <description>The purpose of this prompt template is to scan an image of a set of hand-written notes from an Advisor. The notes are from a recent meeting that the Advisor has had with one of their clients.</description>
+    <developerName>FINS_Image_Upload_for_Advisor_Meeting_Notes</developerName>
+    <masterLabel>Image Upload for Advisor Meeting Notes</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>Input: A photo of handwritten meeting notes taken by a financial advisor with the name {!$User.Name}
+
+Task: Analyze the image and generate a clear, well-written summary of the meeting in two paragraphs. The summary should:
+
+- Be suitable for pasting into a CRM note or follow-up email.
+- Preserve the advisor&apos;s tone, while improving clarity and grammar.
+- Include the client&apos;s name (if mentioned), meeting date (if noted), key discussion topics, goals, product recommendations, action items, and any open questions.
+- If there are specific names of people mentioned in the notes, you must always include all of their respective names in your response.
+- If the name of the advisor is mentioned in the meeting notes , then there&apos;s no need to include their name in the response.
+- Use professional yet conversational language that the advisor can easily revise by keyboard.
+- Use the pronouns defined here: {!$Input:recordId.PersonPronouns}
+
+Example Output:
+&quot;I met with John Anderson on April 18 to review his portfolio and discuss retirement planning. His primary goals include retiring at age 62 and reducing his overall tax burden. We discussed strategies such as contributing to a Roth IRA and investing in municipal bonds. Action items include following up on 401(k) options and preparing detailed retirement projections. John also asked for help determining the best way to allocate his assets.&quot;
+
+The paragraph above is an example output. Do not use any details or information from the example output.
+</content>
+        <inputs>
+            <apiName>recordId</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>recordId</masterLabel>
+            <referenceName>Input:recordId</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>File</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>File</masterLabel>
+            <referenceName>Input:File</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>bN9rfRB46IM/CV8zCVrTUXSm8exbz9E3o/JbZsSWU2g=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Input: A photo of handwritten meeting notes taken by a financial advisor with the name {!$User.Name}
+
+Task: Analyze the image and generate a clear, well-written summary of the meeting in two paragraphs. The summary should:
+
+- Be suitable for pasting into a CRM note or follow-up email.
+- Preserve the advisor&apos;s tone, while improving clarity and grammar.
+- Include the client&apos;s name (if mentioned), meeting date (if noted), key discussion topics, goals, product recommendations, action items, and any open questions.
+- If there are specific names of people mentioned in the notes, you must always include all of their respective names in your response.
+- If the name of the advisor is mentioned in the meeting notes , then there&apos;s no need to include their name in the response.
+- Use professional yet conversational language that the advisor can easily revise by keyboard.
+- Use the pronouns defined here: {!$Input:recordId.PersonPronouns}
+- 使用 {!$User.LanguageLocaleKey} 語言回應
+
+Example Output:
+&quot;I met with John Anderson on April 18 to review his portfolio and discuss retirement planning. His primary goals include retiring at age 62 and reducing his overall tax burden. We discussed strategies such as contributing to a Roth IRA and investing in municipal bonds. Action items include following up on 401(k) options and preparing detailed retirement projections. John also asked for help determining the best way to allocate his assets.&quot;
+
+The paragraph above is an example output. Do not use any details or information from the example output.
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>recordId</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>recordId</masterLabel>
+            <referenceName>Input:recordId</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>File</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>File</masterLabel>
+            <referenceName>Input:File</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>874i9ea0BY9iNG/kX+jAvCUJotRjvuLeU3OmFjuWpl8=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>Input: A photo of handwritten meeting notes taken by a financial advisor with the name {!$User.Name}
+
+Task: Analyze the image and generate a clear, well-written summary of the meeting in two paragraphs. The summary should:
+
+- Be suitable for pasting into a CRM note or follow-up email.
+- Preserve the advisor&apos;s tone, while improving clarity and grammar.
+- Include the client&apos;s name (if mentioned), meeting date (if noted), key discussion topics, goals, product recommendations, action items, and any open questions.
+- If there are specific names of people mentioned in the notes, you must always include all of their respective names in your response.
+- If the name of the advisor is mentioned in the meeting notes , then there&apos;s no need to include their name in the response.
+- Use professional yet conversational language that the advisor can easily revise by keyboard.
+- Use the pronouns defined here: {!$Input:recordId.PersonPronouns}
+- 使用 {!$User.LanguageLocaleKey} 語言回應
+
+Example Output:
+&quot;I met with John Anderson on April 18 to review his portfolio and discuss retirement planning. His primary goals include retiring at age 62 and reducing his overall tax burden. We discussed strategies such as contributing to a Roth IRA and investing in municipal bonds. Action items include following up on 401(k) options and preparing detailed retirement projections. John also asked for help determining the best way to allocate his assets.&quot;
+
+The paragraph above is an example output. Do not use any details or information from the example output.
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>recordId</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>recordId</masterLabel>
+            <referenceName>Input:recordId</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>File</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>File</masterLabel>
+            <referenceName>Input:File</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25Flash001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>874i9ea0BY9iNG/kX+jAvCUJotRjvuLeU3OmFjuWpl8=_3</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>
