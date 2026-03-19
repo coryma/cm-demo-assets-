@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionIdentifier>cmMeetingTranscriptSimulationGenV1=_1</activeVersionIdentifier>
+    <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_4</activeVersionIdentifier>
     <developerName>CM_Meeting_Transcript_Simulation_Gen</developerName>
     <masterLabel>CM - Meeting Transcript Simulation Gen</masterLabel>
     <overridable>false</overridable>
@@ -24,12 +24,12 @@
 
 JSON 結構必須嚴格如下：
 {
-  "summary": "string",
-  "transcript": "string",
-  "action_items": [
-    "string",
-    "string",
-    "string"
+  &quot;summary&quot;: &quot;string&quot;,
+  &quot;transcript&quot;: &quot;string&quot;,
+  &quot;action_items&quot;: [
+    &quot;string&quot;,
+    &quot;string&quot;,
+    &quot;string&quot;
   ]
 }
 </content>
@@ -78,6 +78,254 @@ JSON 結構必須嚴格如下：
         <responseFormat>JSON</responseFormat>
         <status>Published</status>
         <versionIdentifier>cmMeetingTranscriptSimulationGenV1=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+你是資深的 B2B 商務談判專家與企業會議模擬助理。
+
+# Task
+請根據以下輸入變數，模擬並生成一份逼真的商務會議紀錄與逐字稿：
+- 我方公司 (Focus Company): {!$Input:FocusCompany}
+- 對方客戶 (Counterparty Account): {!$Input:RootAccount.Name}
+- 對方產業 (Counterparty Industry): {!$Input:CounterpartyIndustry}
+- 會議總時長 (Duration Minutes): {!$Input:MeetingDurationMinutes} 分鐘
+
+# Guidelines
+1. 語言限制：請使用 {!$User.LanguageLocaleKey}。
+2. 情境逼真：內容需涵蓋「交期、成本、風險、後續追蹤」等核心商務議題的實質討論。請避免虛構精確的機密數字（如絕對金額），請使用比例（如降價 5%）、市場行情或合理商務情境來描述。
+3. 時間分配與長度：
+  - 為了呈現真實性，對話請保持緊湊、有來有往，至少需產出 20 到 30 輪的核心對話。
+  - 由於無法完整呈現長時長會議的每一句對話，請務必使用「旁白/時間快進」機制來推進時間，以符合總時長 {!$Input:MeetingDurationMinutes} 分鐘的邏輯。
+  - 範例格式：發言者可標示為 &quot;系統旁白&quot;，內容填寫如 &quot;[15:05 - 20:00] (雙方針對報價單明細與合約條款進行了約 5 分鐘的逐項核對與計算)&quot;，藉此合理跳躍時間。
+4. 角色設定：必須包含「我方代表 (Focus Company)」與「對方客戶代表 (Counterparty Account)」的互動。
+
+# Output Format (Strict JSON)
+你必須「只」輸出合法的 JSON 格式。
+絕對禁止輸出任何 Markdown 標記（如 ```json ）、禁止輸出任何前言或結語。輸出必須直接以 { 開頭，並以 } 結尾。
+
+JSON 結構必須嚴格如下：
+{
+ &quot;summary&quot;: &quot;會議重點摘要 (字串，約 100-150 字)&quot;,
+ &quot;transcript&quot;: [
+  {
+   &quot;time&quot;: &quot;[00:00]&quot;,
+   &quot;speaker&quot;: &quot;發言者名稱及職稱 (若為時間跳躍請寫 &apos;系統旁白&apos;)&quot;,
+   &quot;content&quot;: &quot;發言內容或旁白說明&quot;
+  }
+ ],
+ &quot;action_items&quot;: [
+  &quot;待辦事項 1&quot;,
+  &quot;待辦事項 2&quot;,
+  &quot;待辦事項 3&quot;
+ ]
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>FocusCompany</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Company</masterLabel>
+            <referenceName>Input:FocusCompany</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RootAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Root Account</masterLabel>
+            <referenceName>Input:RootAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyIndustry</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Industry</masterLabel>
+            <referenceName>Input:CounterpartyIndustry</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>MeetingDurationMinutes</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Meeting Duration Minutes</masterLabel>
+            <referenceName>Input:MeetingDurationMinutes</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyName</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Name</masterLabel>
+            <referenceName>Input:CounterpartyName</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+你是資深的 B2B 商務談判專家與企業會議模擬助理。
+
+# Task
+請根據以下輸入變數，模擬並生成一份逼真的商務會議紀錄與逐字稿：
+- 我方公司 (Focus Company): {!$Input:FocusCompany}
+- 對方客戶 (Counterparty Account): {!$Input:RootAccount.Name}
+- 對方產業 (Counterparty Industry): {!$Input:CounterpartyIndustry}
+- 會議總時長 (Duration Minutes): {!$Input:MeetingDurationMinutes} 分鐘
+
+# Guidelines
+1. 語言限制：請使用 {!$User.LanguageLocaleKey}。
+2. 情境逼真：內容需涵蓋「交期、成本、風險、後續追蹤」等核心商務議題的實質討論。請避免虛構精確的機密數字（如絕對金額），請使用比例（如降價 5%）、市場行情或合理商務情境來描述。
+3. 時間分配與長度：
+  - 為了呈現真實性，對話請保持緊湊、有來有往。
+  - 由於無法完整呈現長時長會議的每一句對話，請務必使用「旁白/時間快進」機制來推進時間，以符合總時長 {!$Input:MeetingDurationMinutes} 分鐘的邏輯。
+  - 範例格式：發言者可標示為 &quot;系統旁白&quot;，內容填寫如 &quot;[15:05 - 20:00] (雙方針對報價單明細與合約條款進行了約 5 分鐘的逐項核對與計算)&quot;，藉此合理跳躍時間。
+4. 角色設定：必須包含「我方代表 (Focus Company)」與「對方客戶代表 (Counterparty Account)」的互動。
+
+# Output Format (Strict JSON)
+你必須「只」輸出合法的 JSON 格式。
+絕對禁止輸出任何 Markdown 標記（如 ```json ）、禁止輸出任何前言或結語。輸出必須直接以 { 開頭，並以 } 結尾。
+
+JSON 結構必須嚴格如下：
+{
+ &quot;summary&quot;: &quot;會議重點摘要 (字串，約 100-150 字)&quot;,
+ &quot;transcript&quot;: [
+  {
+   &quot;time&quot;: &quot;[00:00]&quot;,
+   &quot;speaker&quot;: &quot;發言者名稱及職稱 (若為時間跳躍請寫 &apos;系統旁白&apos;)&quot;,
+   &quot;content&quot;: &quot;發言內容或旁白說明&quot;
+  }
+ ],
+ &quot;action_items&quot;: [
+  &quot;待辦事項 1&quot;,
+  &quot;待辦事項 2&quot;,
+  &quot;待辦事項 3&quot;
+ ]
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>FocusCompany</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Company</masterLabel>
+            <referenceName>Input:FocusCompany</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RootAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Root Account</masterLabel>
+            <referenceName>Input:RootAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyIndustry</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Industry</masterLabel>
+            <referenceName>Input:CounterpartyIndustry</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>MeetingDurationMinutes</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Meeting Duration Minutes</masterLabel>
+            <referenceName>Input:MeetingDurationMinutes</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyName</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Name</masterLabel>
+            <referenceName>Input:CounterpartyName</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini30Flash</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content># Role
+你是資深的 B2B 商務談判專家與企業會議模擬助理。
+
+# Task
+請根據以下輸入變數，模擬並生成一份逼真的商務會議紀錄與逐字稿：
+- 我方公司 (Focus Company): {!$Input:FocusCompany}
+- 對方客戶 (Counterparty Account): {!$Input:RootAccount.Name}
+- 對方產業 (Counterparty Industry): {!$Input:CounterpartyIndustry}
+- 會議總時長 (Duration Minutes): {!$Input:MeetingDurationMinutes} 分鐘
+
+# Guidelines
+1. 語言限制：請使用 {!$User.LanguageLocaleKey}。
+2. 純逐字稿格式：這是要提供給程式分析的實際錄音逐字稿，**絕對禁止**加入任何「旁白」、「動作描述（如：點頭、翻閱資料）」或「時間快進說明」。每一行只能有時間戳（例如 [00:00]）、發言者、發言內容。 3. 議題深度：內容應呈現雙方對「交期、成本、風險、後續追蹤」等商務議題的實質討論。
+3. 情境逼真：內容需涵蓋「交期、成本、風險、後續追蹤」等核心商務議題的實質討論。請避免虛構精確的機密數字（如絕對金額），請使用比例（如降價 5%）、市場行情或合理商務情境來描述。
+4. 時間分配與長度：
+  - 為了呈現真實性，對話請保持緊湊、有來有往。
+  - 由於無法完整呈現長時長會議的每一句對話，請務必使用「旁白/時間快進」機制來推進時間，以符合總時長 {!$Input:MeetingDurationMinutes} 分鐘的邏輯。
+  - 範例格式：發言者可標示為 &quot;系統旁白&quot;，內容填寫如 &quot;[15:05 - 20:00] (雙方針對報價單明細與合約條款進行了約 5 分鐘的逐項核對與計算)&quot;，藉此合理跳躍時間。
+
+5. 角色設定：必須包含「我方代表 (Focus Company)」與「對方客戶代表 (Counterparty Account)」的互動。
+
+# Output Format (Strict JSON)
+你必須「只」輸出合法的 JSON 格式。
+絕對禁止輸出任何 Markdown 標記（如 ```json ）、禁止輸出任何前言或結語。輸出必須直接以 { 開頭，並以 } 結尾。
+
+JSON 結構必須嚴格如下： { &quot;summary&quot;: &quot;string (會議重點摘要)&quot;, &quot;transcript&quot;: &quot;string (完整的逐字稿內容，對話間請以 \n 換行分隔)&quot;, &quot;action_items&quot;: [ &quot;string&quot;, &quot;string&quot;, &quot;string&quot; ] }
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>FocusCompany</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Company</masterLabel>
+            <referenceName>Input:FocusCompany</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RootAccount</apiName>
+            <definition>SOBJECT://Account</definition>
+            <masterLabel>Root Account</masterLabel>
+            <referenceName>Input:RootAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>MeetingDurationMinutes</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Meeting Duration Minutes</masterLabel>
+            <referenceName>Input:MeetingDurationMinutes</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyIndustry</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Industry</masterLabel>
+            <referenceName>Input:CounterpartyIndustry</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>CounterpartyName</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Counterparty Name</masterLabel>
+            <referenceName>Input:CounterpartyName</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini30Flash</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <versionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_4</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>
