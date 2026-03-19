@@ -45,8 +45,7 @@ public without sharing class CMQBRAsyncEmailDraftService {
             }
         }
 
-        Id focusCompanyId = getActiveDemoTargetAccountId();
-        Map<Id, String> transcriptByAccount = resolveTranscriptByAccount(accountIds, focusCompanyId);
+        Map<Id, String> transcriptByAccount = CMQBRTranscriptResolver.resolveByAccount(accountIds);
 
         List<CM_QBR_Email_Draft_Buffer__c> inserts = new List<CM_QBR_Email_Draft_Buffer__c>();
         List<Integer> queuedIndexes = new List<Integer>();
@@ -479,44 +478,6 @@ public without sharing class CMQBRAsyncEmailDraftService {
         return rawGreeting
             .replace('您好：', '您好，')
             .replace('您好:', '您好，');
-    }
-
-    private static Id getActiveDemoTargetAccountId() {
-        List<Account> activeTargets = [
-            SELECT Id
-            FROM Account
-            WHERE CM_Is_Demo_Target__c = true
-            ORDER BY LastModifiedDate DESC
-            LIMIT 1
-        ];
-        return activeTargets.isEmpty() ? null : activeTargets[0].Id;
-    }
-
-    private static Map<Id, String> resolveTranscriptByAccount(Set<Id> accountIds, Id focusCompanyId) {
-        Map<Id, String> transcriptByAccount = new Map<Id, String>();
-        if (accountIds == null || accountIds.isEmpty() || focusCompanyId == null) {
-            return transcriptByAccount;
-        }
-
-        for (CM_Meeting_Transcript__c transcript : [
-            SELECT Counterparty_Account__c, Transcript__c, Generated_At__c, LastModifiedDate
-            FROM CM_Meeting_Transcript__c
-            WHERE Focus_Company__c = :focusCompanyId
-              AND Counterparty_Account__c IN :accountIds
-              AND Status__c = 'Completed'
-            ORDER BY Counterparty_Account__c, Generated_At__c DESC, LastModifiedDate DESC
-            LIMIT 2000
-        ]) {
-            Id counterpartyId = transcript.Counterparty_Account__c;
-            if (
-                counterpartyId != null &&
-                !String.isBlank(transcript.Transcript__c) &&
-                !transcriptByAccount.containsKey(counterpartyId)
-            ) {
-                transcriptByAccount.put(counterpartyId, transcript.Transcript__c);
-            }
-        }
-        return transcriptByAccount;
     }
 
     private static Boolean isChineseLanguage() {

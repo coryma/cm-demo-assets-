@@ -41,6 +41,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>CMQBRTranscriptResolver</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>CMQbrMeetingPrepController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
