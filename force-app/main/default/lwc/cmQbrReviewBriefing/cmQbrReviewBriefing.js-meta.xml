@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR Review Briefing</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="attendeeStrategyHtml" type="String" role="inputOnly" label="Attendee Strategy Html" />
+            <property name="swotHtml" type="String" role="inputOnly" label="SWOT Html" />
+            <property name="keyTalkingPointsHtml" type="String" role="inputOnly" label="Key Talking Points Html" />
+            <property name="actionRequestsHtml" type="String" role="inputOnly" label="Action Requests Html" />
+            <property name="includeActionItems" type="Boolean" label="Include Action Items" />
+            <property name="includePricingAsks" type="Boolean" label="Include Pricing Asks" />
+            <property name="includeRiskAlerts" type="Boolean" label="Include Risk Alerts" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

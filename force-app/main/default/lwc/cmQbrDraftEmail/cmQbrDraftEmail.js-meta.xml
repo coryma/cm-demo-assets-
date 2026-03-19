@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR Draft Email</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="accountId" type="String" role="inputOnly" label="Account Id" />
+            <property name="selectedContactIds" type="String" role="inputOnly" label="Selected Contact Ids" />
+            <property name="briefingHtml" type="String" role="inputOnly" label="Briefing Html" />
+            <property name="outputMode" type="String" role="inputOnly" label="Output Mode" />
+            <property name="draftBufferId" type="String" role="inputOnly" label="Draft Buffer Id" />
+            <property name="recipientContactIds" type="String" label="Recipient Contact Ids" />
+            <property name="ccRecipientContactIds" type="String" label="CC Recipient Contact Ids" />
+            <property name="internalRecipients" type="String" role="inputOnly" label="Internal Recipients" />
+            <property name="selectedUserIds" type="String" label="Selected User Ids" />
+            <property name="ccSelectedUserIds" type="String" label="CC Selected User Ids" />
+            <property name="emailSubject" type="String" role="inputOnly" label="Email Subject" />
+            <property name="emailBody" type="String" role="inputOnly" label="Email Body" />
+            <property name="includeActionItems" type="Boolean" role="inputOnly" label="Include Action Items" />
+            <property name="includePricingAsks" type="Boolean" role="inputOnly" label="Include Pricing Asks" />
+            <property name="includeRiskAlerts" type="Boolean" role="inputOnly" label="Include Risk Alerts" />
+            <property name="autoSelectAllExternalRecipients" type="Boolean" role="inputOnly" label="Auto Select All External Recipients" />
+            <property name="summaryModeLabelOverride" type="String" role="inputOnly" label="Summary Mode Label Override" />
+            <property name="hideReviewFlags" type="Boolean" role="inputOnly" label="Hide Review Flags" />
+            <property name="editedEmailSubject" type="String" label="Edited Email Subject" />
+            <property name="editedEmailBody" type="String" label="Edited Email Body" />
+            <property name="sendStatusMessage" type="String" label="Send Status Message" />
+            <property name="emailSent" type="Boolean" label="Email Sent" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

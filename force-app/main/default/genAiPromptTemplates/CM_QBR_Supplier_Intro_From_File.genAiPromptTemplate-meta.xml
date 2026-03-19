@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>cmQbrSupplierIntroFromFileV1=_1</activeVersionIdentifier>
+    <developerName>CM_QBR_Supplier_Intro_From_File</developerName>
+    <masterLabel>CM - QBR Supplier Intro From File</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>你是企業簡報顧問。請根據上傳檔案與會議參數，為 QBR 第 2 頁「供應商公司簡介」產生內容。
+
+輸入資料：
+- FocusCompany: {!$Input:FocusCompany}
+- FocusDepartment: {!$Input:FocusDepartment}
+- RootAccount: {!$Input:RootAccount}
+- SupplierFileContent: {!$RelatedList:supplierFile.ContentVersions.Records}
+
+任務要求：
+1. 請以繁體中文輸出。
+2. 這份輸出只對應「第 2 頁：供應商公司簡介」。
+3. 內容需可直接放進簡報，重點包含：公司定位、產品/技術能力、產能與供應穩定性、與 FocusCompany 的合作價值。
+4. bullet_points 至少 4 點、每點精簡。
+5. 若資料不足，請以保守且合理的商務描述補齊，不要捏造過度具體的敏感數字。
+
+輸出規則（嚴格）：
+- 只能輸出 JSON，不得包含 Markdown 或任何額外文字。
+- 必須符合以下結構：
+{
+  &quot;slide_title&quot;: &quot;供應商公司簡介 - 標題&quot;,
+  &quot;bullet_points&quot;: [
+    &quot;重點 1&quot;,
+    &quot;重點 2&quot;,
+    &quot;重點 3&quot;,
+    &quot;重點 4&quot;
+  ],
+  &quot;table_data&quot;: {
+    &quot;has_table&quot;: false,
+    &quot;headers&quot;: [],
+    &quot;rows&quot;: []
+  },
+  &quot;speaker_notes&quot;: &quot;講者備忘&quot;
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>supplierFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>Supplier File</masterLabel>
+            <referenceName>Input:supplierFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>FocusCompany</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Company</masterLabel>
+            <referenceName>Input:FocusCompany</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>FocusDepartment</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Focus Department</masterLabel>
+            <referenceName>Input:FocusDepartment</referenceName>
+            <required>false</required>
+        </inputs>
+        <inputs>
+            <apiName>RootAccount</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Root Account</masterLabel>
+            <referenceName>Input:RootAccount</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro30</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <description>Get file versions from uploaded supplier file.</description>
+            <label>Versions</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:supplierFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:supplierFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>cmQbrSupplierIntroFromFileV1=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

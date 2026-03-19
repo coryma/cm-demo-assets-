@@ -1,0 +1,423 @@
+<template>
+    <div class="slds-p-around_medium">
+        <template if:true={isSetupMode}>
+            <p class="step-title">{setupTitle}</p>
+            <p class="helper-text">{setupHint}</p>
+
+            <lightning-combobox
+                name="quarter"
+                label={quarterLabel}
+                value={quarter}
+                options={quarterOptions}
+                required
+                onchange={handleQuarterChange}
+            ></lightning-combobox>
+
+            <lightning-input
+                class="slds-m-top_medium"
+                type="date"
+                name="meetingDate"
+                label={meetingDateLabel}
+                value={meetingDate}
+                required
+                onchange={handleDateChange}
+            ></lightning-input>
+
+            <div class="actions slds-m-top_medium">
+                <lightning-button
+                    variant="brand"
+                    label={loadDefaultLabel}
+                    onclick={handleLoadDefault}
+                    disabled={disableLoadDefault}
+                ></lightning-button>
+            </div>
+
+            <template if:true={showSetupSummary}>
+                <section class="summary-box slds-m-top_medium">
+                    <p class="summary-name">{generatedMeetingName}</p>
+                    <lightning-formatted-url
+                        value={generatedMeetingUrl}
+                        label={openMeetingLabel}
+                        target="_blank"
+                    ></lightning-formatted-url>
+                    <template if:true={generatedAtLabel}>
+                        <p class="helper-text slds-m-top_x-small">{generatedAtLabel}</p>
+                    </template>
+                </section>
+            </template>
+        </template>
+
+        <template if:true={isEditorMode}>
+            <section class="editor-box editor-tabs-box">
+                <p class="step-title">{editorTopicsTitle}</p>
+                <p class="helper-text slds-m-top_x-small">{editorTopicsHint}</p>
+                <div class="table-box topic-list-box slds-m-top_small">
+                    <lightning-datatable
+                        key-field="key"
+                        data={topicRows}
+                        columns={topicTableColumns}
+                        selected-rows={selectedTopicRowKeys}
+                        max-row-selection="1"
+                        onrowselection={handleTopicRowSelection}
+                    ></lightning-datatable>
+                </div>
+            </section>
+        </template>
+
+        <template if:true={isSlideOneMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageOneLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageOne}
+                            disabled={disableCopyPageOne}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageOneTitle}
+                    onchange={handlePageOneTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageOneRichText}
+                    onchange={handlePageOneRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideTwoMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageTwoLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageTwo}
+                            disabled={disableCopyPageTwo}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageTwoTitle}
+                    onchange={handlePageTwoTitleChange}
+                ></lightning-input>
+
+                <lightning-file-upload
+                    class="slds-m-top_small"
+                    label={supplierUploadLabel}
+                    name="supplierIntroUploadInFlow"
+                    accept={supplierFileAccept}
+                    record-id={qbrMeetingId}
+                    onuploadfinished={handleSupplierUploadFinished}
+                    disabled={isBusy}
+                ></lightning-file-upload>
+                <p class="helper-text slds-m-top_x-small">{supplierUploadHint}</p>
+
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageTwoRichText}
+                    onchange={handlePageTwoRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideThreeMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageThreeLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageThree}
+                            disabled={disableCopyPageThree}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageThreeTitle}
+                    onchange={handlePageThreeTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageThreeRichText}
+                    onchange={handlePageThreeRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideFourMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageFourLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageFour}
+                            disabled={disableCopyPageFour}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageFourTitle}
+                    onchange={handlePageFourTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageFourRichText}
+                    onchange={handlePageFourRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideFiveMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageFiveLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageFive}
+                            disabled={disableCopyPageFive}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageFiveTitle}
+                    onchange={handlePageFiveTitleChange}
+                ></lightning-input>
+
+                <template if:true={pageFiveHasTable}>
+                    <p class="helper-text slds-m-top_small">{spendingTableHint}</p>
+                    <p class="helper-text slds-m-top_x-small">{pageFiveSelectionCountLabel}</p>
+                    <div class="table-box slds-m-top_small">
+                        <lightning-datatable
+                            key-field="id"
+                            data={pageFiveRows}
+                            columns={pageFiveColumns}
+                            selected-rows={pageFiveSelectedRowKeys}
+                            onrowselection={handlePageFiveRowSelection}
+                        ></lightning-datatable>
+                    </div>
+                </template>
+
+                <template if:false={pageFiveHasTable}>
+                    <p class="helper-text slds-m-top_small">{noTableMessage}</p>
+                </template>
+            </section>
+        </template>
+
+        <template if:true={isSlideSixMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageSixLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageSix}
+                            disabled={disableCopyPageSix}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageSixTitle}
+                    onchange={handlePageSixTitleChange}
+                ></lightning-input>
+
+                <template if:true={pageSixHasTable}>
+                    <p class="helper-text slds-m-top_small">{spendingTableHint}</p>
+                    <p class="helper-text slds-m-top_x-small">{pageSixSelectionCountLabel}</p>
+                    <div class="table-box slds-m-top_small">
+                        <lightning-datatable
+                            key-field="id"
+                            data={pageSixRows}
+                            columns={pageSixColumns}
+                            selected-rows={pageSixSelectedRowKeys}
+                            onrowselection={handlePageSixRowSelection}
+                        ></lightning-datatable>
+                    </div>
+                </template>
+
+                <template if:false={pageSixHasTable}>
+                    <p class="helper-text slds-m-top_small">{noTableMessage}</p>
+                </template>
+            </section>
+        </template>
+
+        <template if:true={isSlideSevenMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageSevenLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageSeven}
+                            disabled={disableCopyPageSeven}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageSevenTitle}
+                    onchange={handlePageSevenTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageSevenRichText}
+                    onchange={handlePageSevenRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideEightMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageEightLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageEight}
+                            disabled={disableCopyPageEight}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageEightTitle}
+                    onchange={handlePageEightTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageEightRichText}
+                    onchange={handlePageEightRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isSlideNineMode}>
+            <section class="editor-box">
+                <div class="editor-header">
+                    <p class="step-title">{pageNineLabel}</p>
+                    <div class="editor-header-actions">
+                        <lightning-button
+                            variant="neutral"
+                            label={copyButtonLabel}
+                            onclick={handleCopyPageNine}
+                            disabled={disableCopyPageNine}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label={saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={disableSave}
+                        ></lightning-button>
+                    </div>
+                </div>
+                <lightning-input
+                    class="slds-m-top_small"
+                    type="text"
+                    label={titleInputLabel}
+                    value={pageNineTitle}
+                    onchange={handlePageNineTitleChange}
+                ></lightning-input>
+                <lightning-input-rich-text
+                    class="rich-editor slds-m-top_small"
+                    value={pageNineRichText}
+                    onchange={handlePageNineRichTextChange}
+                ></lightning-input-rich-text>
+            </section>
+        </template>
+
+        <template if:true={isBusy}>
+            <lightning-spinner class="slds-m-top_small" alternative-text="Processing" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={statusMessage}>
+            <p class="status-message slds-m-top_small">{statusMessage}</p>
+        </template>
+
+        <template if:true={errorMessage}>
+            <p class="error-message slds-m-top_small">{errorMessage}</p>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,58 @@
+<template>
+  <lightning-card title={title} icon-name="doctype:image">
+    <div class="slds-p-around_small">
+
+      <template if:true={isLoading}>
+        <div class="slds-align_absolute-center slds-m-vertical_medium">
+          <lightning-spinner alternative-text={labels.imageLoading} size="small"></lightning-spinner>
+        </div>
+      </template>
+
+      <template if:true={hasMultiImages}>
+        <template for:each={imageItems} for:item="img" for:index="idx">
+          <div key={img.id} class="slds-m-bottom_small">
+            <div class="img-wrap" style={containerStyle}>
+              <img src={img.url}
+                   alt={altText}
+                   data-index={idx}
+                   onerror={onMultiImgError}
+                   class="img-el"
+                   style={imageStyle} />
+            </div>
+            <template if:true={showDownloadLink}>
+              <div class="slds-m-top_x-small">
+                <lightning-button variant="base" label={labels.imageDownload} title={labels.imageDownload} data-index={idx} onclick={openDownloadMulti}></lightning-button>
+              </div>
+            </template>
+            <template if:true={img.error}>
+              <div class="slds-text-color_error slds-m-top_small">{img.error}</div>
+            </template>
+          </div>
+        </template>
+      </template>
+
+      <template if:false={hasMultiImages}>
+        <template if:true={imgUrl}>
+          <div class="img-wrap" style={containerStyle}>
+            <img src={imgUrl}
+                 alt={altText}
+                 onload={onImgLoad}
+                 onerror={onImgError}
+                 class="img-el"
+                 style={imageStyle} />
+          </div>
+
+          <template if:true={showDownload}>
+            <div class="slds-m-top_x-small">
+              <lightning-button variant="base" label={labels.imageDownload} title={labels.imageDownload} onclick={openDownload}></lightning-button>
+            </div>
+          </template>
+        </template>
+      </template>
+
+      <template if:true={errorMsg}>
+        <div class="slds-text-color_error slds-m-top_small">{errorMsg}</div>
+      </template>
+    </div>
+  </lightning-card>
+</template>

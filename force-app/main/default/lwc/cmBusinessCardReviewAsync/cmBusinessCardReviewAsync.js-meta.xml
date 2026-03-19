@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>60.0</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>CM BusinessCard Review (Async)</masterLabel>
+  <targets>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+      <property name="contentVersionId" type="String" label="Content Version Id (068/069)" role="inputOnly"/>
+      <property name="batchId" type="String" label="Batch Id（若未提供 contentVersionId 時使用）" role="inputOnly"/>
+      <property name="leadSource" type="String" label="Lead Source" role="inputOnly"/>
+      <property name="flowOutputCardsJsonEdited" type="String" label="Cards JSON (Edited)" role="outputOnly"/>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

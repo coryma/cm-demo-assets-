@@ -1,0 +1,14 @@
+<template>
+    <div class="frame">
+        <div class="title">{displayTitle}</div>
+        <div class="subtitle">{subtitleText}</div>
+
+        <div class="spinner-wrap">
+            <lightning-spinner alternative-text={displayTitle} size="medium"></lightning-spinner>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+            <div class="progress-fill" style={progressStyle}></div>
+        </div>
+    </div>
+</template>

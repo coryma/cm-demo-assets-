@@ -1,0 +1,76 @@
+<template>
+    <div class="slds-p-around_medium">
+        <div class="slds-text-title_caps slds-m-bottom_small">{headerText}</div>
+
+        <div class="slds-box slds-theme_default slds-m-bottom_medium">
+            <template if:true={hasAccountPlan}>
+                <div><strong>{planLabel}:</strong> {accountPlanName}</div>
+                <template if:true={lastModifiedLabel}>
+                    <div class="slds-m-top_x-small"><strong>{lastUpdatedLabel}:</strong> {lastModifiedLabel}</div>
+                </template>
+            </template>
+            <div class="slds-m-top_x-small">{statusMessage}</div>
+        </div>
+
+        <template if:true={hasAccountPlan}>
+            <lightning-radio-group
+                name="swotDecision"
+                label={modeLabel}
+                options={decisionOptions}
+                value={swotDecision}
+                type="radio"
+                onchange={handleDecisionChange}>
+            </lightning-radio-group>
+        </template>
+
+        <template if:true={overwriteWarningText}>
+            <div class="slds-text-color_error slds-m-top_small">{overwriteWarningText}</div>
+        </template>
+
+        <template if:true={hasExistingSwot}>
+            <div class="slds-m-top_large">
+                <div class="slds-text-title_caps slds-m-bottom_small">{previewTitle}</div>
+
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-text-title_bold slds-m-bottom_x-small">{strengthsLabel}</div>
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{strengthsHelpText}</div>
+                    <lightning-input-rich-text
+                        label={strengthsEditorLabel}
+                        value={editedStrengthsHtml}
+                        onchange={handleStrengthsChange}>
+                    </lightning-input-rich-text>
+                </div>
+
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-text-title_bold slds-m-bottom_x-small">{weaknessesLabel}</div>
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{weaknessesHelpText}</div>
+                    <lightning-input-rich-text
+                        label={weaknessesEditorLabel}
+                        value={editedWeaknessesHtml}
+                        onchange={handleWeaknessesChange}>
+                    </lightning-input-rich-text>
+                </div>
+
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-text-title_bold slds-m-bottom_x-small">{opportunitiesLabel}</div>
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{opportunitiesHelpText}</div>
+                    <lightning-input-rich-text
+                        label={opportunitiesEditorLabel}
+                        value={editedOpportunitiesHtml}
+                        onchange={handleOpportunitiesChange}>
+                    </lightning-input-rich-text>
+                </div>
+
+                <div class="slds-box slds-theme_default">
+                    <div class="slds-text-title_bold slds-m-bottom_x-small">{threatsLabel}</div>
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{threatsHelpText}</div>
+                    <lightning-input-rich-text
+                        label={threatsEditorLabel}
+                        value={editedThreatsHtml}
+                        onchange={handleThreatsChange}>
+                    </lightning-input-rich-text>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

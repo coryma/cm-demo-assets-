@@ -1,0 +1,85 @@
+<template>
+  <lightning-card title={labels.reviewTitle} icon-name="standard:contact">
+    <div class="slds-p-around_medium">
+
+      <!-- Waiting state -->
+      <template if:true={isWaiting}>
+        <div class="slds-align_absolute-center slds-m-vertical_large">
+          <lightning-spinner alternative-text={labels.reviewSpinner} size="small"></lightning-spinner>
+        </div>
+        <lightning-progress-bar class="slds-m-top_small" value={uiProgress}></lightning-progress-bar>
+        <div class="slds-m-top_x-small slds-text-color_weak">{progressLabel}</div>
+      </template>
+
+      <!-- Empty state (finished with no cards) -->
+      <template if:true={isNoCards}>
+        <div class="slds-box slds-theme_alert-texture slds-m-bottom_small">
+          <div class="slds-text-heading_small slds-m-bottom_x-small">{labels.noCardsTitle}</div>
+          <div class="slds-text-color_weak">
+            {labels.noCardsBody}
+          </div>
+        </div>
+      </template>
+
+      <!-- Edit area (when cards exist) -->
+      <template if:true={isReady}>
+        <template for:each={cards} for:item="c" for:index="idx">
+          <div key={c._key} class="slds-box slds-m-bottom_small">
+            <div class="slds-text-title_bold">
+              {c.LastName} {c.FirstName}<template if:true={c.Company}> · {c.Company}</template>
+            </div>
+            <div class="slds-text-body_small slds-m-bottom_x-small">
+              <template if:true={c.Title}>{c.Title}</template>
+              <template if:true={c.Email}> · {c.Email}</template>
+              <template if:true={c.MobilePhone}> · {c.MobilePhone}</template>
+            </div>
+            <lightning-textarea
+              label={labels.descLabel}
+              value={c.Description}
+              data-index={idx}
+              onchange={onDescChange}>
+            </lightning-textarea>
+            <template if:true={c.hasAccountMatches}>
+              <div class="slds-box slds-theme_default slds-m-top_medium duplicate-guard">
+                <div class="slds-text-title_bold slds-m-bottom_x-small">{labels.dupeTitle}</div>
+                <p class="slds-text-body_small slds-m-bottom_small">
+                  {labels.dupeBody}
+                </p>
+                <lightning-radio-group
+                  class="slds-m-bottom_small"
+                  name={c._key}
+                  type="button"
+                  data-index={idx}
+                  value={c.CreateAs}
+                  options={c.createOptions}
+                  onchange={onCreateModeChange}>
+                </lightning-radio-group>
+                <template if:true={c.showAccountPicker}>
+                  <lightning-combobox
+                    data-index={idx}
+                    value={c.ExistingAccountId}
+                    options={c.accountOptions}
+                    label={labels.accountLabel}
+                    placeholder={labels.accountPlaceholder}
+                    onchange={onAccountPickChange}>
+                  </lightning-combobox>
+                </template>
+              </div>
+            </template>
+          </div>
+        </template>
+        <div class="slds-text-color_weak slds-m-top_x-small">
+          {labels.footerNote}
+        </div>
+      </template>
+
+      <!-- Errors -->
+      <template if:true={errMsg}>
+        <div class="slds-text-color_error slds-m-top_small">{errMsg}</div>
+      </template>
+      <template if:true={matchErrMsg}>
+        <div class="slds-text-color_error slds-m-top_small">{matchErrMsg}</div>
+      </template>
+    </div>
+  </lightning-card>
+</template>

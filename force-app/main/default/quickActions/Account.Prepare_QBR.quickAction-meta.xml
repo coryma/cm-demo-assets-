@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>為此 Account 建立 QBR 會前準備簡報草稿</description>
+    <flowDefinition>CM_Prepare_Account_QBR</flowDefinition>
+    <label>🤖 QBR 準備</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>Flow</type>
+</QuickAction>

@@ -1,0 +1,39 @@
+.frame {
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+}
+
+.title {
+    color: #4f4f4f;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+}
+
+.subtitle {
+    color: #6f6f6f;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.spinner-wrap {
+    min-height: 4rem;
+    position: relative;
+}
+
+.progress-track {
+    background: #d8d8d8;
+    border-radius: 999px;
+    height: 0.5rem;
+    margin: 2rem auto 0;
+    max-width: 32rem;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: #0b5cab;
+    border-radius: 999px;
+    height: 100%;
+    transition: width 120ms linear;
+}

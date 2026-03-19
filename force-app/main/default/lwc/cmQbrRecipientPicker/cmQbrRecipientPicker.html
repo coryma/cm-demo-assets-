@@ -1,0 +1,35 @@
+<template>
+    <div class="slds-p-around_medium">
+        <template if:true={isExternalMode}>
+            <p class="slds-m-bottom_medium">{externalIntroText}</p>
+            <template if:true={hasExternalOptions}>
+                <lightning-dual-listbox
+                    name="externalRecipients"
+                    label={externalRecipientsLabel}
+                    source-label={availableLabel}
+                    selected-label={selectedLabel}
+                    options={recipientOptions}
+                    value={selectedValues}
+                    required
+                    onchange={handleRecipientChange}>
+                </lightning-dual-listbox>
+            </template>
+            <template if:false={hasExternalOptions}>
+                <div class="slds-text-color_weak">{noExternalOptionsText}</div>
+            </template>
+        </template>
+
+        <template if:false={isExternalMode}>
+            <p class="slds-m-bottom_medium">{internalIntroText}</p>
+            <lightning-textarea
+                name="internalRecipients"
+                label={internalRecipientsLabel}
+                value={internalRecipients}
+                required
+                maxlength="1000"
+                placeholder={internalRecipientsPlaceholder}
+                onchange={handleInternalRecipientChange}>
+            </lightning-textarea>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,59 @@
+<template>
+    <div class="slds-p-around_medium">
+        <p class="step-title">{title}</p>
+        <p class="helper-text slds-m-top_x-small">{hintText}</p>
+
+        <div class="toolbar slds-m-top_small">
+            <lightning-button
+                variant="neutral"
+                label={selectAllLabel}
+                onclick={handleSelectAll}
+                disabled={isBusy}>
+            </lightning-button>
+            <lightning-button
+                variant="neutral"
+                label={clearLabel}
+                onclick={handleClearSelection}
+                disabled={isBusy}>
+            </lightning-button>
+            <span class="helper-text">{selectedCountLabel}</span>
+        </div>
+
+        <div class="table-box slds-m-top_small">
+            <lightning-datatable
+                key-field="key"
+                data={rows}
+                columns={columns}
+                selected-rows={selectedRowKeys}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+        </div>
+
+        <div class="slds-m-top_medium">
+            <lightning-button
+                variant="brand"
+                label={generateButtonLabel}
+                onclick={handleGenerate}
+                disabled={disableGenerate}>
+            </lightning-button>
+        </div>
+
+        <template if:true={showFileLink}>
+            <div class="slds-m-top_small">
+                <lightning-formatted-url value={generatedFileUrl} label={fileLinkLabel} target="_blank"></lightning-formatted-url>
+            </div>
+        </template>
+
+        <template if:true={isBusy}>
+            <lightning-spinner class="slds-m-top_small" alternative-text="Processing" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={statusMessage}>
+            <p class="status-message slds-m-top_small">{statusMessage}</p>
+        </template>
+
+        <template if:true={errorMessage}>
+            <p class="error-message slds-m-top_small">{errorMessage}</p>
+        </template>
+    </div>
+</template>

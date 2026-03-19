@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR Presentation Export</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="qbrMeetingId" type="String" role="inputOnly" label="QBR Meeting Id" />
+            <property name="selectedSlideNumbers" type="String" label="Selected Slide Numbers" />
+            <property name="generatedFileUrl" type="String" label="Generated File Url" />
+            <property name="generatedFileName" type="String" label="Generated File Name" />
+            <property name="generatedContentDocumentId" type="String" label="Generated Content Document Id" />
+            <property name="generatedContentVersionId" type="String" label="Generated Content Version Id" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

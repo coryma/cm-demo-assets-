@@ -1,0 +1,7 @@
+.waiting {
+min-height: 80px; /* Give the spinner some breathing room */
+}
+
+.duplicate-guard {
+  background-color: var(--lwc-colorBackgroundAlt, #f3f2f2);
+}

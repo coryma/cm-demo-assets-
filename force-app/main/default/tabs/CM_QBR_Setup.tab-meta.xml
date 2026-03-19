@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Manage bilingual QBR agenda topics for the Prepare QBR flow.</description>
+    <flexiPage>CM_QBR_Setup</flexiPage>
+    <label>QBR Setup</label>
+    <motif>Custom18: Form</motif>
+</CustomTab>

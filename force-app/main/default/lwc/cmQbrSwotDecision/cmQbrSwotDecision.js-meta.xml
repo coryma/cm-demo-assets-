@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR SWOT Decision</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="hasAccountPlan" type="Boolean" role="inputOnly" label="Has Account Plan" />
+            <property name="hasExistingSwot" type="Boolean" role="inputOnly" label="Has Existing SWOT" />
+            <property name="isCompleteSwot" type="Boolean" role="inputOnly" label="Is Complete SWOT" />
+            <property name="canGenerate" type="Boolean" role="inputOnly" label="Can Generate" />
+            <property name="accountPlanName" type="String" role="inputOnly" label="Account Plan Name" />
+            <property name="lastModifiedLabel" type="String" role="inputOnly" label="Last Modified Label" />
+            <property name="statusMessage" type="String" role="inputOnly" label="Status Message" />
+            <property name="strengthsPreviewHtml" type="String" role="inputOnly" label="Strengths Preview Html" />
+            <property name="weaknessesPreviewHtml" type="String" role="inputOnly" label="Weaknesses Preview Html" />
+            <property name="opportunitiesPreviewHtml" type="String" role="inputOnly" label="Opportunities Preview Html" />
+            <property name="threatsPreviewHtml" type="String" role="inputOnly" label="Threats Preview Html" />
+            <property name="swotDecision" type="String" label="SWOT Decision" />
+            <property name="editedStrengthsHtml" type="String" label="Edited Strengths Html" />
+            <property name="editedWeaknessesHtml" type="String" label="Edited Weaknesses Html" />
+            <property name="editedOpportunitiesHtml" type="String" label="Edited Opportunities Html" />
+            <property name="editedThreatsHtml" type="String" label="Edited Threats Html" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

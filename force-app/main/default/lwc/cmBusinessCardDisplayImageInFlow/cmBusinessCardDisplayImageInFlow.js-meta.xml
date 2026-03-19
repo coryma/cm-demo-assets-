@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>61.0</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>CM BusinessCard Display Image (Flow)</masterLabel>
+  <targets>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+      <property name="title" type="String" label="標題" role="inputOnly"/>
+      <property name="altText" type="String" label="替代文字" role="inputOnly"/>
+      <property name="contentVersionId" type="String" label="Content Version Id (068…)" role="inputOnly"/>
+      <property name="contentVersionIdsJson" type="String" label="Content Version Ids (JSON array)" role="inputOnly"/>
+      <property name="contentDocumentId" type="String" label="Content Document Id (069…)" role="inputOnly"/>
+      <property name="width" type="String" label="寬度（100% / 600px）" role="inputOnly"/>
+      <property name="height" type="String" label="高度（auto / 300px）" role="inputOnly"/>
+      <property name="objectFit" type="String" label="填充（contain/cover/fill/none/scale-down）" role="inputOnly"/>
+      <property name="borderRadius" type="String" label="圓角（例如 6px）" role="inputOnly"/>
+      <property name="showDownloadLink" type="Boolean" label="顯示下載按鈕" role="inputOnly"/>
+
+       <!-- Backward compatibility -->
+      <property name="imageUrl" type="String" label="Image URL" description="完整圖片網址" />
+      <property name="imageStyle" type="String" label="Image Style" description="CSS 樣式（可選）" />
+
+      <!-- Outputs -->
+      <property name="resolvedUrl" type="String" label="實際顯示的圖片 URL" role="outputOnly"/>
+      <property name="loadStatus" type="String" label="載入狀態（loaded/failed）" role="outputOnly"/>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,19 @@
+<template>
+  <lightning-card title={labels.uploadTitle}>
+    <div class="slds-p-around_medium">
+      <lightning-file-upload
+        label={labels.uploadLabel}
+        name="cardUpload"
+        accept=".png,.jpg,.jpeg,.heic,.pdf"
+        multiple
+        onuploadfinished={handleUploadFinished}
+      ></lightning-file-upload>
+      <template if:true={fileCount}>
+        <p class="slds-m-top_small">{uploadedStatusText}</p>
+      </template>
+      <template if:true={errMsg}>
+        <div class="slds-text-color_error slds-m-top_small">{errMsg}</div>
+      </template>
+    </div>
+  </lightning-card>
+</template>

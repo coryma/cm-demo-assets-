@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR Recipient Picker</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="outputMode" type="String" role="inputOnly" label="Output Mode" />
+            <property name="selectedContactIds" type="String" role="inputOnly" label="Selected Contact Ids" />
+            <property name="recipientContactIds" type="String" label="Recipient Contact Ids" />
+            <property name="internalRecipients" type="String" label="Internal Recipients" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

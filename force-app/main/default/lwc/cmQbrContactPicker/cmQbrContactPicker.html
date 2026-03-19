@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-p-around_medium">
+        <template if:true={hasRows}>
+            <lightning-datatable
+                key-field="contactId"
+                data={rows}
+                columns={columns}
+                selected-rows={selectedRowIds}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+        </template>
+        <template if:false={hasRows}>
+            <div class="slds-text-color_weak">{emptyStateText}</div>
+        </template>
+    </div>
+</template>

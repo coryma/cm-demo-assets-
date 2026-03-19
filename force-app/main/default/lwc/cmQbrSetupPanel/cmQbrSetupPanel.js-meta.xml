@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>QBR Setup Panel</masterLabel>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="accountId" type="String" label="Account Id" />
+            <property name="screenMode" type="String" label="Screen Mode" />
+            <property name="quarter" type="String" label="Quarter" />
+            <property name="meetingDate" type="String" label="Meeting Date" />
+            <property name="meetingObjectives" type="String" label="Meeting Objectives" />
+            <property name="outputMode" type="String" label="Output Mode" />
+            <property name="primaryFocus" type="String" label="Primary Focus" />
+            <property name="focusDepartment" type="String" label="Focus Department" />
+            <property name="qbrMeetingId" type="String" label="QBR Meeting Id" />
+            <property name="slideOneHtml" type="String" label="Slide 1 HTML" />
+            <property name="slideTwoHtml" type="String" label="Slide 2 HTML" />
+            <property name="slideThreeHtml" type="String" label="Slide 3 HTML" />
+            <property name="slideFourHtml" type="String" label="Slide 4 HTML" />
+            <property name="slideFiveHtml" type="String" label="Slide 5 HTML" />
+            <property name="slideSixHtml" type="String" label="Slide 6 HTML" />
+            <property name="slideSevenHtml" type="String" label="Slide 7 HTML" />
+            <property name="slideEightHtml" type="String" label="Slide 8 HTML" />
+            <property name="slideNineHtml" type="String" label="Slide 9 HTML" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

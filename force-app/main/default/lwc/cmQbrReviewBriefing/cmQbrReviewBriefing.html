@@ -1,0 +1,47 @@
+<template>
+    <div class="slds-p-around_medium">
+        <div class="slds-m-bottom_large">
+            <div class="slds-text-title_caps slds-m-bottom_x-small">{attendeeStrategyLabel}</div>
+            <lightning-formatted-rich-text value={attendeeStrategyHtml}></lightning-formatted-rich-text>
+        </div>
+
+        <div class="slds-m-bottom_large">
+            <div class="slds-text-title_caps slds-m-bottom_x-small">{swotLabel}</div>
+            <lightning-formatted-rich-text value={swotHtml}></lightning-formatted-rich-text>
+        </div>
+
+        <div class="slds-m-bottom_large">
+            <div class="slds-text-title_caps slds-m-bottom_x-small">{talkingPointsLabel}</div>
+            <lightning-formatted-rich-text value={keyTalkingPointsHtml}></lightning-formatted-rich-text>
+        </div>
+
+        <div class="slds-m-bottom_large">
+            <div class="slds-text-title_caps slds-m-bottom_x-small">{actionRequestsLabel}</div>
+            <lightning-formatted-rich-text value={actionRequestsHtml}></lightning-formatted-rich-text>
+        </div>
+
+        <div class="slds-m-top_large">
+            <div class="slds-text-title_caps slds-m-bottom_small">{includeSectionLabel}</div>
+            <lightning-input
+                type="checkbox"
+                label={includeActionItemsLabel}
+                checked={includeActionItems}
+                onchange={handleActionItemsChange}>
+            </lightning-input>
+            <lightning-input
+                class="slds-m-top_x-small"
+                type="checkbox"
+                label={includePricingAsksLabel}
+                checked={includePricingAsks}
+                onchange={handlePricingAsksChange}>
+            </lightning-input>
+            <lightning-input
+                class="slds-m-top_x-small"
+                type="checkbox"
+                label={includeRiskAlertsLabel}
+                checked={includeRiskAlerts}
+                onchange={handleRiskAlertsChange}>
+            </lightning-input>
+        </div>
+    </div>
+</template>

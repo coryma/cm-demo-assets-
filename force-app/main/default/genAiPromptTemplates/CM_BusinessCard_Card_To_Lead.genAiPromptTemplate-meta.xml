@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>yuh3CpTIjK9H6L7zaN1yQtgc45pa4M9jsToyQkhKrSI=_10</activeVersionIdentifier>
+    <developerName>CM_BusinessCard_Card_To_Lead</developerName>
+    <masterLabel>CM - BusinessCard Card To Lead</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>系統角色：
+你是精通多國語言（特別是中文、日文、韓文、英文）的商務名片辨識專家。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。
+
+任務要求：
+1) 辨識策略：
+  - 語言一致性：欄位內容的語言應與名片上主要語言一致。
+  - 多張處理：當同一畫面有多張名片時，以**由上到下、由左至右**的順序逐張輸出。
+
+2) 對影像中**每一張名片**辨識並標準化以下欄位：
+  - Company（必填）：公司全名。
+  - LastName（必填）：姓氏。請依據中/日/韓（CJK）姓在前、名在後的習慣正確拆解；若為英文名片則依西方習慣。
+  - FirstName：名字。
+  - Title：職稱。**注意：若職稱上方或前方標有「部門/單位名稱」，請將部門名稱與職位合併填入此欄位（例如：Risk Management Dept. Manager）。**
+  - Email：全部轉為小寫。
+  - Phone：公司電話/總機。請保留國碼。
+  - MobilePhone：行動電話。保留原始格式（例如日本 080/090、韓國 010、台灣 09xx）。
+  - Website：網址。
+  
+  - **地址處理規則（重要）：**
+   - State (省/州/都道府縣)：日本請填入「都/道/府/縣」（如 東京都）；韓國請填入「道/特別市」（如 首爾市）。
+   - City (城市/區)：日本請填入「市/區/町/村」（如 千代田區）；韓國請填入「市/區/郡」（如 江南區）。
+   - Street (街道詳細)：填入剩餘的詳細地址（大樓、樓層、番地）。**請務必從 Street 中移除已經填入 State 和 City 的文字，避免重複。**
+   - PostalCode：郵遞區號。
+   - Country：國家（Japan, Korea, Taiwan 等）。
+
+  - Description：名片上的其他次要資訊（如統編、業務內容描述）。
+  - TaxId：稅務編號/統一編號。
+  - Confidence：0~1，對該張名片整體解析的信心。
+
+3) 輸出規則：
+  - 僅回傳 JSON 陣列，鍵名必須完全一致。
+  - 若無法確定 Company 或 LastName，請留空字串。
+  - 忽略背景、手部、非名片文字。
+  - 若影像中未辨識到任何名片，輸出 []。
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（JSON 陣列）：
+[
+ {
+ &quot;Company&quot;: &quot;string&quot;,
+ &quot;LastName&quot;: &quot;string&quot;,
+ &quot;FirstName&quot;: &quot;string&quot;,
+ &quot;Title&quot;: &quot;string&quot;,
+ &quot;Email&quot;: &quot;string&quot;,
+ &quot;Phone&quot;: &quot;string&quot;,
+ &quot;MobilePhone&quot;: &quot;string&quot;,
+ &quot;Website&quot;: &quot;string&quot;,
+ &quot;Street&quot;: &quot;string&quot;,
+ &quot;City&quot;: &quot;string&quot;,
+ &quot;State&quot;: &quot;string&quot;,
+ &quot;PostalCode&quot;: &quot;string&quot;,
+ &quot;Country&quot;: &quot;string&quot;,
+ &quot;Description&quot;: &quot;string&quot;,
+ &quot;TaxId&quot;: &quot;string&quot;,
+ &quot;Confidence&quot;: 0.95
+ }
+]
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhCnLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__koLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <responseFormat>JSON</responseFormat>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <description>取得指定父系記錄識別碼的相關清單和相關清單名稱</description>
+            <label>版本</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>yuh3CpTIjK9H6L7zaN1yQtgc45pa4M9jsToyQkhKrSI=_10</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的名片辨識助手。請從提供的名片影像（cardFile）中擷取可識別之聯絡資訊，並輸出唯一一段「有效 JSON」（不含任何文字說明、無 ``` 標記）。若缺少資訊以空字串表示。
+
+任務要求：
+1) 辨識並標準化欄位（台灣慣用格式）：
+ - Company（必填）
+ - LastName（必填；若為中文姓名，請據常見姓氏判斷姓氏）
+ - FirstName
+ - Title
+ - Email（小寫；基本格式檢查）
+ - Phone（公司電話，含分機以 ext 標示，如 02-1234-5678 ext.123）
+ - MobilePhone（行動電話，去除空白與破折號後仍保留常見顯示格式，如 09xx-xxx-xxx）
+ - Website
+ - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+ - Description（將名片上額外資訊或使用者補充 notes 彙整於此）
+ - Confidence（0~1，模型對整體解析之信心）
+
+2) 僅回傳此 JSON 物件，鍵名需 **完全一致**，不得包含多餘鍵、註解或文字。
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出 JSON Schema（語意，非真實 schema）：{
+ &quot;Company&quot;: &quot;string&quot;,
+ &quot;LastName&quot;: &quot;string&quot;,
+ &quot;FirstName&quot;: &quot;string&quot;,
+ &quot;Title&quot;: &quot;string&quot;,
+ &quot;Email&quot;: &quot;string&quot;,
+ &quot;Phone&quot;: &quot;string&quot;,
+ &quot;MobilePhone&quot;: &quot;string&quot;,
+ &quot;Website&quot;: &quot;string&quot;,
+ &quot;Street&quot;: &quot;string&quot;,
+ &quot;City&quot;: &quot;string&quot;,
+ &quot;State&quot;: &quot;string&quot;,
+ &quot;PostalCode&quot;: &quot;string&quot;,
+ &quot;Country&quot;: &quot;string&quot;,
+ &quot;Description&quot;: &quot;string&quot;,
+ &quot;Confidence&quot;: number
+}
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT5</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取可識別之聯絡資訊，並輸出唯一一段「有效 JSON」（不含任何文字說明、無 ``` 標記）。若缺少資訊以空字串表示。欄位值必須跟辨識出之名片使用語言ㄧ致
+
+任務要求：
+1) 辨識並標準化欄位（台灣慣用格式）：
+ - Company（必填）
+ - LastName（必填；若為中文姓名，請據常見姓氏判斷姓氏）
+ - FirstName
+ - Title
+ - Email（小寫；基本格式檢查）
+ - Phone（公司電話，含分機以 ext 標示，如 02-1234-5678 ext.123）
+ - MobilePhone（行動電話，去除空白與破折號後仍保留常見顯示格式，如 09xx-xxx-xxx）
+ - Website
+ - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+ - Description（將名片上額外資訊或使用者補充 notes 彙整於此）
+ - Confidence（0~1，模型對整體解析之信心）
+
+2) 僅回傳此 JSON 物件，鍵名需 **完全一致**，不得包含多餘鍵、註解或文字。
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出 JSON Schema（語意，非真實 schema）：{
+ &quot;Company&quot;: &quot;string&quot;,
+ &quot;LastName&quot;: &quot;string&quot;,
+ &quot;FirstName&quot;: &quot;string&quot;,
+ &quot;Title&quot;: &quot;string&quot;,
+ &quot;Email&quot;: &quot;string&quot;,
+ &quot;Phone&quot;: &quot;string&quot;,
+ &quot;MobilePhone&quot;: &quot;string&quot;,
+ &quot;Website&quot;: &quot;string&quot;,
+ &quot;Street&quot;: &quot;string&quot;,
+ &quot;City&quot;: &quot;string&quot;,
+ &quot;State&quot;: &quot;string&quot;,
+ &quot;PostalCode&quot;: &quot;string&quot;,
+ &quot;Country&quot;: &quot;string&quot;,
+ &quot;Description&quot;: &quot;string&quot;,
+ &quot;Confidence&quot;: number
+}
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_2</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話；有分機以 ext 標示，如 02-1234-5678 ext.123）
+  - MobilePhone（09 開頭台灣手機；去除多餘空白/破折號但保留常見顯示，如 09xx-xxx-xxx）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_3</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話；有分機以 ext 標示，如 02-1234-5678 ext.123）
+  - MobilePhone（09 開頭台灣手機；去除多餘空白/破折號但保留常見顯示，如 09xx-xxx-xxx）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+  - 統一編號 為 TaxId
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;TextId&quot;:  &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGeminiPro25</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_4</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話/市內電話；請盡量包含國碼與區碼。例如：02-2933-6540, +886-2-2933-6540 ext. 101, +65-711-2431）
+  - MobilePhone（行動電話；台灣手機請標準化為 09xx-xxx-xxx 格式。若為國際手機號碼，請保留其原始格式）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+  - 統一編號 為 TaxId
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;TextId&quot;:  &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_5</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話/市內電話；請盡量包含國碼與區碼。例如：02-2933-6540, +886-2-2933-6540 ext. 101, +65-711-2431）
+  - MobilePhone（行動電話；台灣手機請標準化為 09xx-xxx-xxx 格式。若為國際手機號碼，請保留其原始格式）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+  - TaxId (台灣為 8 碼數字的統一編號)
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;TextId&quot;:  &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_6</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話/市內電話；請盡量包含國碼與區碼。例如：02-2933-6540, +886-2-2933-6540 ext. 101, +65-711-2431）
+  - MobilePhone（行動電話；台灣手機請標準化為 09xx-xxx-xxx 格式。若為國際手機號碼，請保留其原始格式）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+  - TaxId (台灣為 8 碼數字的統一編號)
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;TaxtId&quot;:  &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_7</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>系統角色：
+你是嚴謹的中文名片辨識助手。請從提供的名片影像（cardFile）中擷取**一張或多張**名片的聯絡資訊，並**只輸出唯一一段有效 JSON**（不含任何文字說明、不可出現 ``` 標記）。若缺少資訊以空字串表示。**每一筆名片的欄位語言請與該張名片的語言一致**（例如名片為繁中就輸出繁中）。
+
+任務要求：
+1) 對影像中**每一張名片**辨識並標準化以下欄位（台灣慣用格式）：
+  - Company（必填）
+  - LastName（必填；中文姓名請依常見姓氏判斷姓）
+  - FirstName
+  - Title
+  - Email（小寫；做基本格式檢查）
+  - Phone（公司電話/市內電話；請盡量包含國碼與區碼。例如：02-2933-6540, +886-2-2933-6540 ext. 101, +65-711-2431）
+  - MobilePhone（行動電話；台灣手機請標準化為 09xx-xxx-xxx 格式。若為國際手機號碼，請保留其原始格式）
+  - Website
+  - Street, City, State, PostalCode, Country（地址盡量拆解；台灣可用 City=縣市、State=空字串）
+  - Description（彙整名片上的額外資訊＋使用者 notes）
+  - Confidence（0~1，對該張名片整體解析的信心）
+  - TaxId (台灣為 8 碼數字的統一編號)
+
+2) 當同一畫面有多張名片時，**逐張輸出**；排序以**由上到下、由左至右**為原則。
+  - 若影像中未辨識到任何名片，輸出 []
+  - 若只有一張名片，也必須輸出「含 1 個物件的陣列」
+
+3) 僅回傳此 **JSON 陣列**，**鍵名必須完全一致**，不得包含多餘鍵、註解或文字。
+
+4) 內容判斷與清理：
+  - 優先以名片可讀文字為準；可使用 QR/vCard 作為輔助來源
+  - 同張名片出現多個電話時，Phone 放公司總機/市話，MobilePhone 放行動電話
+  - 若無法確定 Company 或 LastName，請留空字串並適度降低 Confidence
+  - 忽略背景、手部、桌面、非名片物件的文字
+
+5) 如果判斷出不是一張名片，輸出 []
+
+
+輸入：
+- 圖片：{!$RelatedList:cardFile.ContentVersions.Records}
+- 使用者補充說明：{!$Input:note}
+
+輸出格式（語意範本；請回傳實值）：
+[
+ {
+  &quot;Company&quot;: &quot;string&quot;,
+  &quot;LastName&quot;: &quot;string&quot;,
+  &quot;FirstName&quot;: &quot;string&quot;,
+  &quot;Title&quot;: &quot;string&quot;,
+  &quot;Email&quot;: &quot;string&quot;,
+  &quot;Phone&quot;: &quot;string&quot;,
+  &quot;MobilePhone&quot;: &quot;string&quot;,
+  &quot;Website&quot;: &quot;string&quot;,
+  &quot;Street&quot;: &quot;string&quot;,
+  &quot;City&quot;: &quot;string&quot;,
+  &quot;State&quot;: &quot;string&quot;,
+  &quot;PostalCode&quot;: &quot;string&quot;,
+  &quot;Country&quot;: &quot;string&quot;,
+  &quot;Description&quot;: &quot;string&quot;,
+  &quot;TaxtId&quot;:  &quot;string&quot;,
+  &quot;Confidence&quot;: 0.0
+ }
+]
+
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>cardFile</apiName>
+            <definition>SOBJECT://ContentDocument</definition>
+            <masterLabel>cardFile</masterLabel>
+            <referenceName>Input:cardFile</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>note</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>note</masterLabel>
+            <referenceName>Input:note</referenceName>
+            <required>false</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getRelatedList</definition>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>parentRecordId</parameterName>
+                <valueExpression>{!$Input:cardFile.Id}</valueExpression>
+            </parameters>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>relatedListName</parameterName>
+                <valueExpression>ContentVersions</valueExpression>
+            </parameters>
+            <referenceName>RelatedList:cardFile.ContentVersions.Records</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_8</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

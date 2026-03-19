@@ -1,0 +1,153 @@
+<template>
+    <lightning-card title={cardTitle} icon-name="standard:account">
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <p class="description">{descriptionText}</p>
+
+            <template if:true={isLoadingContext}>
+                <lightning-spinner alternative-text="Loading context" size="small"></lightning-spinner>
+            </template>
+
+            <lightning-input
+                class="slds-m-top_small"
+                label={focusCompanyLabel}
+                value={focusCompanyName}
+                read-only
+            ></lightning-input>
+
+            <lightning-input
+                class="slds-m-top_small"
+                label={focusDepartmentLabel}
+                value={focusDepartment}
+                placeholder={focusDepartmentPlaceholder}
+                onchange={handleDepartmentChange}
+                required
+                disabled={disableDepartmentInput}
+            ></lightning-input>
+
+            <template if:true={showFocusCompanyMissing}>
+                <div class="warning-box slds-m-top_small">{focusCompanyMissingText}</div>
+            </template>
+
+            <section class="slds-m-top_medium">
+                <lightning-input
+                    type="search"
+                    label={accountSearchLabel}
+                    value={searchKey}
+                    placeholder={accountSearchPlaceholder}
+                    onchange={handleSearchChange}
+                    disabled={isGenerating}
+                ></lightning-input>
+
+                <template if:true={isSearching}>
+                    <lightning-spinner
+                        class="slds-m-top_x-small"
+                        alternative-text="Searching accounts"
+                        size="small"
+                    ></lightning-spinner>
+                </template>
+
+                <div class="account-table slds-m-top_small">
+                    <lightning-datatable
+                        key-field="id"
+                        data={accounts}
+                        columns={columns}
+                        max-row-selection="1"
+                        selected-rows={selectedRows}
+                        onrowselection={handleRowSelection}
+                    ></lightning-datatable>
+                </div>
+
+                <template if:true={showNoAccounts}>
+                    <p class="hint slds-m-top_x-small">{noAccountsText}</p>
+                </template>
+            </section>
+
+            <section class="topics-box slds-m-top_medium">
+                <p class="topics-title">{fixedTopicsLabel}</p>
+                <template for:each={fixedTopicRows} for:item="row">
+                    <p class="topic-line" key={row.key}>{row.label}</p>
+                </template>
+            </section>
+
+            <div class="actions slds-m-top_medium">
+                <lightning-button
+                    variant="brand"
+                    label={generateLabel}
+                    onclick={handleGenerate}
+                    disabled={disableGenerate}
+                ></lightning-button>
+            </div>
+
+            <template if:true={hasGeneratedMeeting}>
+                <section class="result-box slds-m-top_medium">
+                    <p class="result-hint">{generatedHintText}</p>
+                    <p class="result-name slds-m-top_x-small">{generatedMeetingName}</p>
+                    <lightning-formatted-url
+                        value={generatedMeetingUrl}
+                        label={openMeetingLabel}
+                        target="_blank"
+                    ></lightning-formatted-url>
+                    <template if:true={generatedAtLabel}>
+                        <p class="generated-at slds-m-top_x-small">{generatedAtLabel}</p>
+                    </template>
+                </section>
+            </template>
+
+            <template if:true={showSlideEditor}>
+                <section class="editor-box slds-m-top_medium">
+                    <div class="editor-header">
+                        <p class="editor-title">{slideEditorTitle}</p>
+                        <lightning-button
+                            variant="brand"
+                            label={saveSlidesLabel}
+                            onclick={handleSaveSlides}
+                            disabled={disableSlideSave}
+                        ></lightning-button>
+                    </div>
+
+                    <p class="hint slds-m-top_x-small">{slideEditorHint}</p>
+
+                    <template if:true={isBusySlides}>
+                        <lightning-spinner
+                            class="slds-m-top_small"
+                            alternative-text="Processing slides"
+                            size="small"
+                        ></lightning-spinner>
+                    </template>
+
+                    <lightning-tabset class="slds-m-top_small">
+                        <lightning-tab label={pageOneLabel}>
+                            <div class="slds-p-top_small">
+                                <lightning-input-rich-text
+                                    class="rich-editor"
+                                    value={pageOneRichText}
+                                    onchange={handlePageOneRichTextChange}
+                                ></lightning-input-rich-text>
+                            </div>
+                        </lightning-tab>
+
+                        <lightning-tab label={pageTwoLabel}>
+                            <div class="slds-p-top_small">
+                                <lightning-file-upload
+                                    label={supplierUploadLabel}
+                                    name="supplierIntroFileUpload"
+                                    accept={supplierFileAccept}
+                                    record-id={generatedMeetingId}
+                                    onuploadfinished={handleSupplierUploadFinished}
+                                    disabled={isBusySlides}
+                                ></lightning-file-upload>
+                                <p class="hint slds-m-top_x-small">{supplierUploadHint}</p>
+
+                                <lightning-input-rich-text
+                                    class="rich-editor slds-m-top_small"
+                                    value={pageTwoRichText}
+                                    onchange={handlePageTwoRichTextChange}
+                                ></lightning-input-rich-text>
+                            </div>
+                        </lightning-tab>
+                    </lightning-tabset>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+</template>
