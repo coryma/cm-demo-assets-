@@ -10,10 +10,16 @@
                             <value>AccountPlan.Generate_SWOT</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>FeedItem.TextPost</value>
+                            <value>Edit</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>_SendConversationMessage</value>
+                            <value>Delete</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Clone</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>FeedItem.TextPost</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Global.SDO_Product_Request</value>
@@ -29,15 +35,6 @@
                         </valueListItems>
                         <valueListItems>
                             <value>Global.SDO_SFS_Vehicle_Inspection</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Edit</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Delete</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Clone</value>
                         </valueListItems>
                         <valueListItems>
                             <value>ChangeOwnerOne</value>
@@ -112,6 +109,16 @@
             <componentInstance>
                 <componentName>runtime_sales_accountplan:objectivesWrapper</componentName>
                 <identifier>runtime_sales_accountplan_objectivesWrapper</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>language</name>
+                    <value>zh</value>
+                </componentInstanceProperties>
+                <componentName>c:cmRelationshipMapLauncher</componentName>
+                <identifier>c_cmRelationshipMapLauncher</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
