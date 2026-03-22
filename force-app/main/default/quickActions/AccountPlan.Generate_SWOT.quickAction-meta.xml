@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Generate SWOT and write back to Account Plan</description>
+    <flowDefinition>CM_Generate_AccountPlan_SWOT</flowDefinition>
+    <label>✦ Generate SWOT</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>Flow</type>
+</QuickAction>

@@ -39,7 +39,6 @@ public with sharing class CM_AccountPlanSWOTInvoker {
             WHERE Id IN :planIds
         ]);
 
-        List<AccountPlan> updates = new List<AccountPlan>();
         for (Request req : requests) {
             Result res = new Result();
             if (req == null || req.accountPlanId == null || !plans.containsKey(req.accountPlanId)) {
@@ -89,35 +88,37 @@ public with sharing class CM_AccountPlanSWOTInvoker {
                 }
 
                 AccountPlan p = new AccountPlan(Id = req.accountPlanId);
-                String strengths = asString(swotMap.get('strengths_html'));
-                String weaknesses = asString(swotMap.get('weaknesses_html'));
-                String opportunities = asString(swotMap.get('opportunities_html'));
-                String threats = asString(swotMap.get('threats_html'));
-                if (!String.isBlank(strengths)) {
-                    p.RelationshipStrengths = strengths;
+                String strengths = normalizeSwotSection(swotMap.get('strengths_html'));
+                String weaknesses = normalizeSwotSection(swotMap.get('weaknesses_html'));
+                String opportunities = normalizeSwotSection(swotMap.get('opportunities_html'));
+                String threats = normalizeSwotSection(swotMap.get('threats_html'));
+                if (hasMissingSwotSections(strengths, weaknesses, opportunities, threats)) {
+                    Map<String, Object> completeFallback = buildFallbackSwot(plan);
+                    strengths = normalizeSwotSection(completeFallback.get('strengths_html'));
+                    weaknesses = normalizeSwotSection(completeFallback.get('weaknesses_html'));
+                    opportunities = normalizeSwotSection(completeFallback.get('opportunities_html'));
+                    threats = normalizeSwotSection(completeFallback.get('threats_html'));
+                    statusMessage = 'AI 回傳 SWOT 欄位不完整，已使用 fallback SWOT 內容回填。';
                 }
-                if (!String.isBlank(weaknesses)) {
-                    p.RelationshipWeaknesses = weaknesses;
-                }
-                if (!String.isBlank(opportunities)) {
-                    p.RelationshipOpportunities = opportunities;
-                }
-                if (!String.isBlank(threats)) {
-                    p.RelationshipThreats = threats;
-                }
-                updates.add(p);
+                // Overwrite all four sections to keep the SWOT snapshot consistent.
+                p.RelationshipStrengths = strengths;
+                p.RelationshipWeaknesses = weaknesses;
+                p.RelationshipOpportunities = opportunities;
+                p.RelationshipThreats = threats;
 
-                res.success = true;
-                res.message = statusMessage;
+                Database.SaveResult saveResult = Database.update(p, false);
+                if (!saveResult.isSuccess()) {
+                    res.success = false;
+                    res.message = 'Generate SWOT failed during save: ' + formatDmlErrors(saveResult.getErrors());
+                } else {
+                    res.success = true;
+                    res.message = statusMessage;
+                }
             } catch (Exception e) {
                 res.success = false;
                 res.message = 'Generate SWOT failed: ' + String.valueOf(e);
             }
             results.add(res);
-        }
-
-        if (!updates.isEmpty()) {
-            update updates;
         }
 
         return results;
@@ -329,6 +330,39 @@ public with sharing class CM_AccountPlanSWOTInvoker {
 
     private static String asString(Object value) {
         return value == null ? null : String.valueOf(value);
+    }
+
+    private static String normalizeSwotSection(Object rawValue) {
+        if (rawValue == null) {
+            return null;
+        }
+        String normalized = String.valueOf(rawValue).trim();
+        return String.isBlank(normalized) ? null : normalized;
+    }
+
+    private static Boolean hasMissingSwotSections(
+        String strengths,
+        String weaknesses,
+        String opportunities,
+        String threats
+    ) {
+        return String.isBlank(strengths)
+            || String.isBlank(weaknesses)
+            || String.isBlank(opportunities)
+            || String.isBlank(threats);
+    }
+
+    private static String formatDmlErrors(Database.Error[] errors) {
+        if (errors == null || errors.isEmpty()) {
+            return 'Unknown save error.';
+        }
+        List<String> messages = new List<String>();
+        for (Database.Error errorRecord : errors) {
+            if (errorRecord != null && !String.isBlank(errorRecord.getMessage())) {
+                messages.add(errorRecord.getMessage());
+            }
+        }
+        return messages.isEmpty() ? 'Unknown save error.' : String.join(messages, ' | ');
     }
 
     private static String escapeHtml(String input) {
