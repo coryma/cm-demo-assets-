@@ -401,6 +401,26 @@ export default class CmQbrSetupPanel extends LightningElement {
         );
     }
 
+    get hasUnsavedChanges() {
+        return (
+            this.slideOneDirty ||
+            this.slideTwoDirty ||
+            this.slideThreeDirty ||
+            this.slideFourDirty ||
+            this.slideFiveDirty ||
+            this.slideSixDirty ||
+            this.slideSevenDirty ||
+            this.slideEightDirty ||
+            this.slideNineDirty
+        );
+    }
+
+    get unsavedWarningMessage() {
+        return this.isChinese
+            ? '⚠ 有未儲存的議題，返回上一步將遺失變更。'
+            : '⚠ Unsaved changes will be lost if you navigate back.';
+    }
+
     get disableLoadDefault() {
         return this.isBusy || !this.accountId;
     }
@@ -696,20 +716,6 @@ export default class CmQbrSetupPanel extends LightningElement {
 
     async ensureSlidesLoaded() {
         if (!this.qbrMeetingId) {
-            return;
-        }
-        if (
-            this.pageOneRichText &&
-            this.pageTwoRichText &&
-            this.pageThreeRichText &&
-            this.pageFourRichText &&
-            this.pageFiveRichText &&
-            this.pageSixRichText &&
-            this.pageSevenRichText &&
-            this.pageEightRichText &&
-            this.pageNineRichText
-        ) {
-            this.syncSlideOutputs();
             return;
         }
         await this.loadEditableSlides();
@@ -1190,269 +1196,90 @@ export default class CmQbrSetupPanel extends LightningElement {
         }
 
         if (this.isEditorMode) {
-            if (!this.pageOneTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第1頁標題不可為空。' : 'Slide 1 title cannot be empty.'
-                };
+            for (const slide of this._getSlideData()) {
+                if (!slide.title?.trim()) {
+                    return {
+                        isValid: false,
+                        errorMessage: this.isChinese
+                            ? `第${slide.number}頁標題不可為空。`
+                            : `Slide ${slide.number} title cannot be empty.`
+                    };
+                }
+                if (slide.hasTable) {
+                    if (!slide.selectedRowKeys.length) {
+                        return {
+                            isValid: false,
+                            errorMessage: this.isChinese
+                                ? `第${slide.number}頁至少需選擇 1 筆表格資料。`
+                                : `Select at least 1 table row for Slide ${slide.number}.`
+                        };
+                    }
+                } else if (!slide.richText?.trim()) {
+                    return {
+                        isValid: false,
+                        errorMessage: this.isChinese
+                            ? `第${slide.number}頁內容不可為空。`
+                            : `Slide ${slide.number} content cannot be empty.`
+                    };
+                }
             }
-            if (!this.pageOneRichText?.trim()) {
+            if (this.hasUnsavedChanges) {
                 return {
                     isValid: false,
-                    errorMessage: this.isChinese ? '第1頁內容不可為空。' : 'Slide 1 content cannot be empty.'
-                };
-            }
-            if (!this.pageTwoTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第2頁標題不可為空。' : 'Slide 2 title cannot be empty.'
-                };
-            }
-            if (!this.pageTwoRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第2頁內容不可為空。' : 'Slide 2 content cannot be empty.'
-                };
-            }
-            if (!this.pageThreeTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第3頁標題不可為空。' : 'Slide 3 title cannot be empty.'
-                };
-            }
-            if (!this.pageThreeRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第3頁內容不可為空。' : 'Slide 3 content cannot be empty.'
-                };
-            }
-            if (!this.pageFourTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第4頁標題不可為空。' : 'Slide 4 title cannot be empty.'
-                };
-            }
-            if (!this.pageFourRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第4頁內容不可為空。' : 'Slide 4 content cannot be empty.'
-                };
-            }
-            if (!this.pageFiveTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第5頁標題不可為空。' : 'Slide 5 title cannot be empty.'
-                };
-            }
-            if (this.pageFiveHasTable && !this.pageFiveSelectedRowKeys.length) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第5頁至少需選擇 1 筆表格資料。' : 'Select at least 1 table row for Slide 5.'
-                };
-            }
-            if (!this.pageSixTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第6頁標題不可為空。' : 'Slide 6 title cannot be empty.'
-                };
-            }
-            if (this.pageSixHasTable && !this.pageSixSelectedRowKeys.length) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第6頁至少需選擇 1 筆表格資料。' : 'Select at least 1 table row for Slide 6.'
-                };
-            }
-            if (!this.pageSevenTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第7頁標題不可為空。' : 'Slide 7 title cannot be empty.'
-                };
-            }
-            if (!this.pageSevenRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第7頁內容不可為空。' : 'Slide 7 content cannot be empty.'
-                };
-            }
-            if (!this.pageEightTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第8頁標題不可為空。' : 'Slide 8 title cannot be empty.'
-                };
-            }
-            if (!this.pageEightRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第8頁內容不可為空。' : 'Slide 8 content cannot be empty.'
-                };
-            }
-            if (!this.pageNineTitle?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第9頁標題不可為空。' : 'Slide 9 title cannot be empty.'
-                };
-            }
-            if (!this.pageNineRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第9頁內容不可為空。' : 'Slide 9 content cannot be empty.'
-                };
-            }
-            if (
-                this.slideOneDirty ||
-                this.slideTwoDirty ||
-                this.slideThreeDirty ||
-                this.slideFourDirty ||
-                this.slideFiveDirty ||
-                this.slideSixDirty ||
-                this.slideSevenDirty ||
-                this.slideEightDirty ||
-                this.slideNineDirty
-            ) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '仍有未儲存內容，請先按「儲存議題」。' : 'There are unsaved changes. Please click Save Topic first.'
+                    errorMessage: this.isChinese
+                        ? '仍有未儲存內容，請先按「儲存議題」。'
+                        : 'There are unsaved changes. Please click Save Topic first.'
                 };
             }
         }
 
-        if (this.isSlideOneMode) {
-            if (!this.pageOneRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第1頁內容不可為空。' : 'Slide 1 content cannot be empty.'
-                };
-            }
-            if (this.slideOneDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第1頁尚未儲存，請先按「儲存議題」。' : 'Slide 1 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideTwoMode) {
-            if (!this.pageTwoRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第2頁內容不可為空。' : 'Slide 2 content cannot be empty.'
-                };
-            }
-            if (this.slideTwoDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第2頁尚未儲存，請先按「儲存議題」。' : 'Slide 2 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideThreeMode) {
-            if (!this.pageThreeRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第3頁內容不可為空。' : 'Slide 3 content cannot be empty.'
-                };
-            }
-            if (this.slideThreeDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第3頁尚未儲存，請先按「儲存議題」。' : 'Slide 3 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideFourMode) {
-            if (!this.pageFourRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第4頁內容不可為空。' : 'Slide 4 content cannot be empty.'
-                };
-            }
-            if (this.slideFourDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第4頁尚未儲存，請先按「儲存議題」。' : 'Slide 4 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideFiveMode) {
-            if (this.pageFiveHasTable && !this.pageFiveSelectedRowKeys.length) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第5頁至少需選擇 1 筆表格資料。' : 'Select at least 1 table row for Slide 5.'
-                };
-            }
-            if (this.slideFiveDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第5頁尚未儲存，請先按「儲存議題」。' : 'Slide 5 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideSixMode) {
-            if (this.pageSixHasTable && !this.pageSixSelectedRowKeys.length) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第6頁至少需選擇 1 筆表格資料。' : 'Select at least 1 table row for Slide 6.'
-                };
-            }
-            if (this.slideSixDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第6頁尚未儲存，請先按「儲存議題」。' : 'Slide 6 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideSevenMode) {
-            if (!this.pageSevenRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第7頁內容不可為空。' : 'Slide 7 content cannot be empty.'
-                };
-            }
-            if (this.slideSevenDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第7頁尚未儲存，請先按「儲存議題」。' : 'Slide 7 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideEightMode) {
-            if (!this.pageEightRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第8頁內容不可為空。' : 'Slide 8 content cannot be empty.'
-                };
-            }
-            if (this.slideEightDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第8頁尚未儲存，請先按「儲存議題」。' : 'Slide 8 has unsaved changes. Please click Save Topic.'
-                };
-            }
-        }
-
-        if (this.isSlideNineMode) {
-            if (!this.pageNineRichText?.trim()) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第9頁內容不可為空。' : 'Slide 9 content cannot be empty.'
-                };
-            }
-            if (this.slideNineDirty) {
-                return {
-                    isValid: false,
-                    errorMessage: this.isChinese ? '第9頁尚未儲存，請先按「儲存議題」。' : 'Slide 9 has unsaved changes. Please click Save Topic.'
-                };
+        if (!this.isSetupMode && !this.isEditorMode) {
+            const currentSlide = this._getSlideData().find((s) => s.number === this.currentSlideNumber);
+            if (currentSlide) {
+                if (currentSlide.hasTable) {
+                    if (!currentSlide.selectedRowKeys.length) {
+                        return {
+                            isValid: false,
+                            errorMessage: this.isChinese
+                                ? `第${currentSlide.number}頁至少需選擇 1 筆表格資料。`
+                                : `Select at least 1 table row for Slide ${currentSlide.number}.`
+                        };
+                    }
+                } else if (!currentSlide.richText?.trim()) {
+                    return {
+                        isValid: false,
+                        errorMessage: this.isChinese
+                            ? `第${currentSlide.number}頁內容不可為空。`
+                            : `Slide ${currentSlide.number} content cannot be empty.`
+                    };
+                }
+                if (currentSlide.dirty) {
+                    return {
+                        isValid: false,
+                        errorMessage: this.isChinese
+                            ? `第${currentSlide.number}頁尚未儲存，請先按「儲存議題」。`
+                            : `Slide ${currentSlide.number} has unsaved changes. Please click Save Topic.`
+                    };
+                }
             }
         }
 
         this.syncSlideOutputs();
         return { isValid: true };
+    }
+
+    _getSlideData() {
+        return [
+            { number: 1, title: this.pageOneTitle, richText: this.pageOneRichText, dirty: this.slideOneDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 2, title: this.pageTwoTitle, richText: this.pageTwoRichText, dirty: this.slideTwoDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 3, title: this.pageThreeTitle, richText: this.pageThreeRichText, dirty: this.slideThreeDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 4, title: this.pageFourTitle, richText: this.pageFourRichText, dirty: this.slideFourDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 5, title: this.pageFiveTitle, richText: null, dirty: this.slideFiveDirty, hasTable: this.pageFiveHasTable, selectedRowKeys: this.pageFiveSelectedRowKeys },
+            { number: 6, title: this.pageSixTitle, richText: null, dirty: this.slideSixDirty, hasTable: this.pageSixHasTable, selectedRowKeys: this.pageSixSelectedRowKeys },
+            { number: 7, title: this.pageSevenTitle, richText: this.pageSevenRichText, dirty: this.slideSevenDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 8, title: this.pageEightTitle, richText: this.pageEightRichText, dirty: this.slideEightDirty, hasTable: false, selectedRowKeys: [] },
+            { number: 9, title: this.pageNineTitle, richText: this.pageNineRichText, dirty: this.slideNineDirty, hasTable: false, selectedRowKeys: [] }
+        ];
     }
 
     notifyChange(attributeName, value) {

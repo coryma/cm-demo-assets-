@@ -48,6 +48,11 @@
         </template>
 
         <template if:true={isEditorMode}>
+            <template if:true={hasUnsavedChanges}>
+                <div class="unsaved-warning slds-m-bottom_small">
+                    <p class="error-message">{unsavedWarningMessage}</p>
+                </div>
+            </template>
             <section class="editor-box editor-tabs-box">
                 <p class="step-title">{editorTopicsTitle}</p>
                 <p class="helper-text slds-m-top_x-small">{editorTopicsHint}</p>
