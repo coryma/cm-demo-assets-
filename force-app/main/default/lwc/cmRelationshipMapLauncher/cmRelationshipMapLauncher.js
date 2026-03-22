@@ -21,7 +21,8 @@ const LABELS = {
 export default class CmRelationshipMapLauncher extends NavigationMixin(LightningElement) {
     @api recordId;
     @api language = 'zh';
-    @api relationshipMapActionApiName = 'Account.SalesAIRelationshipGraph';
+    // Kept for flexipage compatibility — no longer used for navigation
+    @api relationshipMapActionApiName;
 
     @wire(getRecord, { recordId: '$accountPlanRecordId', fields: [ACCOUNT_ID_FIELD] })
     accountPlan;
@@ -61,21 +62,19 @@ export default class CmRelationshipMapLauncher extends NavigationMixin(Lightning
         return this.labels.button;
     }
 
-    get primaryActionApiName() {
-        return (this.relationshipMapActionApiName || '').trim() || 'Account.SalesAIRelationshipGraph';
-    }
-
     handleOpen() {
         if (!this.accountId) {
             return;
         }
         this[NavigationMixin.Navigate]({
-            type: 'standard__quickAction',
+            type: 'standard__navItemPage',
             attributes: {
-                apiName: this.primaryActionApiName
+                apiName: 'standard-SalesAIRelationshipGraph'
             },
             state: {
-                recordId: this.accountId
+                c__recordId: this.accountId,
+                c__sobject: 'Account',
+                ws: `/lightning/r/Account/${this.accountId}/view`
             }
         });
     }
