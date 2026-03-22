@@ -18,12 +18,6 @@
             <stringValue>LightningFlowBuilder</stringValue>
         </value>
     </processMetadataValues>
-    <customProperty>
-        <name>ScreenProgressIndicator</name>
-        <value>
-            <stringValue>{"location":"top","type":"path"}</stringValue>
-        </value>
-    </customProperty>
     <apiVersion>66</apiVersion>
     <description>為 Account 準備結構化 QBR 會前簡報草稿 / Prepare a structured QBR briefing draft for an Account.</description>
     <interviewLabel>準備 Account QBR {!$Flow.CurrentDateTime}</interviewLabel>
