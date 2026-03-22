@@ -3,15 +3,17 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import ACCOUNT_ID_FIELD from '@salesforce/schema/AccountPlan.AccountId';
 
+const ACCOUNT_ID_PREFIX = '001';
+
 const LABELS = {
     en: {
         title: 'Relationship Map',
-        description: 'Visualize key stakeholders for this account.',
+        description: 'Open the relationship map view for this account.',
         button: 'Open Relationship Map'
     },
     zh: {
         title: '關係圖',
-        description: '視覺化此帳戶的主要利害關係人。',
+        description: '開啟此帳戶的關係圖視圖。',
         button: '開啟關係圖'
     }
 };
@@ -19,12 +21,28 @@ const LABELS = {
 export default class CmRelationshipMapLauncher extends NavigationMixin(LightningElement) {
     @api recordId;
     @api language = 'zh';
+    @api relationshipMapActionApiName = 'Account.SalesAIRelationshipGraph';
 
-    @wire(getRecord, { recordId: '$recordId', fields: [ACCOUNT_ID_FIELD] })
+    @wire(getRecord, { recordId: '$accountPlanRecordId', fields: [ACCOUNT_ID_FIELD] })
     accountPlan;
 
+    get isAccountRecord() {
+        return typeof this.recordId === 'string' && this.recordId.startsWith(ACCOUNT_ID_PREFIX);
+    }
+
+    get accountPlanRecordId() {
+        return this.isAccountRecord ? undefined : this.recordId;
+    }
+
     get accountId() {
-        return getFieldValue(this.accountPlan.data, ACCOUNT_ID_FIELD);
+        if (this.isAccountRecord) {
+            return this.recordId;
+        }
+        return this.accountPlan?.data ? getFieldValue(this.accountPlan.data, ACCOUNT_ID_FIELD) : undefined;
+    }
+
+    get isOpenDisabled() {
+        return !this.accountId;
     }
 
     get labels() {
@@ -43,15 +61,23 @@ export default class CmRelationshipMapLauncher extends NavigationMixin(Lightning
         return this.labels.button;
     }
 
+    get primaryActionApiName() {
+        return (this.relationshipMapActionApiName || '').trim() || 'Account.SalesAIRelationshipGraph';
+    }
+
     handleOpen() {
-        if (!this.accountId) return;
+        if (!this.accountId) {
+            return;
+        }
         this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
+            type: 'standard__quickAction',
             attributes: {
-                recordId: this.accountId,
-                objectApiName: 'Account',
-                actionName: 'view'
+                apiName: this.primaryActionApiName
+            },
+            state: {
+                recordId: this.accountId
             }
         });
     }
+
 }
