@@ -3,19 +3,19 @@
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
-            <stringValue>LightningFlowBuilder</stringValue>
+                <stringValue>LightningFlowBuilder</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+                <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
-            <stringValue>LightningFlowBuilder</stringValue>
+                <stringValue>LightningFlowBuilder</stringValue>
         </value>
     </processMetadataValues>
     <apiVersion>66</apiVersion>
@@ -24,12 +24,63 @@
     <label>CM - Prepare Account QBR</label>
     <processType>Flow</processType>
     <screens>
+        <name>Export_Presentation</name>
+        <label>輸出簡報 / Export Presentation</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+        <stageReference>
+            <elementReference>{'apexValue': None, 'booleanValue': None, 'collectionElements': None, 'complexValue': None, 'complexValueType': None, 'dateTimeValue': None, 'dateValue': None, 'elementReference': 'Export_Stage', 'formulaDataType': None, 'formulaExpression': None, 'inputConfiguratorMode': None, 'isReverseValueMapping': None, 'numberValue': None, 'setupReference': None, 'setupReferenceType': None, 'sobjectValue': None, 'stringValue': None, 'timeValue': None, 'transform': None, 'transformValueReference': None, 'valueMapName': None}</elementReference>
+        </stageReference>
+        <fields>
+            <name>ExportIntro</name>
+            <fieldText><p>最後一步：勾選要輸出的議題，生成簡報檔。</p></fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>PresentationExport</name>
+            <extensionName>c:cmQbrPresentationExport</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
+            <inputParameters>
+                <name>qbrMeetingId</name>
+                <value>
+                    <elementReference>varQbrMeetingId</elementReference>
+                </value>
+            </inputParameters>
+            <outputParameters>
+                <assignToReference>varSelectedSlideNumbers</assignToReference>
+                <name>selectedSlideNumbers</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varPresentationFileUrl</assignToReference>
+                <name>generatedFileUrl</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varPresentationFileName</assignToReference>
+                <name>generatedFileName</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varPresentationContentDocumentId</assignToReference>
+                <name>generatedContentDocumentId</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>varPresentationContentVersionId</assignToReference>
+                <name>generatedContentVersionId</name>
+            </outputParameters>
+        </fields>
+    </screens>
+    <screens>
         <name>Meeting_Setup</name>
         <label>會議設定 / Meeting Setup</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
-        <allowFinish>false</allowFinish>
+        <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
             <targetReference>Topic_Editor</targetReference>
@@ -37,17 +88,18 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
         <stageReference>
-            <elementReference>Setup_Stage</elementReference>
+            <elementReference>{'apexValue': None, 'booleanValue': None, 'collectionElements': None, 'complexValue': None, 'complexValueType': None, 'dateTimeValue': None, 'dateValue': None, 'elementReference': 'Setup_Stage', 'formulaDataType': None, 'formulaExpression': None, 'inputConfiguratorMode': None, 'isReverseValueMapping': None, 'numberValue': None, 'setupReference': None, 'setupReferenceType': None, 'sobjectValue': None, 'stringValue': None, 'timeValue': None, 'transform': None, 'transformValueReference': None, 'valueMapName': None}</elementReference>
         </stageReference>
         <fields>
             <name>SetupIntro</name>
-            <fieldText>&lt;p&gt;&lt;strong&gt;QBR 會議準備（使用者編修版）&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;此流程不會重新生成 9 頁內容，只會讀取 QBR Setup 已產生的預設資料，供你編修。&lt;/p&gt;</fieldText>
+            <fieldText><p><strong>QBR 會議準備（使用者編修版）</strong></p><p>此流程不會重新生成 9 頁內容，只會讀取 QBR Setup 已產生的預設資料，供你編修。</p></fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
             <name>QbrSetupPanel</name>
             <extensionName>c:cmQbrSetupPanel</extensionName>
             <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
             <inputParameters>
                 <name>accountId</name>
                 <value>
@@ -138,7 +190,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
-        <allowFinish>false</allowFinish>
+        <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
             <targetReference>Export_Presentation</targetReference>
@@ -146,17 +198,18 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
         <stageReference>
-            <elementReference>Editor_Stage</elementReference>
+            <elementReference>{'apexValue': None, 'booleanValue': None, 'collectionElements': None, 'complexValue': None, 'complexValueType': None, 'dateTimeValue': None, 'dateValue': None, 'elementReference': 'Editor_Stage', 'formulaDataType': None, 'formulaExpression': None, 'inputConfiguratorMode': None, 'isReverseValueMapping': None, 'numberValue': None, 'setupReference': None, 'setupReferenceType': None, 'sobjectValue': None, 'stringValue': None, 'timeValue': None, 'transform': None, 'transformValueReference': None, 'valueMapName': None}</elementReference>
         </stageReference>
         <fields>
             <name>EditorIntro</name>
-            <fieldText>&lt;p&gt;請使用 Tab 編修議題內容。完成後按「下一步」進入輸出。&lt;/p&gt;</fieldText>
+            <fieldText><p>請使用 Tab 編修議題內容。完成後按「下一步」進入輸出。</p></fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
             <name>TopicEditorPanel</name>
             <extensionName>c:cmQbrSetupPanel</extensionName>
             <fieldType>ComponentInstance</fieldType>
+            <isRequired>true</isRequired>
             <inputParameters>
                 <name>accountId</name>
                 <value>
@@ -230,56 +283,6 @@
             <outputParameters>
                 <assignToReference>varSlideFourHtml</assignToReference>
                 <name>slideFourHtml</name>
-            </outputParameters>
-        </fields>
-    </screens>
-    <screens>
-        <name>Export_Presentation</name>
-        <label>輸出簡報 / Export Presentation</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <showFooter>true</showFooter>
-        <showHeader>false</showHeader>
-        <stageReference>
-            <elementReference>Export_Stage</elementReference>
-        </stageReference>
-        <fields>
-            <name>ExportIntro</name>
-            <fieldText>&lt;p&gt;最後一步：勾選要輸出的議題，生成簡報檔。&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>PresentationExport</name>
-            <extensionName>c:cmQbrPresentationExport</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>qbrMeetingId</name>
-                <value>
-                    <elementReference>varQbrMeetingId</elementReference>
-                </value>
-            </inputParameters>
-            <outputParameters>
-                <assignToReference>varSelectedSlideNumbers</assignToReference>
-                <name>selectedSlideNumbers</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varPresentationFileUrl</assignToReference>
-                <name>generatedFileUrl</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varPresentationFileName</assignToReference>
-                <name>generatedFileName</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varPresentationContentDocumentId</assignToReference>
-                <name>generatedContentDocumentId</name>
-            </outputParameters>
-            <outputParameters>
-                <assignToReference>varPresentationContentVersionId</assignToReference>
-                <name>generatedContentVersionId</name>
             </outputParameters>
         </fields>
     </screens>
