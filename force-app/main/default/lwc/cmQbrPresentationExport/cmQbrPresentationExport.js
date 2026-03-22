@@ -92,8 +92,8 @@ export default class CmQbrPresentationExport extends LightningElement {
 
     get selectedCountLabel() {
         return this.isChinese
-            ? `已選 ${this.selectedSlideNumberList.length} / 9`
-            : `${this.selectedSlideNumberList.length} / 9 selected`;
+            ? `已選 ${this.selectedSlideNumberList.length} / ${this.topics.length}`
+            : `${this.selectedSlideNumberList.length} / ${this.topics.length} selected`;
     }
 
     get isBusy() {
@@ -144,7 +144,7 @@ export default class CmQbrPresentationExport extends LightningElement {
             this.generatedContentVersionId = '';
             this.notifySelections();
             this.notifyFileOutputs();
-            this.statusMessage = this.isChinese ? '已載入 9 個議題，可開始勾選。' : 'Loaded 9 topics. You can now select slides.';
+            this.statusMessage = this.isChinese ? `已載入 ${this.topics.length} 個議題，可開始勾選。` : `Loaded ${this.topics.length} topics. You can now select slides.`;
         } catch (error) {
             this.errorMessage = this.reduceError(error);
             this.statusMessage = '';
