@@ -126,6 +126,7 @@ Tracked and ready to retrieve/deploy via scripts:
 - `account-role-setup`
 - `email-simulation`
 - `lead-ai-scoring`
+- `homepage-sync`
 - `qbr-preparation`
 - `supply-network-core`
 - `supply-network-page`
@@ -193,6 +194,40 @@ Expected result:
 - You can search/select an Account in `Demo Setup`
 - Saving updates `CM_Is_Demo_Target__c`
 - Saving updates `Industry`, `Website`, `Description`, and `CM_Supply_Scenario_Catalog__c`
+
+### 3.5) One-Time HomePage Sync (260312 baseline to new org)
+
+Use this when target org Home page must match `coryma-260312` (`MFG_HOME_DISCRETE_MCO`).
+
+Dry-run:
+
+```bash
+sf project deploy start \
+  --manifest manifest/features/homepage-sync.xml \
+  --target-org <target-org-alias> \
+  --dry-run \
+  --wait 30
+```
+
+Apply:
+
+```bash
+sf project deploy start \
+  --manifest manifest/features/homepage-sync.xml \
+  --target-org <target-org-alias> \
+  --wait 30
+```
+
+Post-check:
+
+```bash
+sf project retrieve start \
+  --target-org <target-org-alias> \
+  --metadata FlexiPage:MFG_HOME_DISCRETE_MCO \
+  --output-dir /tmp/home-verify
+diff -u force-app/main/default/flexipages/MFG_HOME_DISCRETE_MCO.flexipage-meta.xml \
+  /tmp/home-verify/flexipages/MFG_HOME_DISCRETE_MCO.flexipage-meta.xml
+```
 
 ### 4) One-Shot Install (Optional)
 
