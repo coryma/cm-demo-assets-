@@ -79,7 +79,7 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`).
 - User value: generate Opportunity candidates from an Email, review/edit line items, then create opportunities in one flow
 - Entry: `EmailMessage.Auto_Create_Opps` quick action on EmailMessage
 - Core assets: `CM_Email_To_Opptys`, `CM_EmailToOpptyPromptInvoker`, `CM_EmailToOpptyCreator`, `cmEmailOpptyJsonReview`, prompt `CM_Email_To_Opptys`, field `Opportunity.SourceEmailId__c`
-- Install pack: `240922-auto-create-opps`
+- Install pack: `email-to-opportunity`
 
 #### 10) Sample Request Submission (Frontstage)
 
@@ -147,7 +147,7 @@ Baseline packs (managed by `docs/install-plan.json`):
 Optional packs (manual deploy when needed):
 
 - `homepage-sync`
-- `240922-auto-create-opps`
+- `email-to-opportunity`
 - `sample-request`
 
 ## New Org Installation Playbook
@@ -205,8 +205,8 @@ If target org already has customization on shared pages (`MFG_HOME_DISCRETE_MCO`
 Install optional custom packs outside baseline plan:
 
 ```bash
-./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias> --dry-run
-./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias>
+./scripts/deploy-feature.sh email-to-opportunity <target-org-alias> --dry-run
+./scripts/deploy-feature.sh email-to-opportunity <target-org-alias>
 
 ./scripts/deploy-feature.sh sample-request <target-org-alias> --dry-run
 ./scripts/deploy-feature.sh sample-request <target-org-alias>
@@ -280,7 +280,7 @@ sf project deploy start \
 - Always install `Meeting Transcript Simulation` before using `QBR Meeting Follow-up`.
 - Follow the exact module order in `docs/install-plan.json` unless a human explicitly changes it.
 - If a step fails, stop and report the failing module name plus CLI error output; do not skip ahead.
-- Optional packs (`240922-auto-create-opps`, `sample-request`, `homepage-sync`) are manual and not part of baseline `install-plan`.
+- Optional packs (`email-to-opportunity`, `sample-request`, `homepage-sync`) are manual and not part of baseline `install-plan`.
 - Deploying `FlexiPage` metadata is page-level overwrite behavior; if repo `Home`/`Account` pages are older than org, deployment can remove newer custom components.
 - Sync rule for shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`): retrieve latest from org first, then commit, then deploy.
 
@@ -304,7 +304,7 @@ Retrieve one feature pack:
 ./scripts/retrieve-feature.sh demo-setup <target-org-alias>
 ./scripts/retrieve-feature.sh lead-ai-scoring <target-org-alias>
 ./scripts/retrieve-feature.sh qbr-preparation <target-org-alias>
-./scripts/retrieve-feature.sh 240922-auto-create-opps <target-org-alias>
+./scripts/retrieve-feature.sh email-to-opportunity <target-org-alias>
 ./scripts/retrieve-feature.sh sample-request <target-org-alias>
 ```
 
@@ -314,7 +314,7 @@ Deploy one feature pack:
 ./scripts/deploy-feature.sh demo-setup <target-org-alias>
 ./scripts/deploy-feature.sh lead-ai-scoring <target-org-alias>
 ./scripts/deploy-feature.sh qbr-preparation <target-org-alias>
-./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias>
+./scripts/deploy-feature.sh email-to-opportunity <target-org-alias>
 ./scripts/deploy-feature.sh sample-request <target-org-alias>
 ```
 
