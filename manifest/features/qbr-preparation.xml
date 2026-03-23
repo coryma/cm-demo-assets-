@@ -23,6 +23,7 @@
         <name>GenAiPromptTemplate</name>
     </types>
     <types>
+        <members>cmRelationshipMapLauncher</members>
         <members>cmQbrContactPicker</members>
         <members>cmQbrDraftEmail</members>
         <members>cmQbrProgressSimulator</members>

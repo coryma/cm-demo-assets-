@@ -48,28 +48,22 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`) a
 
 - User value: visualize supplier/customer network graph for the selected account
 - Entry: `MFG_ACCOUNT_DISCRETE_ALL`
-- Core assets: `cmSupplyNetworkGraph`, `cmRelationshipMapLauncher`, `CMSupplyNetworkGraphController`, `cytoscape`
+- Core assets: `cmSupplyNetworkGraph`, `CMSupplyNetworkGraphController`, `cytoscape`
 
-#### 5) QBR Editing and PPT Generation (Frontstage)
+#### 5) Account Plan Enhance (Includes SWOT Generation)
 
-- User value: edit AI-generated QBR draft and export presentation file
+- User value: edit AI-generated QBR draft, generate SWOT, and export presentation file
 - Entry: `CM_QBR_Setup`, `Account_Plan_Record_Page`
-- Core assets: `CM_Prepare_Account_QBR`, `cmQbrSetup`, `cmQbrSetupPanel`, `cmQbrReviewBriefing`, `cmQbrDraftEmail`, `cmQbrPresentationExport`
+- Core assets: `CM_Prepare_Account_QBR`, `CM_Generate_AccountPlan_SWOT`, `AccountPlan.Generate_SWOT`, `cmQbrSetup`, `cmQbrSetupPanel`, `cmQbrReviewBriefing`, `cmQbrDraftEmail`, `cmQbrPresentationExport`, `cmQbrSwotDecision`, `CM_AccountPlanSWOTInvoker`, `CM_QBRSwotInspector`, `CM_SWOT_Analysis`, `cmRelationshipMapLauncher`
 
-#### 6) Account Plan SWOT Generation (Frontstage)
-
-- User value: generate SWOT output for Account Plan
-- Entry: `Account_Plan_Record_Page`
-- Core assets: `CM_Generate_AccountPlan_SWOT`, `AccountPlan.Generate_SWOT`, `cmQbrSwotDecision`, `CM_AccountPlanSWOTInvoker`, `CM_QBRSwotInspector`, `CM_SWOT_Analysis`
-
-#### 7) QBR Meeting Follow-up (Frontstage)
+#### 6) QBR Meeting Follow-up (Frontstage)
 
 - User value: generate follow-up summary, tasks, and draft outputs after meeting intake
 - Entry: `Account.AI_Meeting_Follow_Up`
 - Dependency: Backstage feature `Meeting Transcript Simulation` is required
 - Core assets: `CM_AI_Advisor_Meeting_Screenflow`, `CMQBRAsyncEmailDraftService`, `CMQBRMeetingAnalysisService`, `CMQBRTranscriptResolver`, `CMFlowRecordCreator`
 
-#### 8) Business Card OCR to Lead (Frontstage)
+#### 7) Business Card OCR to Lead (Frontstage)
 
 - User value: turn business card input into lead-ready structured data
 - Core assets: `CM_BusinessCard_To_Lead`, `cmBusinessCardOcrUpload`, `cmBusinessCardReviewAsync`, `cmBusinessCardDisplayImageInFlow`, `CM_BusinessCard_*`
