@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 <feature-name> <target-org>" >&2
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <feature-name> <target-org> [extra sf deploy flags...]" >&2
   exit 1
 fi
 
 feature="$1"
 target_org="$2"
+extra_flags=("${@:3}")
 manifest="manifest/features/${feature}.xml"
 
 if [[ ! -f "${manifest}" ]]; then
@@ -18,4 +19,5 @@ fi
 sf project deploy start \
   --manifest "${manifest}" \
   --target-org "${target_org}" \
-  --wait 30
+  --wait 30 \
+  "${extra_flags[@]}"

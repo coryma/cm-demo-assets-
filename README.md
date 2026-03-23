@@ -134,6 +134,11 @@ Tracked and ready to retrieve/deploy via scripts:
 
 This section is the source of truth for installing this repo into a brand-new org.
 
+- Human/AI readable guide: `docs/AI_INSTALL_PLAYBOOK.md`
+- Machine-readable plan: `docs/install-plan.json`
+- Plan execution script: `scripts/install-by-plan.sh`
+- Plan validation script: `scripts/verify-install-plan.sh`
+
 ### 1) Prerequisites
 
 - Salesforce CLI (`sf`) installed
@@ -147,28 +152,32 @@ sf org login web --alias <target-org-alias>
 sf org display --target-org <target-org-alias>
 ```
 
-### 2) Install Order (Modular, Recommended)
+### 2) Install Order and Execution
 
-Install modules in this order to reduce dependency issues:
+Do not hardcode install order in prompts. Always read and execute `docs/install-plan.json`.
 
-1. `demo-setup` (foundation; must be first)
-2. `account-role-setup`
-3. `supply-network-core`
-4. `supply-network-page`
-5. `lead-ai-scoring`
-6. `email-simulation`
-7. `qbr-preparation`
-
-Deploy commands:
+Validate plan:
 
 ```bash
-./scripts/deploy-feature.sh demo-setup <target-org-alias>
-./scripts/deploy-feature.sh account-role-setup <target-org-alias>
-./scripts/deploy-feature.sh supply-network-core <target-org-alias>
-./scripts/deploy-feature.sh supply-network-page <target-org-alias>
-./scripts/deploy-feature.sh lead-ai-scoring <target-org-alias>
-./scripts/deploy-feature.sh email-simulation <target-org-alias>
-./scripts/deploy-feature.sh qbr-preparation <target-org-alias>
+./scripts/verify-install-plan.sh docs/install-plan.json
+```
+
+Dry-run install:
+
+```bash
+./scripts/install-by-plan.sh <target-org-alias> --dry-run
+```
+
+Production install:
+
+```bash
+./scripts/install-by-plan.sh <target-org-alias>
+```
+
+If target org already has customization on shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`):
+
+```bash
+./scripts/install-by-plan.sh <target-org-alias> --sync-shared-pages
 ```
 
 ### 3) Demo Setup Validation (Immediately After Step 1)
@@ -200,7 +209,7 @@ sf project deploy start \
 
 - Always install `demo-setup` first before any feature that depends on active demo target context.
 - Always install `Meeting Transcript Simulation` before using `QBR Meeting Follow-up`.
-- Follow the exact module order above unless a human explicitly changes the order.
+- Follow the exact module order in `docs/install-plan.json` unless a human explicitly changes it.
 - If a step fails, stop and report the failing module name plus CLI error output; do not skip ahead.
 - Deploying `FlexiPage` metadata is page-level overwrite behavior; if repo `Home`/`Account` pages are older than org, deployment can remove newer custom components.
 - Sync rule for shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`): retrieve latest from org first, then commit, then deploy.
@@ -233,4 +242,12 @@ Deploy one feature pack:
 ./scripts/deploy-feature.sh demo-setup <target-org-alias>
 ./scripts/deploy-feature.sh lead-ai-scoring <target-org-alias>
 ./scripts/deploy-feature.sh qbr-preparation <target-org-alias>
+```
+
+Install by plan:
+
+```bash
+./scripts/verify-install-plan.sh docs/install-plan.json
+./scripts/install-by-plan.sh <target-org-alias> --dry-run
+./scripts/install-by-plan.sh <target-org-alias>
 ```

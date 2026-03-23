@@ -1,0 +1,93 @@
+{
+  "version": "2026-03-23",
+  "description": "Canonical AI-readable installation plan for cm-demo-assets.",
+  "notes": [
+    "Install by manifest feature packs only. Do not run full force-app deployment for baseline installs.",
+    "Shared FlexiPages can be overwritten by deployment. Use shared-page sync for non-empty orgs.",
+    "qbr-preparation currently covers both QBR preparation and Account Plan enhancement assets."
+  ],
+  "sharedPages": [
+    "MFG_HOME_DISCRETE_MCO",
+    "MFG_ACCOUNT_DISCRETE_ALL"
+  ],
+  "installOrder": [
+    "demo-setup",
+    "account-role-setup",
+    "email-simulation",
+    "lead-ai-scoring",
+    "supply-network-core",
+    "supply-network-page",
+    "qbr-preparation"
+  ],
+  "modules": [
+    {
+      "id": "demo-setup",
+      "name": "Demo Setup Foundation",
+      "scope": "backstage",
+      "manifest": "manifest/features/demo-setup.xml",
+      "dependsOn": [],
+      "entry": "CM_Demo_Setup"
+    },
+    {
+      "id": "account-role-setup",
+      "name": "Account Role Setup",
+      "scope": "backstage",
+      "manifest": "manifest/features/account-role-setup.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "CM_Account_Role_Setup"
+    },
+    {
+      "id": "email-simulation",
+      "name": "Email Simulation",
+      "scope": "backstage",
+      "manifest": "manifest/features/email-simulation.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "CM_Email_Simulation"
+    },
+    {
+      "id": "lead-ai-scoring",
+      "name": "Lead AI Scoring",
+      "scope": "frontstage",
+      "manifest": "manifest/features/lead-ai-scoring.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "MFG_HOME_DISCRETE_MCO"
+    },
+    {
+      "id": "supply-network-core",
+      "name": "Supply Network Core",
+      "scope": "frontstage",
+      "manifest": "manifest/features/supply-network-core.xml",
+      "dependsOn": [
+        "demo-setup",
+        "account-role-setup"
+      ],
+      "entry": "MFG_ACCOUNT_DISCRETE_ALL"
+    },
+    {
+      "id": "supply-network-page",
+      "name": "Supply Network Page Binding",
+      "scope": "frontstage",
+      "manifest": "manifest/features/supply-network-page.xml",
+      "dependsOn": [
+        "supply-network-core"
+      ],
+      "entry": "MFG_ACCOUNT_DISCRETE_ALL"
+    },
+    {
+      "id": "qbr-preparation",
+      "name": "QBR + Account Plan Enhancement Bundle",
+      "scope": "mixed",
+      "manifest": "manifest/features/qbr-preparation.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "Account.Prepare_QBR and CM_QBR_Setup"
+    }
+  ]
+}
