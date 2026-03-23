@@ -1,10 +1,18 @@
 {
   "version": "2026-03-23",
-  "description": "Canonical AI-readable installation plan for cm-demo-assets.",
+  "description": "Canonical repo-only installation plan for cm-demo-assets baseline modules.",
+  "policy": {
+    "sourceOfTruth": "repo-only",
+    "baselineExecution": "installOrder",
+    "optionalExecution": "manual deploy-feature",
+    "allowExternalOrgAsSource": false
+  },
   "notes": [
-    "Install by manifest feature packs only. Do not run full force-app deployment for baseline installs.",
-    "Shared FlexiPages can be overwritten by deployment. Use shared-page sync for non-empty orgs.",
-    "qbr-preparation currently covers both QBR preparation and Account Plan enhancement assets."
+    "Baseline installation must deploy only manifest feature packs defined in this file.",
+    "Do not run full force-app deployment for baseline installs.",
+    "Shared FlexiPages can be overwritten by deployment; use shared-page sync for non-empty orgs.",
+    "qbr-preparation is currently a combined pack that includes QBR Meeting Preparation, Account Plan Enhancement (SWOT), and QBR setup generation assets.",
+    "qbr-follow-up and business-card-ocr include Flow screen dependencies that may require additional preinstalled components in target org."
   ],
   "sharedPages": [
     "MFG_HOME_DISCRETE_MCO",
@@ -13,17 +21,23 @@
   "installOrder": [
     "demo-setup",
     "account-role-setup",
+    "activity-scorecard",
     "email-simulation",
+    "news-setup",
+    "meeting-transcript-simulation",
     "lead-ai-scoring",
+    "business-card-ocr",
     "supply-network-core",
     "supply-network-page",
-    "qbr-preparation"
+    "qbr-preparation",
+    "qbr-follow-up"
   ],
   "modules": [
     {
       "id": "demo-setup",
       "name": "Demo Setup Foundation",
       "scope": "backstage",
+      "stage": "foundation",
       "manifest": "manifest/features/demo-setup.xml",
       "dependsOn": [],
       "entry": "CM_Demo_Setup"
@@ -32,6 +46,7 @@
       "id": "account-role-setup",
       "name": "Account Role Setup",
       "scope": "backstage",
+      "stage": "backstage",
       "manifest": "manifest/features/account-role-setup.xml",
       "dependsOn": [
         "demo-setup"
@@ -39,9 +54,19 @@
       "entry": "CM_Account_Role_Setup"
     },
     {
+      "id": "activity-scorecard",
+      "name": "Activity Scorecard",
+      "scope": "frontstage",
+      "stage": "frontstage",
+      "manifest": "manifest/features/activity-scorecard.xml",
+      "dependsOn": [],
+      "entry": "MFG_HOME_DISCRETE_MCO and MFG_ACCOUNT_DISCRETE_ALL"
+    },
+    {
       "id": "email-simulation",
       "name": "Email Simulation",
       "scope": "backstage",
+      "stage": "backstage",
       "manifest": "manifest/features/email-simulation.xml",
       "dependsOn": [
         "demo-setup"
@@ -49,19 +74,57 @@
       "entry": "CM_Email_Simulation"
     },
     {
+      "id": "news-setup",
+      "name": "News Setup and Account Targeting",
+      "scope": "backstage",
+      "stage": "backstage",
+      "manifest": "manifest/features/news-setup.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "CM_News_Setup",
+      "excludedAssets": [
+        "CM_Account_News_Update (requires sales_summaries__SumRelaRecForAccount flow dependency)"
+      ]
+    },
+    {
+      "id": "meeting-transcript-simulation",
+      "name": "Meeting Transcript Simulation",
+      "scope": "backstage",
+      "stage": "backstage",
+      "manifest": "manifest/features/meeting-transcript-simulation.xml",
+      "dependsOn": [
+        "demo-setup"
+      ],
+      "entry": "CM_Meeting_Transcript_Simulation"
+    },
+    {
       "id": "lead-ai-scoring",
       "name": "Lead AI Scoring",
-      "scope": "frontstage",
+      "scope": "mixed",
+      "stage": "frontstage",
       "manifest": "manifest/features/lead-ai-scoring.xml",
       "dependsOn": [
         "demo-setup"
       ],
+      "frontstageEntry": "MFG_HOME_DISCRETE_MCO",
+      "backstageEntry": "CM_Update_Lead_AI_Related_Fields",
       "entry": "MFG_HOME_DISCRETE_MCO"
+    },
+    {
+      "id": "business-card-ocr",
+      "name": "Business Card OCR to Lead",
+      "scope": "frontstage",
+      "stage": "frontstage",
+      "manifest": "manifest/features/business-card-ocr.xml",
+      "dependsOn": [],
+      "entry": "CM_BusinessCard_To_Lead"
     },
     {
       "id": "supply-network-core",
       "name": "Supply Network Core",
       "scope": "frontstage",
+      "stage": "frontstage",
       "manifest": "manifest/features/supply-network-core.xml",
       "dependsOn": [
         "demo-setup",
@@ -73,6 +136,7 @@
       "id": "supply-network-page",
       "name": "Supply Network Page Binding",
       "scope": "frontstage",
+      "stage": "frontstage",
       "manifest": "manifest/features/supply-network-page.xml",
       "dependsOn": [
         "supply-network-core"
@@ -81,13 +145,62 @@
     },
     {
       "id": "qbr-preparation",
-      "name": "QBR + Account Plan Enhancement Bundle",
+      "name": "QBR and Account Plan Suite",
       "scope": "mixed",
+      "stage": "mixed",
       "manifest": "manifest/features/qbr-preparation.xml",
       "dependsOn": [
         "demo-setup"
       ],
-      "entry": "Account.Prepare_QBR and CM_QBR_Setup"
+      "frontstageEntry": "Account.Prepare_QBR",
+      "backstageEntry": "CM_QBR_Setup",
+      "entry": "Account.Prepare_QBR and CM_QBR_Setup",
+      "includesFeatures": [
+        "QBR Meeting Preparation (frontstage)",
+        "Account Plan Enhancement with SWOT (frontstage)",
+        "QBR Meeting Preparation Generation (backstage)"
+      ]
+    },
+    {
+      "id": "qbr-follow-up",
+      "name": "QBR Meeting Follow-up",
+      "scope": "frontstage",
+      "stage": "frontstage",
+      "manifest": "manifest/features/qbr-follow-up.xml",
+      "dependsOn": [
+        "meeting-transcript-simulation",
+        "qbr-preparation"
+      ],
+      "entry": "Account.AI_Meeting_Follow_Up",
+      "dependencyNote": "Meeting Transcript Simulation is required."
     }
+  ],
+  "optionalModules": [
+    {
+      "id": "email-to-opportunity",
+      "name": "Email to Opportunity Auto-Creation",
+      "manifest": "manifest/features/email-to-opportunity.xml",
+      "entry": "EmailMessage.Auto_Create_Opps"
+    },
+    {
+      "id": "sample-request",
+      "name": "Sample Request Submission",
+      "manifest": "manifest/features/sample-request.xml",
+      "entry": "Opportunity.CM_Sample_Submission"
+    },
+    {
+      "id": "homepage-sync",
+      "name": "Home Page Sync",
+      "manifest": "manifest/features/homepage-sync.xml",
+      "entry": "MFG_HOME_DISCRETE_MCO",
+      "warning": "Page-level overwrite. Deploy only when replacing target Home layout is intentional."
+    }
+  ],
+  "validationChecklist": [
+    "Demo Setup page opens and saves target account.",
+    "Account page has Prepare QBR action and Supply Network graph.",
+    "Home page has latest leads list and activity scorecard.",
+    "Backstage pages CM_Account_Role_Setup, CM_Email_Simulation, CM_News_Setup, CM_Meeting_Transcript_Simulation, and CM_QBR_Setup open successfully.",
+    "QBR follow-up quick action works after transcript simulation data exists."
   ]
 }

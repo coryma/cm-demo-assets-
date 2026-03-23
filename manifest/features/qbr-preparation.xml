@@ -12,6 +12,7 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>CM_Generate_AccountPlan_SWOT</members>
         <members>CM_Prepare_Account_QBR</members>
         <name>Flow</name>
     </types>
@@ -27,6 +28,7 @@
         <members>cmQbrContactPicker</members>
         <members>cmQbrDraftEmail</members>
         <members>cmQbrProgressSimulator</members>
+        <members>cmQbrPresentationExport</members>
         <members>cmQbrRecipientPicker</members>
         <members>cmQbrReviewBriefing</members>
         <members>cmQbrSetup</members>
@@ -35,7 +37,9 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>Account.AI_Meeting_Follow_Up</members>
         <members>Account.Prepare_QBR</members>
+        <members>AccountPlan.Generate_SWOT</members>
         <name>QuickAction</name>
     </types>
     <types>
@@ -45,6 +49,7 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Account_Plan_Record_Page</members>
         <members>CM_QBR_Setup</members>
         <members>MFG_ACCOUNT_DISCRETE_ALL</members>
         <name>FlexiPage</name>

@@ -57,7 +57,11 @@
 4. 後台頁面可開啟：
    - `CM_Account_Role_Setup`
    - `CM_Email_Simulation`
+   - `CM_News_Setup`
+   - `CM_Meeting_Transcript_Simulation`
    - `CM_QBR_Setup`
+5. Account page 可看到並可執行：
+   - `AI Meeting Follow-up`
 
 ## Notes
 

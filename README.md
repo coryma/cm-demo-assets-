@@ -107,6 +107,7 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`).
 - Purpose: configure which accounts should generate news and maintain news context data
 - Entry: `CM_News_Setup`
 - Core assets: `CM_Get_News_Prompt_Template_Flow`, `CM_Get_News_BY_API`, `cmNewsSetup`, prompts `CM_Account_News`, `CM_Account_News_Update`
+- Install note: baseline pack deploys `CM_Account_News`; `CM_Account_News_Update` has external flow dependency (`sales_summaries__SumRelaRecForAccount`)
 - External endpoints: `GDELT_API`, `GNEWS_API`, `GOOGLE_NEWS_RSS`, `NEWS_API`
 
 #### 4) Email Simulation (Backstage-only)
@@ -138,11 +139,16 @@ Baseline packs (managed by `docs/install-plan.json`):
 
 - `demo-setup`
 - `account-role-setup`
+- `activity-scorecard`
 - `email-simulation`
+- `news-setup`
+- `meeting-transcript-simulation`
 - `lead-ai-scoring`
+- `business-card-ocr`
 - `supply-network-core`
 - `supply-network-page`
 - `qbr-preparation`
+- `qbr-follow-up`
 
 Optional packs (manual deploy when needed):
 
