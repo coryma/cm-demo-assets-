@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Create a sample submission from the current opportunity.</description>
+    <flowDefinition>CM_Sample_Request_Flow</flowDefinition>
+    <label>CM Sample Submission</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>Flow</type>
+</QuickAction>

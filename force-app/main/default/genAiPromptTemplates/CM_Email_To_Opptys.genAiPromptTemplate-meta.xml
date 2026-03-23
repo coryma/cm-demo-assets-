@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_2</activeVersionIdentifier>
+    <developerName>CM_Email_To_Opptys</developerName>
+    <masterLabel>CM - Email To Opptys</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are an expert Sales Assistant AI for an electronics distributor. Your task is to analyze the incoming email content and extract business opportunities (product requests) into a structured JSON format.
+
+Please follow these rules strictly:
+1. Identify the sender&apos;s information and the urgency of the request.
+2. Extract every product requested as a separate item in the &quot;line_items&quot; array.
+3. For each item, extract: Manufacturer (Brand), Part Number, Quantity (as a number), Target Price (extract numerical value and currency separately), Required Delivery Date, and any specific Application or Notes.
+4. If a field is not mentioned, use null.
+5. The output must be valid JSON only. Do not include markdown formatting (like ```json) or conversational text.
+
+Here is the email content:
+{!$Input:Email}
+
+Map the extracted data to this JSON structure:
+{
+ &quot;customer_info&quot;: {
+  &quot;name&quot;: &quot;Name of the sender&quot;,
+  &quot;title&quot;: &quot;Job title&quot;,
+  &quot;company_context&quot;: &quot;Company name or team inferred&quot;,
+  &quot;request_deadline&quot;: &quot;Date or timeframe mentioned for response&quot;
+ },
+ &quot;general_requirements&quot;: {
+  &quot;production_schedule&quot;: &quot;Timeline for production (e.g., Q1 2025)&quot;,
+  &quot;special_terms&quot;: &quot;Any generic requests like NCNR, FAE support, etc.&quot;
+ },
+ &quot;line_items&quot;: [
+  {
+   &quot;manufacturer&quot;: &quot;Brand name&quot;,
+   &quot;part_number&quot;: &quot;Full part number&quot;,
+   &quot;quantity&quot;: 1000,
+   &quot;target_price&quot;: {
+    &quot;value&quot;: 0.00,
+    &quot;currency&quot;: &quot;USD&quot;
+   },
+   &quot;delivery_requirement&quot;: &quot;Specific month or terms&quot;,
+   &quot;application_notes&quot;: &quot;Context like &apos;Industrial control&apos; or &apos;Automotive grade&apos;&quot;
+  }
+ ]
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Email</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Email</masterLabel>
+            <referenceName>Input:Email</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an expert Sales Assistant AI for an electronics distributor. Your task is to analyze the incoming email content and extract business opportunities (product requests) into a structured JSON format.
+
+Please follow these rules strictly:
+1. Identify the sender&apos;s information and the urgency of the request.
+2. Extract every product requested as a separate item in the &quot;line_items&quot; array.
+3. For each item, extract: Manufacturer (Brand), Part Number, Quantity (as a number), Target Price (extract numerical value and currency separately), Required Delivery Date, and any specific Application or Notes.
+4. If a field is not mentioned, use null.
+5. The output must be valid JSON only. Do not include markdown formatting (like ```json) or conversational text.
+
+Here is the email content:
+{!$Input:Email}
+
+Map the extracted data to this JSON structure:
+{
+ &quot;customer_info&quot;: {
+  &quot;name&quot;: &quot;Name of the sender&quot;,
+  &quot;title&quot;: &quot;Job title&quot;,
+  &quot;company_context&quot;: &quot;Company name or team inferred&quot;,
+  &quot;request_deadline&quot;: &quot;Date or timeframe mentioned for response&quot;
+ },
+ &quot;general_requirements&quot;: {
+  &quot;production_schedule&quot;: &quot;Timeline for production (e.g., Q1 2025)&quot;,
+  &quot;special_terms&quot;: &quot;Any generic requests like NCNR, FAE support, etc.&quot;
+ },
+ &quot;line_items&quot;: [
+  {
+   &quot;manufacturer&quot;: &quot;Brand name&quot;,
+   &quot;part_number&quot;: &quot;Full part number&quot;,
+   &quot;quantity&quot;: 1000,
+   &quot;target_price&quot;: {
+    &quot;value&quot;: 0.00,
+    &quot;currency&quot;: &quot;USD&quot;
+   },
+   &quot;delivery_requirement&quot;: &quot;Specific month or terms&quot;,
+   &quot;application_notes&quot;: &quot;Context like &apos;Industrial control&apos; or &apos;Automotive grade&apos;&quot;
+  }
+ ]
+}
+</content>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__nlNlLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__enUsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__frFrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__deDeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__itItLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__jaJpLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__ptBrLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esEsLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__esMxLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__svSeLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <generationTemplateConfigs>
+            <generationConfigDeveloperName>einstein_gpt__zhTwLanguageStyle</generationConfigDeveloperName>
+        </generationTemplateConfigs>
+        <inputs>
+            <apiName>Email</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Email</masterLabel>
+            <referenceName>Input:Email</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultVertexAIGemini25FlashLite001</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_2</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

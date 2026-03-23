@@ -1,0 +1,67 @@
+<template>
+    <div class="slds-var-p-around_medium">
+        <div class="slds-text-heading_medium slds-m-bottom_medium">
+            Opportunities
+            <div class="slds-text-body_small slds-text-color_weak">Up to 5 items (Name = Account - Product - Total)</div>
+        </div>
+
+        <article class="slds-card slds-m-bottom_medium">
+            <div class="slds-card__body slds-p-around_small">
+                <template if:true={opptyLines}>
+                    <template for:each={opptyLines} for:item="line">
+                        <div key={line.key} class="slds-box slds-m-bottom_small slds-card_boundary">
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-input
+                                        type="text"
+                                        name="name"
+                                        label="Opportunity Name"
+                                        value={line.name}
+                                        data-key={line.key}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <lightning-input
+                                        type="number"
+                                        name="quantity"
+                                        label="Quantity"
+                                        value={line.quantity}
+                                        data-key={line.key}
+                                        min="0"
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <lightning-input
+                                        type="number"
+                                        name="unitPrice"
+                                        label="Unit Price"
+                                        value={line.unitPrice}
+                                        data-key={line.key}
+                                        step="0.01"
+                                        min="0"
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        name="closeDate"
+                                        label="Close Date"
+                                        value={line.closeDate}
+                                        data-key={line.key}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+                <template if:false={opptyLines}>
+                    <div class="slds-text-color_error">No line_items parsed. Please check the prompt output.</div>
+                </template>
+            </div>
+        </article>
+    </div>
+</template>

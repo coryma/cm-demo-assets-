@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>CM_CoDeveloped</members>
+        <members>CM_In_Stock</members>
+        <members>CM_Sample_Submission</members>
+        <members>CM_Sample_Submission_Info</members>
+        <members>CM_Self_Develop</members>
+        <members>CM_Type</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>SampleRequest__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>SampleRequest__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Sample_Request</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>CM_Sample_Request_Flow</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>SampleRequest__c-送樣需求 版面配置</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>SampleRequestInStockPath</members>
+        <members>SampleRequestPath2</members>
+        <name>PathAssistant</name>
+    </types>
+    <types>
+        <members>CM_Sample_Request_Access</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <members>Opportunity.CM_Sample_Submission</members>
+        <name>QuickAction</name>
+    </types>
+    <version>66.0</version>
+</Package>

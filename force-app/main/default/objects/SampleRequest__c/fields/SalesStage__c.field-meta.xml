@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SalesStage__c</fullName>
+    <externalId>false</externalId>
+    <formula>CASE(
+    TEXT(Opportunity__r.StageName),
+    &quot;Closed Lost&quot;, &quot;輸單&quot;,
+    &quot;Closed Win&quot;, &quot;贏單&quot;,
+&quot;Discovery&quot;,&quot;需求及技術討論&quot;,
+&quot;Negotiation&quot;,&quot;議價/商務條款&quot;,
+&quot;Qualification&quot;,&quot;機會資訊確認&quot;,
+&quot;Value Proposition&quot;,&quot;案件資訊確認&quot;,
+     &quot;贏單&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>銷售階段</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

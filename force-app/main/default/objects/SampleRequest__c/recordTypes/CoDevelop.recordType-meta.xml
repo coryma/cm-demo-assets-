@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CoDevelop</fullName>
+    <active>true</active>
+    <label>Co-Develop</label>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>合作開發中</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>完成</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>已出貨</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>待客戶回饋</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>待核准</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>新建</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>準備中</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

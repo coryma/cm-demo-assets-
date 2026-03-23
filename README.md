@@ -4,7 +4,7 @@ Salesforce demo metadata repository for Cory Ma.
 
 ## Inventory Scope
 
-This inventory is based on **tracked files in this Git repo** (`git ls-files`) at commit `b58fb70`.
+This inventory is based on **tracked files in this Git repo** (`git ls-files`).
 
 - Included: code and metadata under `force-app/main/default`
 - Excluded: local untracked files and ad hoc retrieve output
@@ -74,6 +74,20 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`) a
 - User value: turn business card input into lead-ready structured data
 - Core assets: `CM_BusinessCard_To_Lead`, `cmBusinessCardOcrUpload`, `cmBusinessCardReviewAsync`, `cmBusinessCardDisplayImageInFlow`, `CM_BusinessCard_*`
 
+#### 9) Email to Opportunity Auto-Creation (Frontstage)
+
+- User value: generate Opportunity candidates from an Email, review/edit line items, then create opportunities in one flow
+- Entry: `EmailMessage.Auto_Create_Opps` quick action on EmailMessage
+- Core assets: `CM_Email_To_Opptys`, `CM_EmailToOpptyPromptInvoker`, `CM_EmailToOpptyCreator`, `cmEmailOpptyJsonReview`, prompt `CM_Email_To_Opptys`, field `Opportunity.SourceEmailId__c`
+- Install pack: `240922-auto-create-opps`
+
+#### 10) Sample Request Submission (Frontstage)
+
+- User value: create sample request records from an Opportunity and route by sample type
+- Entry: `Opportunity.CM_Sample_Submission` quick action on Opportunity
+- Core assets: `CM_Sample_Request_Flow`, `SampleRequest__c`, `Sample_Request`, `SampleRequestPath2`, `SampleRequestInStockPath`, `CM_Sample_Request_Access`
+- Install pack: `sample-request`
+
 ### Backstage Setup and Simulation (Admin/Operations)
 
 #### 1) Demo Setup (Foundation, install first)
@@ -120,16 +134,21 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`) a
 
 ## Manifest-Driven Feature Packs
 
-Tracked and ready to retrieve/deploy via scripts:
+Baseline packs (managed by `docs/install-plan.json`):
 
 - `demo-setup`
 - `account-role-setup`
 - `email-simulation`
 - `lead-ai-scoring`
-- `homepage-sync`
-- `qbr-preparation`
 - `supply-network-core`
 - `supply-network-page`
+- `qbr-preparation`
+
+Optional packs (manual deploy when needed):
+
+- `homepage-sync`
+- `240922-auto-create-opps`
+- `sample-request`
 
 ## New Org Installation Playbook
 
@@ -179,6 +198,21 @@ If target org already has customization on shared pages (`MFG_HOME_DISCRETE_MCO`
 
 ```bash
 ./scripts/install-by-plan.sh <target-org-alias> --sync-shared-pages
+```
+
+### 2.5) Optional Pack Installation (Manual)
+
+Install optional custom packs outside baseline plan:
+
+```bash
+./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias> --dry-run
+./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias>
+
+./scripts/deploy-feature.sh sample-request <target-org-alias> --dry-run
+./scripts/deploy-feature.sh sample-request <target-org-alias>
+
+./scripts/deploy-feature.sh homepage-sync <target-org-alias> --dry-run
+./scripts/deploy-feature.sh homepage-sync <target-org-alias>
 ```
 
 ### 3) Demo Setup Validation (Immediately After Step 1)
@@ -246,6 +280,7 @@ sf project deploy start \
 - Always install `Meeting Transcript Simulation` before using `QBR Meeting Follow-up`.
 - Follow the exact module order in `docs/install-plan.json` unless a human explicitly changes it.
 - If a step fails, stop and report the failing module name plus CLI error output; do not skip ahead.
+- Optional packs (`240922-auto-create-opps`, `sample-request`, `homepage-sync`) are manual and not part of baseline `install-plan`.
 - Deploying `FlexiPage` metadata is page-level overwrite behavior; if repo `Home`/`Account` pages are older than org, deployment can remove newer custom components.
 - Sync rule for shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`): retrieve latest from org first, then commit, then deploy.
 
@@ -269,6 +304,8 @@ Retrieve one feature pack:
 ./scripts/retrieve-feature.sh demo-setup <target-org-alias>
 ./scripts/retrieve-feature.sh lead-ai-scoring <target-org-alias>
 ./scripts/retrieve-feature.sh qbr-preparation <target-org-alias>
+./scripts/retrieve-feature.sh 240922-auto-create-opps <target-org-alias>
+./scripts/retrieve-feature.sh sample-request <target-org-alias>
 ```
 
 Deploy one feature pack:
@@ -277,6 +314,8 @@ Deploy one feature pack:
 ./scripts/deploy-feature.sh demo-setup <target-org-alias>
 ./scripts/deploy-feature.sh lead-ai-scoring <target-org-alias>
 ./scripts/deploy-feature.sh qbr-preparation <target-org-alias>
+./scripts/deploy-feature.sh 240922-auto-create-opps <target-org-alias>
+./scripts/deploy-feature.sh sample-request <target-org-alias>
 ```
 
 Install by plan:
