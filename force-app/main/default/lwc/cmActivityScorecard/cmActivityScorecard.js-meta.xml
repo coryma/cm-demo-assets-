@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>60.0</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>CM Activity Scorecard</masterLabel>
+  <description>CM demo activity scorecard with multilingual labels.</description>
+  <targets>
+    <target>lightning__RecordPage</target>
+    <target>lightning__AppPage</target>
+    <target>lightning__HomePage</target>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage">
+      <property name="recordId" type="String" label="Account Id" description="Account Id to display metrics for when not placed on an Account record page." />
+      <property name="headerLabel" type="String" label="Header Label" description="Text displayed in the component header." default="Activity Scorecard - Last 30 Days" />
+      <property name="lookbackDays" type="Integer" label="Lookback Window (Days)" description="Number of days to include when calculating metrics (1-365)." default="30" min="1" max="365" />
+      <property name="targetUserId" type="String" label="User Id" description="Override the user whose owned accounts are aggregated when the component is not bound to a specific Account." />
+    </targetConfig>
+    <targetConfig targets="lightning__FlowScreen">
+      <property name="recordId" type="String" label="Account Id" description="Account Id to display metrics for." />
+      <property name="headerLabel" type="String" label="Header Label" />
+      <property name="lookbackDays" type="Integer" label="Lookback Window (Days)" default="30" min="1" max="365" />
+      <property name="targetUserId" type="String" label="User Id" description="Override the user whose owned accounts are aggregated when record Id is not provided." />
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

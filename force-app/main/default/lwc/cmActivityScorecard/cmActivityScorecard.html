@@ -1,0 +1,75 @@
+<template>
+  <section class="scorecard">
+    <template if:true={isLoading}>
+      <div class="scorecard__loading">
+        <lightning-spinner alternative-text={loadingLabel} size="small"></lightning-spinner>
+      </div>
+    </template>
+
+    <header class="scorecard__heading">
+      <span class="scorecard__indicator" aria-hidden="true"></span>
+      <h2 class="scorecard__title">{effectiveHeaderLabel}</h2>
+    </header>
+
+    <template if:true={hasError}>
+      <div class="scorecard__state scorecard__state--error">{errorMessage}</div>
+    </template>
+    <template if:false={hasError}>
+      <template if:false={isLoading}>
+        <template if:true={hasSummary}>
+          <div class="scorecard__summary">
+            <template for:each={summaryItems} for:item="item">
+              <article key={item.key} class={item.classes}>
+                <div class="summary-card__label">{item.label}</div>
+                <div class="summary-card__value">{item.value}</div>
+                <template if:true={item.detail}>
+                  <div class="summary-card__detail">{item.detail}</div>
+                </template>
+              </article>
+            </template>
+          </div>
+        </template>
+        <template if:false={hasSummary}>
+          <div class="scorecard__state scorecard__state--empty">{summaryEmptyMessage}</div>
+        </template>
+
+        <template if:true={hasActivities}>
+          <ul class="scorecard__activities">
+            <template for:each={activityItems} for:item="activity">
+              <li key={activity.key} class="activity">
+                <div class={activity.iconClasses} role="presentation">
+                  <lightning-icon icon-name={activity.iconName} size="small" variant="inverse"></lightning-icon>
+                </div>
+
+                <div class="activity__content">
+                  <div class="activity__primary">
+                    <span class="activity__value">{activity.value}</span>
+                    <span class="activity__label">{activity.label}</span>
+                  </div>
+
+                  <div class="activity__progress">
+                    <div class="activity__progress-track">
+                      <span class={activity.progressClasses} style={activity.progressStyle}></span>
+                    </div>
+
+                    <div class="activity__meta">
+                      <template if:true={activity.isNewPersonalBest}>
+                        <span class="activity__badge">{activity.badgeText}</span>
+                      </template>
+                      <template if:false={activity.isNewPersonalBest}>
+                        <span class="activity__meta-text">{activity.metaText}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </template>
+        <template if:false={hasActivities}>
+          <div class="scorecard__state scorecard__state--empty">{activitiesEmptyMessage}</div>
+        </template>
+      </template>
+    </template>
+  </section>
+</template>

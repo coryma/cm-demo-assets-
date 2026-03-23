@@ -1,0 +1,237 @@
+:host {
+  display: block;
+  font-family: var(--lwc-fontFamily, "Salesforce Sans", Arial, sans-serif);
+}
+
+.scorecard {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.scorecard__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #1b1b1d;
+}
+
+.scorecard__indicator {
+  position: relative;
+  display: inline-flex;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid #2a6df4;
+}
+
+.scorecard__indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.35rem;
+  height: 0.35rem;
+  background: #2a6df4;
+  border-radius: 50%;
+}
+
+.scorecard__title {
+  letter-spacing: 0.01em;
+}
+
+.scorecard__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}
+
+.scorecard__state {
+  border: 1px dashed #d6d9de;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: #5f6368;
+  font-size: 0.9rem;
+  background: #f7f9fc;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.scorecard__state--error {
+  border-color: rgba(194, 57, 52, 0.35);
+  background: rgba(194, 57, 52, 0.08);
+  color: #c23934;
+}
+
+.scorecard__state--empty {
+  border-style: solid;
+}
+
+.scorecard--message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+}
+
+.scorecard__summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.summary-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: #f9fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.summary-card__label {
+  font-size: 0.85rem;
+  color: #5f6368;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.summary-card__value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #1b1b1d;
+}
+
+.summary-card__detail {
+  font-size: 0.75rem;
+  color: #7a7d81;
+}
+
+.summary-card--success .summary-card__value {
+  color: #1e9f55;
+}
+
+.summary-card--danger .summary-card__value {
+  color: #c23934;
+}
+
+.scorecard__activities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.activity__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.activity__content {
+  flex: 1;
+}
+
+.activity__primary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.activity__value {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.activity__label {
+  color: #5f6368;
+}
+
+.activity__progress {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.activity__progress-track {
+  position: relative;
+  height: 0.6rem;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.activity__progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+}
+
+.activity__meta {
+  font-size: 0.75rem;
+  color: #7a7d81;
+  display: flex;
+  align-items: center;
+}
+
+.activity__badge {
+  font-weight: 600;
+  color: #1e9f55;
+}
+
+.theme--success {
+  background: linear-gradient(90deg, #2ecc71, #1e9f55);
+}
+
+.theme--teal {
+  background: linear-gradient(90deg, #1abc9c, #13866a);
+}
+
+.theme--slate {
+  background: linear-gradient(90deg, #94a2d3, #5c6bc0);
+}
+
+.theme--magenta {
+  background: linear-gradient(90deg, #d980fa, #c34cb4);
+}
+
+@media (max-width: 31.25rem) {
+  .scorecard {
+    padding: 1.25rem;
+  }
+
+  .summary-card__value {
+    font-size: 1.75rem;
+  }
+}
