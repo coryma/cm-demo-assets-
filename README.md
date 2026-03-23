@@ -54,7 +54,7 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`) a
 
 - User value: prepare and edit AI-generated QBR meeting content, then export presentation file
 - Entry: `Account.Prepare_QBR` button on `MFG_ACCOUNT_DISCRETE_ALL` (Account page)
-- Core assets: `Account.Prepare_QBR`, `CM_Prepare_Account_QBR`, `cmQbrSetup`, `cmQbrSetupPanel`, `cmQbrReviewBriefing`, `cmQbrDraftEmail`, `cmQbrPresentationExport`
+- Core assets: `Account.Prepare_QBR`, `CM_Prepare_Account_QBR`, `cmQbrSetupPanel`, `cmQbrReviewBriefing`, `cmQbrDraftEmail`, `cmQbrPresentationExport`
 
 #### 6) Account Plan Enhancement (Includes SWOT Generation)
 
@@ -116,7 +116,7 @@ This inventory is based on **tracked files in this Git repo** (`git ls-files`) a
 
 - Purpose: configure participant companies and generate default QBR preparation content
 - Entry: `CM_QBR_Setup`
-- Core assets: `CM_Prepare_Account_QBR`, `CMQbrMeetingPrepController`, `CMQbrSetupController`, `CM_QBRFlowService`, prompts `CM_CrossRole_MeetingBrief_Gen`, `CM_QBR_Supplier_Intro_From_File`, `CM_QBR_Follow_Up_Email_Draft`
+- Core assets: `CM_Prepare_Account_QBR`, `CMQbrMeetingPrepController`, `CMQbrSetupController`, `cmQbrSetup`, `CM_QBRFlowService`, prompts `CM_CrossRole_MeetingBrief_Gen`, `CM_QBR_Supplier_Intro_From_File`, `CM_QBR_Follow_Up_Email_Draft`
 
 ## Manifest-Driven Feature Packs
 
