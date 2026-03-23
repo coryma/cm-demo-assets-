@@ -3,10 +3,8 @@
     <fullName>CM_Is_Demo_Target__c</fullName>
     <defaultValue>false</defaultValue>
     <description>Marks the Account currently used as the active demo target.</description>
-    <externalId>false</externalId>
     <inlineHelpText>Use the Demo Target Setup component to switch the active demo target account.</inlineHelpText>
     <label>CM Demo Target</label>
-    <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Checkbox</type>

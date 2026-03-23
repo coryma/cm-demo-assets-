@@ -3,6 +3,7 @@
     <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_1</activeVersionIdentifier>
     <developerName>CM_Draft_Mock_Email</developerName>
     <masterLabel>CM - Draft Mock Email</masterLabel>
+    <overridable>false</overridable>
     <templateVersions>
         <content>您是系統的資料轉換與模擬助手。您的任務是根據提供的「背景資料」，撰寫一封完整的電子郵件，並嚴格封裝進指定的 JSON 格式中，供系統批次建立 EmailMessage 測試資料。
 

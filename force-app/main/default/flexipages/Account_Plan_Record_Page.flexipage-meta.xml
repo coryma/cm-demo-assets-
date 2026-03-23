@@ -107,24 +107,21 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>runtime_sales_accountplan:objectivesWrapper</componentName>
-                <identifier>runtime_sales_accountplan_objectivesWrapper</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
                 <componentInstanceProperties>
                     <name>language</name>
                     <value>zh</value>
                 </componentInstanceProperties>
-                <componentName>c:cmRelationshipMapLauncher</componentName>
+                <componentInstanceProperties>
+                    <name>relationshipMapActionApiName</name>
+                </componentInstanceProperties>
+                <componentName>cmRelationshipMapLauncher</componentName>
                 <identifier>c_cmRelationshipMapLauncher</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
             <componentInstance>
-                <componentName>runtime_sales_accountplan:relationshipMap</componentName>
-                <identifier>runtime_sales_accountplan_relationshipMap</identifier>
+                <componentName>runtime_sales_accountplan:objectivesWrapper</componentName>
+                <identifier>runtime_sales_accountplan_objectivesWrapper</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

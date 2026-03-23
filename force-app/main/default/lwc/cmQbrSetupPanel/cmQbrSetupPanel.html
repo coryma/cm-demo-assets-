@@ -23,28 +23,6 @@
                 onchange={handleDateChange}
             ></lightning-input>
 
-            <div class="actions slds-m-top_medium">
-                <lightning-button
-                    variant="brand"
-                    label={loadDefaultLabel}
-                    onclick={handleLoadDefault}
-                    disabled={disableLoadDefault}
-                ></lightning-button>
-            </div>
-
-            <template if:true={showSetupSummary}>
-                <section class="summary-box slds-m-top_medium">
-                    <p class="summary-name">{generatedMeetingName}</p>
-                    <lightning-formatted-url
-                        value={generatedMeetingUrl}
-                        label={openMeetingLabel}
-                        target="_blank"
-                    ></lightning-formatted-url>
-                    <template if:true={generatedAtLabel}>
-                        <p class="helper-text slds-m-top_x-small">{generatedAtLabel}</p>
-                    </template>
-                </section>
-            </template>
         </template>
 
         <template if:true={isEditorMode}>
@@ -417,8 +395,10 @@
             <lightning-spinner class="slds-m-top_small" alternative-text="Processing" size="small"></lightning-spinner>
         </template>
 
-        <template if:true={statusMessage}>
-            <p class="status-message slds-m-top_small">{statusMessage}</p>
+        <template if:false={isSetupMode}>
+            <template if:true={statusMessage}>
+                <p class="status-message slds-m-top_small">{statusMessage}</p>
+            </template>
         </template>
 
         <template if:true={errorMessage}>

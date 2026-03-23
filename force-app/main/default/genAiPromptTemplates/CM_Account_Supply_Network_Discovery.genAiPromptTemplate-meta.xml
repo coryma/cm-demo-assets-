@@ -3,6 +3,7 @@
     <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_2</activeVersionIdentifier>
     <developerName>CM_Account_Supply_Network_Discovery</developerName>
     <masterLabel>CM - Account 上下游關係擷取</masterLabel>
+    <overridable>false</overridable>
     <templateVersions>
         <content>你是「企業供應鏈關係擷取引擎」。
 

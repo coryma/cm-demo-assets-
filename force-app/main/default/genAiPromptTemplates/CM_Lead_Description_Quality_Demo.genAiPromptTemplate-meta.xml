@@ -3,6 +3,7 @@
     <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_7</activeVersionIdentifier>
     <developerName>CM_Lead_Description_Quality_Demo</developerName>
     <masterLabel>CM - Lead Description Quality Demo</masterLabel>
+    <overridable>false</overridable>
     <templateVersions>
         <content>You are a Salesforce assistant for demo data preparation.
 

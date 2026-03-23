@@ -55,4 +55,35 @@
             <section>Renewal/Co-Term Information</section>
         </sections>
     </layouts>
+    <quickActions>
+        <aspect>Master</aspect>
+        <label>🤖 QBR 會議跟進</label>
+        <name>AI_Meeting_Follow_Up</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- 模擬郵件 --></label>
+        <name>Generate_Simulated_Emails</name>
+    </quickActions>
+    <quickActions>
+        <aspect>Master</aspect>
+        <label>🤖 QBR 準備</label>
+        <name>Prepare_QBR</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Business Account --></label>
+        <name>Business_Account</name>
+    </recordTypes>
+    <recordTypes>
+        <description>
+            <!-- Partner accounts with additional, channel-related information like the Partner
+        Scorecard. -->
+        </description>
+        <label><!-- Partner --></label>
+        <name>SDO_Account_Partner</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Primary Account record type used for most account records. --></description>
+        <label><!-- Account --></label>
+        <name>SDO_Account_Simple</name>
+    </recordTypes>
 </CustomObjectTranslation>

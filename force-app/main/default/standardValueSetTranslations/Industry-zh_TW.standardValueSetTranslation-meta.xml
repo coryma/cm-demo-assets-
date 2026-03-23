@@ -113,6 +113,10 @@
         <translation><!-- Retail --></translation>
     </valueTranslation>
     <valueTranslation>
+        <masterLabel>Semiconductors</masterLabel>
+        <translation><!-- Semiconductors --></translation>
+    </valueTranslation>
+    <valueTranslation>
         <masterLabel>Shipping</masterLabel>
         <translation><!-- Shipping --></translation>
     </valueTranslation>

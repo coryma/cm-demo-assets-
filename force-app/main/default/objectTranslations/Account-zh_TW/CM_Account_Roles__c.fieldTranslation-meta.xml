@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Select one or more business roles. Use Supplier when this account is an upstream supplier. Use Customer when this account is a sell-side customer account. --></help>
-    <label><!-- Business Role --></label>
-    <name>BusinessRole__c</name>
+    <help><!-- Select one or more identity roles for this Account. --></help>
+    <label><!-- CM Account Roles --></label>
+    <name>CM_Account_Roles__c</name>
     <picklistValues>
         <masterLabel>Customer</masterLabel>
         <translation><!-- Customer --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Partner</masterLabel>
+        <translation><!-- Partner --></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Supplier</masterLabel>

@@ -3,8 +3,8 @@
     <fullName>CM_Supply_Scenario_Catalog__c</fullName>
     <label>CM Supply Scenario Catalog</label>
     <length>32768</length>
-    <required>false</required>
-    <trackTrending>false</trackTrending>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>LongTextArea</type>
     <visibleLines>8</visibleLines>
 </CustomField>

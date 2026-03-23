@@ -5,6 +5,98 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>enableInlineEdit</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>entityName</name>
+                    <value>Account</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>filterName</name>
+                    <value>Accounts_Needing_Outreach</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideActionBar</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideSearchBar</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>pageSize</name>
+                    <value>3</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:filterListCard</componentName>
+                <identifier>flexipage_filterListCard</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!$User.LanguageLocaleKey}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>zh_TW</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>enableInlineEdit</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>entityName</name>
+                    <value>Account</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>filterName</name>
+                    <value>AllCompanyAccountsNeedingOutreach</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideActionBar</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideSearchBar</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>pageSize</name>
+                    <value>3</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:filterListCard</componentName>
+                <identifier>flexipage_filterListCard3</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!$User.LanguageLocaleKey}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>zh_TW</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-72c88f45-68ae-4cd5-b86b-cd9fbc4f4690</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>limitSize</name>
+                    <value>3</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>pollingMs</name>
+                    <value>10000</value>
+                </componentInstanceProperties>
+                <componentName>cmLatestLeads</componentName>
+                <identifier>c_cmLatestLeads</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>enableInlineEdit</name>
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
@@ -29,20 +121,6 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:filterListCard</componentName>
                 <identifier>flexipage_filterListCard2</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>limitSize</name>
-                    <value>3</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>pollingMs</name>
-                    <value>10000</value>
-                </componentInstanceProperties>
-                <componentName>cmLatestLeads</componentName>
-                <identifier>c_cmLatestLeads</identifier>
             </componentInstance>
         </itemInstances>
         <name>Facet-6a301519-b1cc-4fa8-93e4-9c4fde25ff5f</name>
@@ -71,6 +149,24 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-72c88f45-68ae-4cd5-b86b-cd9fbc4f4690</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Key Accounts</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>name</name>
+                    <value>accordionSection--ov3cbebuqwl</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:accordionSection</componentName>
+                <identifier>flexipage_accordionSection</identifier>
+            </componentInstance>
+        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -119,7 +215,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>defaultSectionName</name>
-                    <value>accordionSection1</value>
+                    <value>accordionSection--ov3cbebuqwl</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:accordion</componentName>
                 <identifier>flexipage_accordion1</identifier>
@@ -715,122 +811,21 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
-                    <name>activitiesCompleted1</name>
-                    <value>90</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesCompleted2</name>
-                    <value>98</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesCompleted3</name>
-                    <value>98</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesCompleted4</name>
-                    <value>23</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesDescription1</name>
-                    <value>tasks completed</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesDescription2</name>
-                    <value>calls logged</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesDescription3</name>
-                    <value>emails sent</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activitiesDescription4</name>
-                    <value>events logged</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activityIcon1</name>
-                    <value>standard:task</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activityIcon2</name>
-                    <value>standard:log_a_call</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activityIcon3</name>
-                    <value>standard:email</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>activityIcon4</name>
-                    <value>standard:event</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiSign1</name>
-                    <value>true</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiSign2</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiTitle1</name>
-                    <value>Deals Won</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiTitle2</name>
-                    <value>Deals Lost</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiValue1</name>
-                    <value>10</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>kpiValue2</name>
-                    <value>7</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>personalBest1</name>
-                    <value>78</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>personalBest2</name>
-                    <value>120</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>personalBest3</name>
-                    <value>150</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>personalBest4</name>
-                    <value>35</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>progressBarColor1</name>
-                    <value>#4bca81</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>progressBarColor2</name>
-                    <value>#48C3CC</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>progressBarColor3</name>
-                    <value>#95AEC5</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>progressBarColor4</name>
-                    <value>#EB7092</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>title</name>
+                    <name>headerLabel</name>
                     <value>Activity Scorecard - Last 30 Days</value>
                 </componentInstanceProperties>
-                <componentName>ActivityScorecardComponent</componentName>
-                <identifier>c_ActivityScorecardComponent1</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!$User.External_ID__c}</leftValue>
-                        <operator>NE</operator>
-                        <rightValue>User.007</rightValue>
-                    </criteria>
-                </visibilityRule>
+                <componentInstanceProperties>
+                    <name>lookbackDays</name>
+                    <value>30</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>recordId</name>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>targetUserId</name>
+                </componentInstanceProperties>
+                <componentName>cmActivityScorecard</componentName>
+                <identifier>c_cmActivityScorecard</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

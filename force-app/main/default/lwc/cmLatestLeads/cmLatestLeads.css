@@ -31,6 +31,23 @@
     font-size: 1.75rem;
 }
 
+.cm-table{
+  width:100%;
+}
+
+.cm-header-label{
+  display:block;
+  width:100%;
+}
+
+.cm-header-label-right{
+  text-align:right;
+}
+
+.cm-cell-right{
+  text-align:right;
+}
+
 
 /* 進場感 */
 .cm-row{ animation: fadeIn .35s ease both; }

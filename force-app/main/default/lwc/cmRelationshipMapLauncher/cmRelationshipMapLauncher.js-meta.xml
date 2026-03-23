@@ -8,6 +8,12 @@
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
             <property name="language" type="String" label="Language" default="zh" datasource="zh,en"/>
+            <property
+                name="relationshipMapActionApiName"
+                type="String"
+                label="Relationship Map Action API Name"
+                default="Account.SalesAIRelationshipGraph"
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

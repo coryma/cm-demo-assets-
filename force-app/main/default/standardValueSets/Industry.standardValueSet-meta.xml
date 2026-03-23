@@ -142,6 +142,11 @@
         <label>Retail</label>
     </standardValue>
     <standardValue>
+        <fullName>Semiconductors</fullName>
+        <default>false</default>
+        <label>Semiconductors</label>
+    </standardValue>
+    <standardValue>
         <fullName>Shipping</fullName>
         <default>false</default>
         <label>Shipping</label>

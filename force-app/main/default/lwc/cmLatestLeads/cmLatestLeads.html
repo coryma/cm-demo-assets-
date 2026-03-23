@@ -36,39 +36,47 @@
 
     <!-- Table (靜態：星星 + 分數文字) -->
     <div class="slds-table_header-fixed_container slds-scrollable_y">
-      <table class="slds-table slds-table_cell-buffer slds-table_header-fixed slds-table_bordered">
+      <table class="cm-table slds-table slds-table_cell-buffer slds-table_header-fixed slds-table_bordered">
         <thead>
           <tr class="slds-line-height_reset">
-            <th scope="col" style="width:3rem;">#</th>
+            <th scope="col" style="width:3rem;">
+              <div class="slds-truncate cm-header-label">#</div>
+            </th>
 
             <th scope="col">
-              <div class="slds-truncate sortable"
+              <div class="slds-truncate sortable cm-header-label"
                    data-field="name" tabindex="0"
                    onclick={handleSort} onkeydown={handleSortKeydown}>
                 {leadNameLabel} <span class="sort-arrow">{nameSortArrow}</span>
               </div>
             </th>
 
-            <th scope="col"><div class="slds-truncate">{companyLabel}</div></th>
-            <th scope="col"><div class="slds-truncate">{phoneLabel}</div></th>
+            <th scope="col">
+              <div class="slds-truncate cm-header-label">{companyLabel}</div>
+            </th>
+            <th scope="col">
+              <div class="slds-truncate cm-header-label">{phoneLabel}</div>
+            </th>
 
-            <th scope="col" class="slds-text-align_right">
-              <div class="slds-truncate sortable"
+            <th scope="col" class="cm-cell-right">
+              <div class="slds-truncate sortable cm-header-label cm-header-label-right"
                    data-field="aiScore" tabindex="0"
                    onclick={handleSort} onkeydown={handleSortKeydown}>
                 {valueIndicatorLabel} <span class="sort-arrow">{aiScoreSortArrow}</span>
               </div>
             </th>
 
-            <th scope="col" class="slds-text-align_right">
-              <div class="slds-truncate sortable"
+            <th scope="col" class="cm-cell-right">
+              <div class="slds-truncate sortable cm-header-label cm-header-label-right"
                    data-field="createdDate" tabindex="0"
                    onclick={handleSort} onkeydown={handleSortKeydown}>
                 {createdDateLabel} <span class="sort-arrow">{createdSortArrow}</span>
               </div>
             </th>
 
-            <th scope="col" class="slds-text-align_right"><div class="slds-truncate">{statusLabel}</div></th>
+            <th scope="col" class="cm-cell-right">
+              <div class="slds-truncate cm-header-label cm-header-label-right">{statusLabel}</div>
+            </th>
           </tr>
         </thead>
 
@@ -92,7 +100,7 @@
                 <td data-label={phoneLabel} class="slds-cell-wrap">{row.phone}</td>
 
                 <!-- 靜態星星 + 分數字樣；滑入才顯示 Popover -->
-                <td data-label={valueIndicatorLabel} class="slds-text-align_right">
+                <td data-label={valueIndicatorLabel} class="cm-cell-right">
                   <div class="score-cell"
                        data-id={row.id}
                        onmouseenter={handleScoreEnter}
@@ -111,8 +119,8 @@
                   </div>
                 </td>
 
-                <td data-label={createdDateLabel} class="slds-text-align_right">{row.createdRel}</td>
-                <td data-label={statusLabel} class="slds-text-align_right"><span class="slds-badge">{row.status}</span></td>
+                <td data-label={createdDateLabel} class="cm-cell-right">{row.createdRel}</td>
+                <td data-label={statusLabel} class="cm-cell-right"><span class="slds-badge">{row.status}</span></td>
               </tr>
             </template>
           </template>

@@ -9,6 +9,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>CMActivityScorecardController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>CMDemoTargetSetupController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -18,6 +22,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>CMEmailTimelineSimulationService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>CMFlowRecordCreator</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -50,10 +58,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>CMQbrSetupController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>CMFlowRecordCreator</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -102,7 +106,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Account.CM_Is_Supplier__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Account.CM_LatestUpdate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.CM_SupplierFactoryCount__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.CM_SupplierMainProducts__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.CM_SupplierRDHeadcount__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.CM_SupplierRatingGrade__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -138,51 +167,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Account.Website</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.Account__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.AsyncJobId__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.DraftBody__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.DraftSubject__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.ErrorMessage__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.MeetingNotes__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.PromptResponse__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.Status__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>CM_QBR_Email_Draft_Buffer__c.SuggestedRecipients__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -238,6 +222,51 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>CM_Meeting_Transcript__c.Transcript__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.Account__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.AsyncJobId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.DraftBody__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.DraftSubject__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.ErrorMessage__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.MeetingNotes__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.PromptResponse__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CM_QBR_Email_Draft_Buffer__c.SuggestedRecipients__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -425,11 +454,11 @@
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>CM_Meeting_Transcript_Simulation</tab>
+        <tab>CM_Lead_AI_Scoring</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>CM_Lead_AI_Scoring</tab>
+        <tab>CM_Meeting_Transcript_Simulation</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>

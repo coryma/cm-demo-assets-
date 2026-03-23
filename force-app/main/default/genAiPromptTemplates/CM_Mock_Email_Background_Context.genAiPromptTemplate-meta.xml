@@ -3,6 +3,7 @@
     <activeVersionIdentifier>k3vL3DXGjrieqcBsxI6NpkntsB7q7BfJMg3llS6oFys=_2</activeVersionIdentifier>
     <developerName>CM_Mock_Email_Background_Context</developerName>
     <masterLabel>CM - Mock Email Background Context</masterLabel>
+    <overridable>false</overridable>
     <templateVersions>
         <content>您是一位專業的企業系統測試資料生成專家。您的任務是根據使用者提供的產業別、公司、部門名稱以及郵件方向，產生一段極度逼真的「模擬郵件背景資料」(Background Context)。
 

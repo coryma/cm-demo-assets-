@@ -3,6 +3,7 @@
     <activeVersionIdentifier>gn08+0OlVDyuYLmBlHYpkYP+9IiAPFyJaeHZwQLUDNI=_1</activeVersionIdentifier>
     <developerName>CM_Lead_Auto_Screening_Demo</developerName>
     <masterLabel>CM - Lead Auto-Screening Demo</masterLabel>
+    <overridable>false</overridable>
     <templateVersions>
         <content>You are a Salesforce assistant for the current demo target account.
 

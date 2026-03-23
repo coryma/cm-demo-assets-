@@ -1,20 +1,27 @@
 <template>
-    <lightning-card>
-        <div class="slds-media slds-media_center slds-p-around_medium">
-            <div class="slds-media__figure">
-                <lightning-icon icon-name="utility:connected_apps" size="large" class="icon-blue"></lightning-icon>
-            </div>
-            <div class="slds-media__body">
-                <h2 class="slds-text-heading_small slds-m-bottom_xx-small">{cardTitle}</h2>
-                <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{cardDescription}</p>
-                <lightning-button
-                    label={buttonLabel}
-                    variant="brand"
-                    icon-name="utility:new_window"
-                    icon-position="right"
-                    onclick={handleOpen}
-                ></lightning-button>
-            </div>
-        </div>
-    </lightning-card>
+    <div class="launcher-wrap">
+        <button
+            class="launcher-chip"
+            type="button"
+            title={buttonLabel}
+            aria-label={buttonLabel}
+            onclick={handleOpen}
+            disabled={isOpenDisabled}
+        >
+            <span class="launcher-icon-shell">
+                <lightning-icon
+                    icon-name="utility:connected_apps"
+                    size="x-small"
+                    class="launcher-icon"
+                ></lightning-icon>
+            </span>
+            <span class="launcher-title">{cardTitle}</span>
+            <lightning-icon
+                icon-name="utility:chevronright"
+                size="xx-small"
+                class="launcher-arrow"
+            ></lightning-icon>
+        </button>
+        <p class="launcher-description">{cardDescription}</p>
+    </div>
 </template>

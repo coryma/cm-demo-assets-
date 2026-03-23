@@ -3,10 +3,6 @@ import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
 import lang from '@salesforce/i18n/lang';
 import locale from '@salesforce/i18n/locale';
 
-// DEPRECATED:
-// This banner is retained only for backward compatibility with orgs that still
-// use Account.CM_Account_Roles__c. New Account role UX should use
-// cmAccountRoleIdentityBanner (BusinessRole__c-based model).
 const ROLES_FIELD = 'Account.CM_Account_Roles__c';
 const FIELDS = [ROLES_FIELD];
 const ROLE_ORDER = ['Customer', 'Supplier', 'Partner'];

@@ -109,6 +109,30 @@
         </outputParameters>
     </actionCalls>
     <actionCalls>
+        <name>Resolve_Setup_Transcript</name>
+        <label>Resolve Setup Transcript</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CMQBRTranscriptResolver</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Initial_Response_Screen_Manual</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CMQBRTranscriptResolver</nameSegment>
+        <offset>0</offset>
+        <outputParameters>
+            <assignToReference>SetupTranscript</assignToReference>
+            <name>transcript</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Scan_Image_of_Advisor_Meeting_Notes</name>
         <label>Scan Image of Advisor Meeting Notes</label>
         <locationX>0</locationX>
@@ -134,30 +158,6 @@
         <nameSegment>FINS_Image_Upload_for_Advisor_Meeting_Notes</nameSegment>
         <offset>0</offset>
         <storeOutputAutomatically>true</storeOutputAutomatically>
-    </actionCalls>
-    <actionCalls>
-        <name>Resolve_Setup_Transcript</name>
-        <label>Resolve Setup Transcript</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <actionName>CMQBRTranscriptResolver</actionName>
-        <actionType>apex</actionType>
-        <connector>
-            <targetReference>Initial_Response_Screen_Manual</targetReference>
-        </connector>
-        <flowTransactionModel>Automatic</flowTransactionModel>
-        <inputParameters>
-            <name>accountId</name>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </inputParameters>
-        <nameSegment>CMQBRTranscriptResolver</nameSegment>
-        <offset>0</offset>
-        <outputParameters>
-            <assignToReference>SetupTranscript</assignToReference>
-            <name>transcript</name>
-        </outputParameters>
     </actionCalls>
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
