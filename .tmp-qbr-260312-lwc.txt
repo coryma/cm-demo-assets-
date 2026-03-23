@@ -1,9 +1,0 @@
-cmQbrContactPicker
-cmQbrDraftEmail
-cmQbrPresentationExport
-cmQbrProgressSimulator
-cmQbrRecipientPicker
-cmQbrReviewBriefing
-cmQbrSetup
-cmQbrSetupPanel
-cmQbrSwotDecision

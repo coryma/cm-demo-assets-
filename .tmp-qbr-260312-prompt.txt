@@ -1,4 +1,0 @@
-CM_CrossRole_MeetingBrief_Gen
-CM_QBR_Follow_Up_Email_Draft
-CM_QBR_Supplier_Intro_From_File
-CM_SWOT_Analysis
