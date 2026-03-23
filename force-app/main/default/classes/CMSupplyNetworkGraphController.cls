@@ -12,14 +12,8 @@ public with sharing class CMSupplyNetworkGraphController {
   private static final String PROMPT_TEMPLATE_DEVELOPER_NAME = 'CM_Account_Supply_Network_Discovery';
   private static final String WNC_IMPACT_PROMPT_TEMPLATE_DEVELOPER_NAME = 'CM_Account_WNC_Impact_Analysis';
   private static final String PROMPT_APPLICATION_NAME = 'PromptBuilderPreview';
-  private static final String DEFAULT_FOCUS_COMPANY_NAME = '啟碁科技 WNC';
-  private static final String DEFAULT_FOCUS_COMPANY_ALIAS = 'WNC';
-  private static final String DEFAULT_FOCUS_COMPANY_DOMAIN = 'wnc.com.tw';
   private static final String SMART_BUILD_MODE_UPSERT = 'UPSERT';
   private static final String SMART_BUILD_MODE_FULL_REBUILD = 'FULL_REBUILD';
-  private static final Set<String> DEFAULT_PINNED_NODE_NAME_KEYS = new Set<String>{
-    'wnc'
-  };
   private static final Set<String> SUPPORTED_DIRECTIONS = new Set<String>{
     'UPSTREAM',
     'DOWNSTREAM',
@@ -2239,7 +2233,6 @@ public with sharing class CMSupplyNetworkGraphController {
     String rootId
   ) {
     Set<String> pinnedNameKeys = new Set<String>();
-    pinnedNameKeys.addAll(DEFAULT_PINNED_NODE_NAME_KEYS);
 
     if (
       rootAccount != null &&
@@ -2799,10 +2792,7 @@ public with sharing class CMSupplyNetworkGraphController {
     if (!String.isBlank(runtimeConfig.focusCompanyName)) {
       return runtimeConfig.focusCompanyName;
     }
-    if (rootAccount != null && !String.isBlank(rootAccount.Name)) {
-      return rootAccount.Name;
-    }
-    return DEFAULT_FOCUS_COMPANY_NAME;
+    return null;
   }
 
   private static String resolvePromptFocusCompanyDomain(Account rootAccount) {
@@ -2810,8 +2800,7 @@ public with sharing class CMSupplyNetworkGraphController {
     if (!String.isBlank(runtimeConfig.focusCompanyDomain)) {
       return runtimeConfig.focusCompanyDomain;
     }
-    String rootDomain = normalizeDomain(rootAccount == null ? null : rootAccount.Website);
-    return String.isBlank(rootDomain) ? DEFAULT_FOCUS_COMPANY_DOMAIN : rootDomain;
+    return null;
   }
 
   private static SupplyNetworkRuntimeConfig getSupplyNetworkRuntimeConfig() {
@@ -2826,8 +2815,8 @@ public with sharing class CMSupplyNetworkGraphController {
 
   private static SupplyNetworkRuntimeConfig buildSupplyNetworkRuntimeConfig() {
     SupplyNetworkRuntimeConfig runtimeConfig = new SupplyNetworkRuntimeConfig();
-    runtimeConfig.focusCompanyName = DEFAULT_FOCUS_COMPANY_NAME;
-    runtimeConfig.focusCompanyDomain = DEFAULT_FOCUS_COMPANY_DOMAIN;
+    runtimeConfig.focusCompanyName = null;
+    runtimeConfig.focusCompanyDomain = null;
     runtimeConfig.scenarioDefinitions = new List<SupplyScenarioDefinition>();
     runtimeConfig.scenarioByCode = new Map<String, SupplyScenarioDefinition>();
     runtimeConfig.aiScenarioCodes = new Set<String>();
@@ -3880,14 +3869,14 @@ public with sharing class CMSupplyNetworkGraphController {
 
   private static String resolveFocusCompanyAlias(String focusCompanyName) {
     if (String.isBlank(focusCompanyName)) {
-      return DEFAULT_FOCUS_COMPANY_ALIAS;
+      return null;
     }
     List<String> tokens = focusCompanyName.trim().split('\\s+');
     if (tokens.isEmpty()) {
-      return DEFAULT_FOCUS_COMPANY_ALIAS;
+      return null;
     }
     String alias = tokens[tokens.size() - 1];
-    return String.isBlank(alias) ? DEFAULT_FOCUS_COMPANY_ALIAS : alias;
+    return String.isBlank(alias) ? null : alias;
   }
 
   private static void persistPromptJsonOnAccount(

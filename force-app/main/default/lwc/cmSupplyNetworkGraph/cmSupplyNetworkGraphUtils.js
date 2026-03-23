@@ -11,7 +11,6 @@ export const DISPLAY_MODES = Object.freeze({
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
 const COMPETITOR_DIRECTION = 'COMPETITOR';
-const LEGACY_WNC_ACCOUNT_ID_SET = new Set(['001al000026yk9baag']);
 
 export function computeNodePositions(nodes, horizontalSpacing = 220, verticalSpacing = 180) {
     const positions = {};
@@ -75,9 +74,7 @@ export function buildFilteredElements(nodes, edges, filterValue, positionsByNode
         .filter((node) => shouldIncludeNode(node, activeFilter))
         .map((node) => {
             const nodeInsight = buildNodeInsight(node);
-            const isFocusCompany =
-                isFocusCompanyNode(node, focusMatcher) ||
-                (!focusMatcher.hasCandidates && isLegacyWncNode(node));
+            const isFocusCompany = isFocusCompanyNode(node, focusMatcher);
             return {
                 data: {
                     id: node.id,
@@ -455,29 +452,6 @@ function buildNodeInsight(node) {
 
 function isBlank(value) {
     return value === null || value === undefined || String(value).trim() === '';
-}
-
-function isLegacyWncNode(node) {
-    const normalizedNodeId = normalizeNodeId(node?.id);
-    const normalizedAccountId = normalizeNodeId(node?.accountId);
-    if (
-        LEGACY_WNC_ACCOUNT_ID_SET.has(normalizedNodeId) ||
-        LEGACY_WNC_ACCOUNT_ID_SET.has(normalizedAccountId)
-    ) {
-        return true;
-    }
-
-    const normalizedLabel = normalizeNodeLabel(node?.label);
-    if (
-        normalizedLabel.includes('wnc') ||
-        normalizedLabel.includes('啟碁') ||
-        normalizedLabel.includes('啟基')
-    ) {
-        return true;
-    }
-
-    const normalizedAccountType = normalizeNodeLabel(node?.accountType);
-    return normalizedAccountType.includes('wnc');
 }
 
 function buildFocusMatcher(focusContext) {
