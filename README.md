@@ -159,7 +159,14 @@ This section is the source of truth for installing this repo into a brand-new or
 - Plan execution script: `scripts/install-by-plan.sh`
 - Plan validation script: `scripts/verify-install-plan.sh`
 
-### 1) Prerequisites
+### 1) Repo-Only Install Policy
+
+- Install from this repo only (`manifest/features/*.xml` + `force-app/main/default`).
+- Do not retrieve metadata from other source orgs during install.
+- Baseline modules come from `docs/install-plan.json`.
+- Optional modules are installed explicitly by `deploy-feature.sh`.
+
+### 2) Prerequisites
 
 - Salesforce CLI (`sf`) installed
 - Authenticated target org alias (example: `new-demo-org`)
@@ -172,9 +179,9 @@ sf org login web --alias <target-org-alias>
 sf org display --target-org <target-org-alias>
 ```
 
-### 2) Install Order and Execution
+### 3) Baseline Install (Install Plan)
 
-Do not hardcode install order in prompts. Always read and execute `docs/install-plan.json`.
+Always execute baseline modules from `docs/install-plan.json`.
 
 Validate plan:
 
@@ -182,27 +189,27 @@ Validate plan:
 ./scripts/verify-install-plan.sh docs/install-plan.json
 ```
 
-Dry-run install:
+Dry-run baseline install:
 
 ```bash
 ./scripts/install-by-plan.sh <target-org-alias> --dry-run
 ```
 
-Production install:
+Apply baseline install:
 
 ```bash
 ./scripts/install-by-plan.sh <target-org-alias>
 ```
 
-If target org already has customization on shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`):
+Optional safeguard for non-empty target orgs with existing shared-page customizations (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`):
 
 ```bash
 ./scripts/install-by-plan.sh <target-org-alias> --sync-shared-pages
 ```
 
-### 2.5) Optional Pack Installation (Manual)
+### 4) Optional Pack Installation (Manual)
 
-Install optional custom packs outside baseline plan:
+Install optional packs explicitly (not part of baseline plan):
 
 ```bash
 ./scripts/deploy-feature.sh email-to-opportunity <target-org-alias> --dry-run
@@ -215,9 +222,9 @@ Install optional custom packs outside baseline plan:
 ./scripts/deploy-feature.sh homepage-sync <target-org-alias>
 ```
 
-### 3) Demo Setup Validation (Immediately After Step 1)
+### 5) Post-Install Validation
 
-Open the setup page:
+Demo Setup validation:
 
 ```bash
 sf org open --target-org <target-org-alias> --path lightning/n/CM_Demo_Setup
@@ -229,9 +236,16 @@ Expected result:
 - Saving updates `CM_Is_Demo_Target__c`
 - Saving updates `Industry`, `Website`, `Description`, and `CM_Supply_Scenario_Catalog__c`
 
-### 3.5) One-Time HomePage Sync (260312 baseline to new org)
+Feature smoke checks (recommended):
 
-Use this when target org Home page must match `coryma-260312` (`MFG_HOME_DISCRETE_MCO`).
+- Email to Opportunity: open any `EmailMessage` record and confirm quick action `Auto-Create Opps ✨` exists and Flow opens.
+- Sample Request: open any `Opportunity` record and confirm quick action `CM Sample Submission` exists and can create `SampleRequest__c`.
+- Supply Network: open Account page with `cmSupplyNetworkGraph`, confirm focus company follows Demo Setup target.
+
+### 6) Shared Page Overwrite Strategy
+
+`homepage-sync` is a page-level overwrite module for `MFG_HOME_DISCRETE_MCO`.
+Use it only when you explicitly want repo Home page layout to replace target org layout.
 
 Dry-run:
 
@@ -263,7 +277,7 @@ diff -u force-app/main/default/flexipages/MFG_HOME_DISCRETE_MCO.flexipage-meta.x
   /tmp/home-verify/flexipages/MFG_HOME_DISCRETE_MCO.flexipage-meta.xml
 ```
 
-### 4) One-Shot Install (Optional)
+### 7) One-Shot Install (Optional)
 
 If you want everything in one deployment instead of modular order:
 
@@ -274,7 +288,7 @@ sf project deploy start \
   --wait 60
 ```
 
-### 5) AI Execution Notes
+### 8) AI Execution Notes
 
 - Always install `demo-setup` first before any feature that depends on active demo target context.
 - Always install `Meeting Transcript Simulation` before using `QBR Meeting Follow-up`.
@@ -282,7 +296,7 @@ sf project deploy start \
 - If a step fails, stop and report the failing module name plus CLI error output; do not skip ahead.
 - Optional packs (`email-to-opportunity`, `sample-request`, `homepage-sync`) are manual and not part of baseline `install-plan`.
 - Deploying `FlexiPage` metadata is page-level overwrite behavior; if repo `Home`/`Account` pages are older than org, deployment can remove newer custom components.
-- Sync rule for shared pages (`MFG_HOME_DISCRETE_MCO`, `MFG_ACCOUNT_DISCRETE_ALL`): retrieve latest from org first, then commit, then deploy.
+- Default installation mode is repo-only; avoid using external org metadata as source input.
 
 ## Org Verification (2026-03-23)
 
